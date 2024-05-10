@@ -2,6 +2,7 @@
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
+using System.Windows.Forms;
 
 namespace Price_Checker.Configuration
 {
@@ -57,15 +58,27 @@ namespace Price_Checker.Configuration
                 // Log or handle the exception as needed
                 Console.WriteLine($"Decryption Error: {ex.Message}");
 
-                // Throw a more user-friendly exception
-                throw new Exception("An error occurred while decrypting the data. Please check the encryption key and the encrypted data.");
+                // Show a more user-friendly message
+                MessageBox.Show("An error occurred while decrypting the data. Please check the encryption key and the encrypted data.", "Decryption Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+
+                // Exit the application
+                Environment.Exit(1);
+                return null;
             }
             catch (FormatException ex)
             {
                 // Handle the FormatException as needed
                 Console.WriteLine($"Format Error: {ex.Message}");
-                throw new Exception("The encrypted data is not in the correct format.");
+
+                // Show a more user-friendly message
+                MessageBox.Show("The encrypted data is not in the correct format.", "Format Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+
+                // Exit the application
+                Environment.Exit(1);
+                return null;
             }
         }
+
+
     }
 }

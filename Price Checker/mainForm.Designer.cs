@@ -43,11 +43,11 @@
             this.bottomPanel = new System.Windows.Forms.Panel();
             this.lbl_status = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.panel5 = new System.Windows.Forms.Panel();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.panel4 = new System.Windows.Forms.Panel();
             this.axWindowsMediaPlayer1 = new AxWMPLib.AxWindowsMediaPlayer();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.scanPanel.SuspendLayout();
@@ -55,10 +55,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
             this.detailPanel.SuspendLayout();
             this.bottomPanel.SuspendLayout();
-            this.panel5.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.panel4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.axWindowsMediaPlayer1)).BeginInit();
+            this.tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // lbl_barcode
@@ -67,7 +67,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.lbl_barcode.Cursor = System.Windows.Forms.Cursors.WaitCursor;
             this.lbl_barcode.Font = new System.Drawing.Font("Arial Rounded MT Bold", 28.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbl_barcode.Location = new System.Drawing.Point(574, 106);
+            this.lbl_barcode.Location = new System.Drawing.Point(574, 120);
             this.lbl_barcode.Name = "lbl_barcode";
             this.lbl_barcode.Size = new System.Drawing.Size(452, 62);
             this.lbl_barcode.TabIndex = 1;
@@ -82,7 +82,7 @@
             this.label3.Cursor = System.Windows.Forms.Cursors.WaitCursor;
             this.label3.Font = new System.Drawing.Font("Arial Rounded MT Bold", 40.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(113)))), ((int)(((byte)(192)))));
-            this.label3.Location = new System.Drawing.Point(409, 364);
+            this.label3.Location = new System.Drawing.Point(370, 396);
             this.label3.Margin = new System.Windows.Forms.Padding(0);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(711, 77);
@@ -108,9 +108,9 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.panel2.BackColor = System.Drawing.Color.White;
+            this.panel2.Controls.Add(this.tableLayoutPanel1);
             this.panel2.Controls.Add(this.scanPanel);
             this.panel2.Controls.Add(this.bottomPanel);
-            this.panel2.Controls.Add(this.panel5);
             this.panel2.Location = new System.Drawing.Point(0, 0);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(1432, 1055);
@@ -125,9 +125,9 @@
             this.scanPanel.Controls.Add(this.detailPanel);
             this.scanPanel.Cursor = System.Windows.Forms.Cursors.Default;
             this.scanPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.scanPanel.Location = new System.Drawing.Point(0, 582);
+            this.scanPanel.Location = new System.Drawing.Point(0, 550);
             this.scanPanel.Name = "scanPanel";
-            this.scanPanel.Size = new System.Drawing.Size(1432, 441);
+            this.scanPanel.Size = new System.Drawing.Size(1432, 473);
             this.scanPanel.TabIndex = 9;
             // 
             // panel3
@@ -160,9 +160,9 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.pictureBox3.Cursor = System.Windows.Forms.Cursors.Default;
             this.pictureBox3.Image = global::Price_Checker.Properties.Resources.Animation___1714451965175;
-            this.pictureBox3.Location = new System.Drawing.Point(397, 13);
+            this.pictureBox3.Location = new System.Drawing.Point(351, 0);
             this.pictureBox3.Name = "pictureBox3";
-            this.pictureBox3.Size = new System.Drawing.Size(748, 460);
+            this.pictureBox3.Size = new System.Drawing.Size(748, 505);
             this.pictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBox3.TabIndex = 3;
             this.pictureBox3.TabStop = false;
@@ -172,9 +172,9 @@
             this.detailPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.detailPanel.BackColor = System.Drawing.Color.White;
             this.detailPanel.Controls.Add(this.lbl_barcode);
-            this.detailPanel.Location = new System.Drawing.Point(1, 73);
+            this.detailPanel.Location = new System.Drawing.Point(1, 75);
             this.detailPanel.Name = "detailPanel";
-            this.detailPanel.Size = new System.Drawing.Size(1431, 367);
+            this.detailPanel.Size = new System.Drawing.Size(1431, 381);
             this.detailPanel.TabIndex = 4;
             // 
             // bottomPanel
@@ -213,25 +213,13 @@
             this.label1.TabIndex = 53;
             this.label1.Text = "BLUEGATES CUBE";
             // 
-            // panel5
-            // 
-            this.panel5.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.panel5.Controls.Add(this.pictureBox1);
-            this.panel5.Controls.Add(this.panel4);
-            this.panel5.Location = new System.Drawing.Point(26, 8);
-            this.panel5.Name = "panel5";
-            this.panel5.Size = new System.Drawing.Size(1384, 556);
-            this.panel5.TabIndex = 6;
-            // 
             // pictureBox1
             // 
             this.pictureBox1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Left;
-            this.pictureBox1.Location = new System.Drawing.Point(0, 0);
+            this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pictureBox1.Location = new System.Drawing.Point(3, 3);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(691, 556);
+            this.pictureBox1.Size = new System.Drawing.Size(693, 521);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBox1.TabIndex = 1;
             this.pictureBox1.TabStop = false;
@@ -241,10 +229,10 @@
             this.panel4.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.panel4.Controls.Add(this.axWindowsMediaPlayer1);
             this.panel4.Cursor = System.Windows.Forms.Cursors.Default;
-            this.panel4.Dock = System.Windows.Forms.DockStyle.Right;
-            this.panel4.Location = new System.Drawing.Point(693, 0);
+            this.panel4.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel4.Location = new System.Drawing.Point(702, 3);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(691, 556);
+            this.panel4.Size = new System.Drawing.Size(694, 521);
             this.panel4.TabIndex = 5;
             // 
             // axWindowsMediaPlayer1
@@ -254,12 +242,30 @@
             this.axWindowsMediaPlayer1.Location = new System.Drawing.Point(0, 0);
             this.axWindowsMediaPlayer1.Name = "axWindowsMediaPlayer1";
             this.axWindowsMediaPlayer1.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("axWindowsMediaPlayer1.OcxState")));
-            this.axWindowsMediaPlayer1.Size = new System.Drawing.Size(691, 556);
+            this.axWindowsMediaPlayer1.Size = new System.Drawing.Size(694, 521);
             this.axWindowsMediaPlayer1.TabIndex = 0;
             // 
             // timer1
             // 
             this.timer1.Interval = 1000;
+            // 
+            // tableLayoutPanel1
+            // 
+            this.tableLayoutPanel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tableLayoutPanel1.ColumnCount = 2;
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel1.Controls.Add(this.pictureBox1, 0, 0);
+            this.tableLayoutPanel1.Controls.Add(this.panel4, 1, 0);
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(21, 17);
+            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+            this.tableLayoutPanel1.RowCount = 1;
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(1399, 527);
+            this.tableLayoutPanel1.TabIndex = 6;
             // 
             // mainForm
             // 
@@ -283,10 +289,10 @@
             this.detailPanel.PerformLayout();
             this.bottomPanel.ResumeLayout(false);
             this.bottomPanel.PerformLayout();
-            this.panel5.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.panel4.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.axWindowsMediaPlayer1)).EndInit();
+            this.tableLayoutPanel1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -308,7 +314,7 @@
         private System.Windows.Forms.Label lbl_status;
         private System.Windows.Forms.Panel panel3;
         private System.Windows.Forms.Label lbl_appname;
-        private System.Windows.Forms.Panel panel5;
         private System.Windows.Forms.Panel detailPanel;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
     }
 }

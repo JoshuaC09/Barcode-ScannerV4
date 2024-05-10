@@ -48,7 +48,6 @@ namespace Price_Checker
             this.lbl_name = new System.Windows.Forms.Label();
             this.name_barcode = new System.Windows.Forms.Label();
             this.name_name = new System.Windows.Forms.Label();
-            this.lbl_details = new System.Windows.Forms.Label();
             this.pricePanel.SuspendLayout();
             this.panel1.SuspendLayout();
             this.panel3.SuspendLayout();
@@ -68,7 +67,6 @@ namespace Price_Checker
             this.pricePanel.Controls.Add(this.lbl_name);
             this.pricePanel.Controls.Add(this.name_barcode);
             this.pricePanel.Controls.Add(this.name_name);
-            this.pricePanel.Controls.Add(this.lbl_details);
             this.pricePanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pricePanel.Location = new System.Drawing.Point(0, 0);
             this.pricePanel.Margin = new System.Windows.Forms.Padding(3, 3, 3, 0);
@@ -236,18 +234,6 @@ namespace Price_Checker
             this.name_name.TabIndex = 7;
             this.name_name.Text = "Product Name:";
             // 
-            // lbl_details
-            // 
-            this.lbl_details.AutoSize = true;
-            this.lbl_details.Font = new System.Drawing.Font("Arial Rounded MT Bold", 30F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbl_details.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(113)))), ((int)(((byte)(192)))));
-            this.lbl_details.Location = new System.Drawing.Point(480, 7);
-            this.lbl_details.Name = "lbl_details";
-            this.lbl_details.Size = new System.Drawing.Size(506, 58);
-            this.lbl_details.TabIndex = 6;
-            this.lbl_details.Text = "PRODUCT DETAILS";
-            this.lbl_details.Visible = false;
-            // 
             // PriceCheckerForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -275,7 +261,6 @@ namespace Price_Checker
         private Label lbl_barcode;
         private Label name_barcode;
         private Label name_name;
-        private Label lbl_details;
         private Label lbl_manufacturer;
         private Label label2;
         private Panel panel3;

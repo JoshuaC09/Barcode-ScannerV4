@@ -2,9 +2,10 @@
 using System;
 using System.Drawing;
 using System.Threading;
+using System.Timers;
 using System.Windows.Forms;
 
-namespace Price_Checker.Configuration
+namespace Price_Checker.Services
 {
     public class ScanBarcodeService
 
@@ -14,7 +15,7 @@ namespace Price_Checker.Configuration
         public event EventHandler<string> BarcodeScanned;
 
 
-        public void HandleBarcodeInput(KeyEventArgs e, TextBox barcodeLabel, Panel scanPanel, mainForm mainForm)
+        public void HandleBarcodeInput(KeyEventArgs e, TextBox barcodeLabel, Panel detailPanel, mainForm mainForm)
         {
             if (e.KeyCode == Keys.Enter)
             {
@@ -29,16 +30,21 @@ namespace Price_Checker.Configuration
                         priceForm.Show();
                         // Set the location of PriceCheckerForm to match that the scanPanel
                         // Set the size of priceForm to match
-                        //priceForm.Size = scanPanel.Size;
+                        priceForm.Dock = DockStyle.Fill; // Fill the panel
+                        priceForm.Size = detailPanel.Size;
 
-                        int offsetX = 230; // Adjust this value as needed
-                        int offsetY = 115;
+                        priceForm.FormBorderStyle = FormBorderStyle.None; // Remove border
+                        priceForm.TopLevel = false; // Set as non-top-level form
 
-                        // Manually adjust the location of priceForm
-                        // For example, you can set it to a specific position relative to scanPanel
-                        priceForm.Location = new Point(scanPanel.Location.X + offsetX, scanPanel.Location.Y + offsetY);
+                        detailPanel.Controls.Add(priceForm); // Add PriceForm to a panel on the main form
+                                                             // Display the barcode in tb_barcode in PriceCheckerForm
 
-                        // Display the barcode in tb_barcode in PriceCheckerForm
+                        // Move the priceForm to the front
+                        priceForm.BringToFront();
+
+                        // Set TabIndex to ensure focus ordering
+                        priceForm.TabIndex = 0;
+
                         priceForm.SetBarcode(barcode);
                         OnBarcodeScanned(barcode);
                     }
@@ -112,16 +118,19 @@ namespace Price_Checker.Configuration
             bool barcodeExists = false;
 
             _config = new DatabaseConfig();
-            string connString = ConnectionStringService.ConnectionString;
+            string connString = $"server={_config.Server};port={_config.Port};uid={_config.Uid};pwd={_config.Pwd};database={_config.Database}";
+
+            // SQL query (fixed)
+            string sql = "SELECT prod_itemcode FROM prod_verifier WHERE prod_barcode = @Barcode";
 
             try
             {
                 using (MySqlConnection conn = new MySqlConnection(connString))
                 {
                     conn.Open();
-                    string sql = $"SELECT prod_itemcode FROM prod_verifier WHERE prod_barcode = '{barcode}'";
                     using (MySqlCommand cmd = new MySqlCommand(sql, conn))
                     {
+                        cmd.Parameters.AddWithValue("@Barcode", barcode);
                         using (MySqlDataReader reader = cmd.ExecuteReader())
                         {
                             barcodeExists = reader.HasRows;
@@ -129,7 +138,7 @@ namespace Price_Checker.Configuration
                     }
                 }
             }
-            catch (MySqlException ex)
+            catch (Exception ex)
             {
                 // Handle the exception appropriately
                 Console.WriteLine("Error: " + ex.Message);

@@ -1,14 +1,13 @@
 ﻿using System;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using Price_Checker.Configuration;
 using Price_Checker.Services;
-
 
 namespace Price_Checker
 {
     public partial class mainForm : Form
     {
-
         private readonly ImagesManagerService imageManager;
         private readonly ScanBarcodeService scanBarcodeService;
         private readonly BarcodeTimer barcodeTimer;
@@ -23,26 +22,21 @@ namespace Price_Checker
             KeyPreview = true;
             this.Shown += MainForm_Shown;
 
-            timer1.Start();
-            timer1.Interval = 1000; // 1000 milliseconds = 1 second
-            timer1.Tick += timer1_Tick;
-
             serverStatusManager = new ServerStatusService();
             serverStatusManager.UpdateStatusLabel(lbl_status, bottomPanel); // Call the UpdateStatusLabel method
             serverStatusManager.Appname(lbl_appname); // Call the Appname method
-
+            // ... other code ...
+            UpdateStatusLabelPeriodically(); // Start the periodic status label update
             scanBarcodeService = new ScanBarcodeService();
             scanBarcodeService.BarcodeScanned += ScanBarcodeService_BarcodeScanned;
             barcodeTimer = new BarcodeTimer(lbl_barcode);
             imageManager = new ImagesManagerService(pictureBox1);
             imageManager.ImageSlideshow();
-
             fontManager = new FontManagerService();
             lbl_barcode.Font = fontManager.GetCustomFont();
-
             videoManager = new VideoManagerService(axWindowsMediaPlayer1);
-
         }
+
         private void MainForm_Shown(object sender, EventArgs e)
         {
             // Set focus to lbl_barcode when the form is shown
@@ -53,16 +47,38 @@ namespace Price_Checker
         {
             scanBarcodeService.HandleBarcodeInput(e, lbl_barcode, scanPanel, this);
         }
+
         private void ScanBarcodeService_BarcodeScanned(object sender, string barcode)
         {
             barcodeTimer.StartTimer();
         }
 
-        private void timer1_Tick(object sender, EventArgs e)
+       
+
+        internal void HandleError(string errorMessage)
         {
-            serverStatusManager.UpdateStatusLabel(lbl_status, bottomPanel);
+            DialogResult result = MessageBox.Show(errorMessage, "Error", MessageBoxButtons.OKCancel, MessageBoxIcon.Error);
+            if (result == DialogResult.OK)
+            {
+                Application.Exit();
+            }
         }
 
-
+        private async void UpdateStatusLabelPeriodically()
+        {
+            while (true)
+            {
+                try
+                {
+                    serverStatusManager.UpdateStatusLabel(lbl_status, bottomPanel);
+                }
+                catch (Exception ex)
+                {
+                    HandleError(ex.Message);
+                    break; // Stop the loop if an error occurs
+                }
+                await Task.Delay(1000); //1sec
+            }
+        }
     }
 }

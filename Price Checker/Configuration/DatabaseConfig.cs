@@ -1,6 +1,9 @@
 ﻿using Price_Checker.Configuration;
 using Price_Checker.Services;
+using System;
 using System.IO;
+using System.Security.Cryptography;
+using System.Windows.Forms;
 using System.Xml.Linq;
 
 public class DatabaseConfig
@@ -28,21 +31,42 @@ public class DatabaseConfig
         // Construct the config file path relative to the application directory
         string configFilePath = Path.Combine(appDirectory, "config.xml");
 
-        if (File.Exists(configFilePath))
+        try
         {
-            var doc = XDocument.Load(configFilePath);
-            var databaseSettings = doc.Element("configuration").Element("databaseSettings");
+            if (File.Exists(configFilePath))
+            {
+                var doc = XDocument.Load(configFilePath);
+                var databaseSettings = doc.Element("configuration").Element("databaseSettings");
 
-            Server = databaseSettings.Element("add").Attribute("server").Value;
-            Uid = _securityService.Decrypt(databaseSettings.Element("add").Attribute("uid").Value);
-            Port = databaseSettings.Element("add").Attribute("port").Value;
-            Pwd = _securityService.Decrypt(databaseSettings.Element("add").Attribute("pwd").Value);
-            Database = databaseSettings.Element("add").Attribute("database").Value;
+                Server = databaseSettings.Element("add").Attribute("server").Value;
+                Uid = _securityService.Decrypt(databaseSettings.Element("add").Attribute("uid").Value);
+                Port = databaseSettings.Element("add").Attribute("port").Value;
+                Pwd = _securityService.Decrypt(databaseSettings.Element("add").Attribute("pwd").Value);
+                Database = databaseSettings.Element("add").Attribute("database").Value;
+            }
+            else
+            {
+                // Handle the case where the config file is not found
+                throw new FileNotFoundException($"The configuration file 'config.xml' was not found in the directory '{appDirectory}'.");
+            }
         }
-        else
+        catch (CryptographicException ex)
         {
-            // Handle the case where the config file is not found
-            throw new FileNotFoundException($"The configuration file 'config.xml' was not found in the directory '{appDirectory}'.");
+            // Log or handle the exception as needed
+            Console.WriteLine($"Decryption Error: {ex.Message}");
+
+            // Display the error message and exit the application
+            MessageBox.Show("An error occurred while decrypting the data. Please check the encryption key and the encrypted data.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            Application.Exit();
+        }
+        catch (FormatException ex)
+        {
+            // Handle the FormatException as needed
+            Console.WriteLine($"Format Error: {ex.Message}");
+
+            // Display the error message and exit the application
+            MessageBox.Show("The encrypted data is not in the correct format.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            Application.Exit();
         }
     }
 }
