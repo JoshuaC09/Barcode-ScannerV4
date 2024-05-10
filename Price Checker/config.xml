@@ -3,7 +3,7 @@
   <databaseSettings>
 	  
 	<add
-	    server="localhost"		    
+	    server="luigi"		    
 	    uid="yBQmh6w1qnjd6Edl2K4neg=="	  
 	    port="3306"				 
 	    pwd="GCTdtKVwpbLbT6z5RdyJDw=="
