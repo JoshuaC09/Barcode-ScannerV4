@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<configuration>
+	<databaseSettings>
+		<server>localhost</server>
+		<user>root</user>
+		<password>BLUEGATES</password>
+		<database>ipos_prod_verifier</database>
+	</databaseSettings>
+</configuration>
