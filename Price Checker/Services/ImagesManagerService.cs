@@ -30,8 +30,16 @@ namespace Price_Checker.Configuration
             imageLoopTimer.Tick += DisplayNextImage;
             imageLoopTimer.Start();
 
+
+            var enviroment = System.Environment.CurrentDirectory;
+            string projectDirectory = Directory.GetParent(enviroment).Parent.FullName;
+
             // Get the directory path of the currently executing assembly
-            string appDirectory = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+            string appDirectory = projectDirectory;
+
+
+
+
             string imagesFolder = Path.Combine(appDirectory, "assets", "Images");
 
             // Fetch all image files in the specified directory

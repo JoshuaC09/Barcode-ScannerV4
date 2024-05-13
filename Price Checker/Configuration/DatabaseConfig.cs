@@ -1,5 +1,4 @@
 ﻿using Price_Checker.Configuration;
-using Price_Checker.Services;
 using System;
 using System.IO;
 using System.Security.Cryptography;
@@ -73,3 +72,5 @@ public class DatabaseConfig
         }
     }
 }
+
+

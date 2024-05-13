@@ -30,8 +30,12 @@ public class VideoManagerService
 
     private void LoadVideoFilePaths()
     {
-        string appDirectory = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
-        string videosFolder = Path.Combine(appDirectory, "assets", "Videos");
+        var enviroment = System.Environment.CurrentDirectory;
+        string projectDirectory = Directory.GetParent(enviroment).Parent.FullName;
+
+        string appDirectory = projectDirectory;
+
+        string videosFolder = Path.Combine(appDirectory,"assets", "Videos");
 
         // Define the video file extensions you want to include
         List<string> videoExtensions = new List<string> { "*.mp4", "*.avi", "*.mov", "*.mkv", "*.flv", "*.wmv", "*.m4v", "*.3gp", "*.ogv", "*.webm", "*.mpeg" }; // Add or remove extensions as needed

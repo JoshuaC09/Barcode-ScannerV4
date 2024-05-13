@@ -383,20 +383,6 @@
     <EmbeddedResource Include="mainForm.resx">
       <DependentUpon>mainForm.cs</DependentUpon>
     </EmbeddedResource>
-    <None Include="assets\Fonts\Schibsted_Grotesk\SchibstedGrotesk-Italic-VariableFont_wght.ttf" />
-    <None Include="assets\Fonts\Schibsted_Grotesk\SchibstedGrotesk-VariableFont_wght.ttf" />
-    <None Include="assets\Fonts\Schibsted_Grotesk\static\SchibstedGrotesk-Black.ttf" />
-    <None Include="assets\Fonts\Schibsted_Grotesk\static\SchibstedGrotesk-BlackItalic.ttf" />
-    <None Include="assets\Fonts\Schibsted_Grotesk\static\SchibstedGrotesk-Bold.ttf" />
-    <None Include="assets\Fonts\Schibsted_Grotesk\static\SchibstedGrotesk-BoldItalic.ttf" />
-    <None Include="assets\Fonts\Schibsted_Grotesk\static\SchibstedGrotesk-ExtraBold.ttf" />
-    <None Include="assets\Fonts\Schibsted_Grotesk\static\SchibstedGrotesk-ExtraBoldItalic.ttf" />
-    <None Include="assets\Fonts\Schibsted_Grotesk\static\SchibstedGrotesk-Italic.ttf" />
-    <None Include="assets\Fonts\Schibsted_Grotesk\static\SchibstedGrotesk-Medium.ttf" />
-    <None Include="assets\Fonts\Schibsted_Grotesk\static\SchibstedGrotesk-MediumItalic.ttf" />
-    <None Include="assets\Fonts\Schibsted_Grotesk\static\SchibstedGrotesk-Regular.ttf" />
-    <None Include="assets\Fonts\Schibsted_Grotesk\static\SchibstedGrotesk-SemiBold.ttf" />
-    <None Include="assets\Fonts\Schibsted_Grotesk\static\SchibstedGrotesk-SemiBoldItalic.ttf" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -436,14 +422,6 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="assets\Fonts\Schibsted_Grotesk\OFL.txt" />
-    <Content Include="assets\Fonts\Schibsted_Grotesk\README.txt" />
-    <Content Include="assets\Images\001_Adds.jpg" />
-    <Content Include="assets\Images\002_Adds.jpg" />
-    <Content Include="assets\Images\003_Adds.jpg" />
-    <Content Include="assets\Videos\video1.mp4" />
-    <Content Include="assets\Videos\video2.mp4" />
-    <Content Include="assets\Videos\video3.mp4" />
     <None Include="Resources\tag.png" />
   </ItemGroup>
   <ItemGroup>
