@@ -1,4 +1,6 @@
 ﻿using AxWMPLib;
+using MySql.Data.MySqlClient;
+using Price_Checker.Configuration;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -28,14 +30,49 @@ public class VideoManagerService
         PlayNextVideo();
     }
 
-    private void LoadVideoFilePaths()
+    public void LoadVideoFilePaths()
     {
-        var enviroment = System.Environment.CurrentDirectory;
-        string projectDirectory = Directory.GetParent(enviroment).Parent.FullName;
+        var environment = System.Environment.CurrentDirectory;
+        string projectDirectory = Directory.GetParent(environment).Parent.FullName;
 
         string appDirectory = projectDirectory;
 
-        string videosFolder = Path.Combine(appDirectory,"assets", "Videos");
+        // string appDirectory = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+
+        DatabaseConfig _config = new DatabaseConfig();
+        string connstring = ConnectionStringService.ConnectionString;
+
+        string assetsFolder = null;
+
+        using (MySqlConnection con = new MySqlConnection(connstring))
+        {
+            con.Open();
+            string sql = "SELECT set_advid FROM settings";
+            MySqlCommand cmd = new MySqlCommand(sql, con);
+            MySqlDataReader reader = cmd.ExecuteReader();
+
+            if (reader.Read())
+            {
+                string setAdvid = reader.IsDBNull(0) ? null : reader.GetString(0);
+                reader.Close();
+
+                if (!string.IsNullOrEmpty(setAdvid))
+                {
+
+                    assetsFolder = setAdvid.Replace("$", "\\");
+                }
+            }
+        }
+
+        string videosFolder;
+        if (string.IsNullOrEmpty(assetsFolder) || !Directory.EnumerateFiles(assetsFolder).Any())
+        {
+            videosFolder = Path.Combine(appDirectory, "assets", "Videos");
+        }
+        else
+        {
+            videosFolder = assetsFolder;
+        }
 
         // Define the video file extensions you want to include
         List<string> videoExtensions = new List<string> { "*.mp4", "*.avi", "*.mov", "*.mkv", "*.flv", "*.wmv", "*.m4v", "*.3gp", "*.ogv", "*.webm", "*.mpeg" }; // Add or remove extensions as needed
@@ -48,26 +85,31 @@ public class VideoManagerService
             allVideoPaths.AddRange(Directory.EnumerateFiles(videosFolder, extension));
         }
 
-        videoFilePaths = allVideoPaths;
+        // Filter out the files with invalid names
+        List<string> invalidVideoPaths = allVideoPaths.Where(file => Path.GetFileNameWithoutExtension(file).Split('_').Length <= 1 || !int.TryParse(Path.GetFileNameWithoutExtension(file).Split('_')[0], out _)).ToList();
+        allVideoPaths = allVideoPaths.Except(invalidVideoPaths).ToList();
+
+        if (invalidVideoPaths.Any())
+        {
+            // Show a message box informing the user about the required naming convention and skipped files
+            MessageBox.Show($"{invalidFileNameMessage}\n{skippedFilesMessage}", caption, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        }
 
         try
         {
-            videoFilePaths.Sort((x, y) =>
-            {
-                int xPrefix = int.Parse(Path.GetFileNameWithoutExtension(x).Split('_')[0]);
-                int yPrefix = int.Parse(Path.GetFileNameWithoutExtension(y).Split('_')[0]);
-                return xPrefix.CompareTo(yPrefix);
-            });
+            // Sort the valid video file paths
+            videoFilePaths = allVideoPaths.OrderBy(x => int.Parse(Path.GetFileNameWithoutExtension(x).Split('_')[0])).ToList();
         }
         catch (InvalidOperationException)
         {
-            // Show a message box informing the user about the required naming convention
+            // This should not happen since we already filtered out invalid file names
             MessageBox.Show($"{invalidFileNameMessage}\n{skippedFilesMessage}", caption, MessageBoxButtons.OK, MessageBoxIcon.Warning);
             return;
         }
 
         videoQueue = new Queue<string>(videoFilePaths);
     }
+
 
 
     public void PlayNextVideo()
@@ -89,9 +131,18 @@ public class VideoManagerService
             }
             else
             {
-                // Handle the case where the video duration is 0 or unavailable
-                // You can set a default interval or handle it differently based on your requirements
-                playbackTimer.Interval = 100000; // Set a default interval of 1minute
+                int? intervalFromDatabase = GetAdvidTimeFromDatabase();
+
+                if (intervalFromDatabase == 0 || intervalFromDatabase == null)
+                {
+                    intervalFromDatabase = 100000; // or any other default value you want to use
+                }
+                else
+                {
+                    intervalFromDatabase = GetAdvidTimeFromDatabase();
+                }
+
+                playbackTimer.Interval = (double)intervalFromDatabase;
                 playbackTimer.Start();
             }
         }
@@ -102,6 +153,46 @@ public class VideoManagerService
             PlayNextVideo();
         }
     }
+
+    public int GetAdvidTimeFromDatabase()
+    {
+        DatabaseConfig _config = new DatabaseConfig();
+        string connstring = ConnectionStringService.ConnectionString;
+
+        using (MySqlConnection con = new MySqlConnection(connstring))
+        {
+            con.Open();
+            string sql = "SELECT set_advidtime FROM settings";
+            MySqlCommand cmd = new MySqlCommand(sql, con);
+            object result = cmd.ExecuteScalar();
+
+            if (result != null && result != DBNull.Value)
+            {
+                if (int.TryParse(result.ToString(), out int seconds))
+                {
+                    int convertedValue = ConvertSecondsToValue(seconds);
+                    return convertedValue;
+                }
+            }
+
+           
+            return 100000; // or any other default value you want to use
+        }
+    }
+
+   internal int ConvertSecondsToValue(int seconds)
+    {
+        if (seconds >= 60)
+        {
+            int minutes = seconds / 60;
+            return minutes * 100000;
+        }
+        else
+        {
+            return seconds * 1000;
+        }
+    }
+
 
     private async void AxWindowsMediaPlayer1_PlayStateChange(object sender, _WMPOCXEvents_PlayStateChangeEvent e)
     {

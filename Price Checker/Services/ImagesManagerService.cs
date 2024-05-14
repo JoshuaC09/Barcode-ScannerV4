@@ -1,9 +1,12 @@
-﻿using System;
+﻿using AxWMPLib;
+using MySql.Data.MySqlClient;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Price_Checker.Configuration
 {
@@ -25,8 +28,9 @@ namespace Price_Checker.Configuration
 
         public void ImageSlideshow()
         {
+
             imageLoopTimer = new System.Windows.Forms.Timer();
-            imageLoopTimer.Interval = 2000; // 5 seconds
+            imageLoopTimer.Interval = GetAdpicTimeFromDatabase(); 
             imageLoopTimer.Tick += DisplayNextImage;
             imageLoopTimer.Start();
 
@@ -35,12 +39,45 @@ namespace Price_Checker.Configuration
             string projectDirectory = Directory.GetParent(enviroment).Parent.FullName;
 
             // Get the directory path of the currently executing assembly
-            string appDirectory = projectDirectory;
+           string appDirectory = projectDirectory;
+
+           // string appDirectory = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+
+            DatabaseConfig _config = new DatabaseConfig();
+            string connstring = ConnectionStringService.ConnectionString;
+            string assetsFolder = null;
+
+            using (MySqlConnection con = new MySqlConnection(connstring))
+            {
+                con.Open();
+                string sql = "SELECT set_adpic FROM settings";
+                MySqlCommand cmd = new MySqlCommand(sql, con);
+                MySqlDataReader reader = cmd.ExecuteReader();
+
+                if (reader.Read())
+                {
+                    string setAdPic = reader.IsDBNull(0) ? null : reader.GetString(0);
+                    reader.Close();
+
+                    if (!string.IsNullOrEmpty(setAdPic))
+                    {
+                        assetsFolder = setAdPic.Replace("$", "\\");
+                    }
+                }
+            }
 
 
 
+            string imagesFolder;
+            if (string.IsNullOrEmpty(assetsFolder) || !Directory.EnumerateFiles(assetsFolder).Any())
+            {
+                imagesFolder = Path.Combine(appDirectory, "assets", "Images");
+            }
+            else
+            {    
+                imagesFolder = assetsFolder;
+            }
 
-            string imagesFolder = Path.Combine(appDirectory, "assets", "Images");
 
             // Fetch all image files in the specified directory
             List<string> imageFiles = Directory.EnumerateFiles(imagesFolder, "*.*")
@@ -83,6 +120,48 @@ namespace Price_Checker.Configuration
 
             // Display the first image
             DisplayNextImage(null, EventArgs.Empty);
+        }
+
+
+
+        public int GetAdpicTimeFromDatabase()
+        {
+            DatabaseConfig _config = new DatabaseConfig();
+            string connstring = ConnectionStringService.ConnectionString;
+
+            using (MySqlConnection con = new MySqlConnection(connstring))
+            {
+                con.Open();
+                string sql = "SELECT set_adpictime FROM settings";
+                MySqlCommand cmd = new MySqlCommand(sql, con);
+                object result = cmd.ExecuteScalar();
+
+                if (result != null && result != DBNull.Value)
+                {
+                    if (int.TryParse(result.ToString(), out int seconds))
+                    {
+                      
+                        int convertedValue = ConvertSecondsToValue(seconds);
+                        return convertedValue;
+                    }
+                }
+
+                return 10000; // or any other default value you want to use
+            }
+        }
+
+
+        internal int ConvertSecondsToValue(int seconds)
+        {
+            if (seconds >= 60)
+            {
+                int minutes = seconds / 60;
+                return minutes * 100000;
+            }
+            else
+            {
+                return seconds * 1000;
+            }
         }
 
         private bool IsImageFile(string filePath)
@@ -130,7 +209,7 @@ namespace Price_Checker.Configuration
                 string imagePath = imageQueue.Dequeue();
                 try
                 {
-                    pictureBox1.Image = Image.FromFile(imagePath);
+                    pictureBox1.Image = System.Drawing.Image.FromFile(imagePath);
                     imageQueue.Enqueue(imagePath); // Add the image back to the end of the queue
                 }
                 catch (OutOfMemoryException)
