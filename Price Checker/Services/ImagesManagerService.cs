@@ -40,21 +40,29 @@ namespace Price_Checker.Configuration
 
             imageLoopTimer = new System.Windows.Forms.Timer();
             imageLoopTimer.Tick += DisplayNextImage;
+
+            // Set the initial interval to the default value or retrieve it from the database
+            int initialInterval = GetAdpicTimeFromDatabase();
+            if (initialInterval == 0)
+            {
+                initialInterval = 10000; // or any other default value you want to use
+            }
+            imageLoopTimer.Interval = initialInterval;
+
             imageLoopTimer.Start();
 
             Timer updateTimer = new Timer();
-            updateTimer.Interval = 1000; 
+            updateTimer.Interval = 1000;
             updateTimer.Tick += UpdateAdpicTimeInterval;
             updateTimer.Start();
-
 
             var enviroment = System.Environment.CurrentDirectory;
             string projectDirectory = Directory.GetParent(enviroment).Parent.FullName;
 
             // Get the directory path of the currently executing assembly
-           string appDirectory = projectDirectory;
+            string appDirectory = projectDirectory;
 
-           // string appDirectory = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+            // string appDirectory = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
 
             DatabaseConfig _config = new DatabaseConfig();
             string connstring = ConnectionStringService.ConnectionString;
@@ -88,7 +96,7 @@ namespace Price_Checker.Configuration
                 imagesFolder = Path.Combine(appDirectory, "assets", "Images");
             }
             else
-            {    
+            {
                 imagesFolder = assetsFolder;
             }
 
@@ -154,7 +162,7 @@ namespace Price_Checker.Configuration
                 {
                     if (int.TryParse(result.ToString(), out int seconds))
                     {
-                      
+
                         int convertedValue = ConvertSecondsToValue(seconds);
                         return convertedValue;
                     }
