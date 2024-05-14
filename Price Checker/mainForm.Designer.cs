@@ -192,6 +192,7 @@
             // 
             // lbl_appname
             // 
+            this.lbl_appname.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(113)))), ((int)(((byte)(192)))));
             this.lbl_appname.Cursor = System.Windows.Forms.Cursors.WaitCursor;
             this.lbl_appname.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lbl_appname.Font = new System.Drawing.Font("Arial Rounded MT Bold", 36F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
