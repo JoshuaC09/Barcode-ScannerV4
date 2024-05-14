@@ -71,6 +71,13 @@ namespace Price_Checker
             _config = new DatabaseConfig();
             string connString = $"server={_config.Server};port={_config.Port};uid={_config.Uid};pwd={_config.Pwd};database={_config.Database}";
 
+            // Check if any required fields are empty
+            if (string.IsNullOrEmpty(tb_appname.Text) || string.IsNullOrEmpty(tb_adpictime.Text) || string.IsNullOrEmpty(tb_advidtime.Text) || string.IsNullOrEmpty(tb_disptime.Text))
+            {
+                MessageBox.Show("Please enter values for all required fields.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return; // Exit the method if any required fields are empty
+            }
+
             using (MySqlConnection conn = new MySqlConnection(connString))
             {
                 string query = "UPDATE settings SET set_appname = @appName, set_adpictime = @adPicTime, set_adpic = @adPicPath, set_advidtime = @adVidTime, set_advid = @adVidPath, set_disptime = @dispTime";
@@ -79,9 +86,9 @@ namespace Price_Checker
 
                 command.Parameters.AddWithValue("@appName", tb_appname.Text);
                 command.Parameters.AddWithValue("@adPicTime", tb_adpictime.Text);
-                command.Parameters.AddWithValue("@adPicPath", tb_adpicpath.Text);
+                command.Parameters.AddWithValue("@adPicPath", tb_adpicpath.Text.Replace("\\", "$"));
                 command.Parameters.AddWithValue("@adVidTime", tb_advidtime.Text);
-                command.Parameters.AddWithValue("@adVidPath", tb_advidpath.Text);
+                command.Parameters.AddWithValue("@adVidPath", tb_advidpath.Text.Replace("\\", "$"));
                 command.Parameters.AddWithValue("@dispTime", tb_disptime.Text);
 
                 conn.Open();
@@ -139,22 +146,16 @@ namespace Price_Checker
             _config = new DatabaseConfig();
             string connString = $"server={_config.Server};port={_config.Port};uid={_config.Uid};pwd={_config.Pwd};database={_config.Database}";
 
-            int set_code = 0;
-
-            if (rb_ipos.Checked)
-            {
-                set_code = 1;
-            }
-            else if (rb_eipos.Checked)
-            {
-                set_code = 2;
-            }
-
             using (MySqlConnection conn = new MySqlConnection(connString))
             {
-                string updateQuery = "UPDATE settings SET set_code = @setCode";
+                string checkedRadioButton = string.Empty;
+                if (rb_ipos.Checked)
+                    checkedRadioButton = "rb_ipos";
+                else if (rb_eipos.Checked)
+                    checkedRadioButton = "rb_eipos";
+
+                string updateQuery = $"UPDATE settings SET set_code = CASE WHEN '{checkedRadioButton}' = 'rb_ipos' THEN 1 WHEN '{checkedRadioButton}' = 'rb_eipos' THEN 2 ELSE 0 END";
                 MySqlCommand command = new MySqlCommand(updateQuery, conn);
-                command.Parameters.AddWithValue("@setCode", set_code);
 
                 conn.Open();
                 command.ExecuteNonQuery();
@@ -188,5 +189,7 @@ namespace Price_Checker
             btn_clear.Enabled = enabled;
 
         }
+
+  
     }
 }
