@@ -12,7 +12,7 @@ namespace Price_Checker
         private DateTime lastOnlineTime = DateTime.MinValue;
         private bool wasOnlinePreviously = false;
 
-        public void UpdateStatusLabel(Label lbl_status, Panel bottomPanel)
+        public void UpdateStatusLabel(Label lbl_status, Panel bottomPanel, Label lbl_appname)
         {
             DatabaseConfig _config = new DatabaseConfig();
             string connstring = ConnectionStringService.ConnectionString;
