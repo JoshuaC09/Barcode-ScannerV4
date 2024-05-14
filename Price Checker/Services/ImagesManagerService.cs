@@ -26,13 +26,26 @@ namespace Price_Checker.Configuration
             this.pictureBox1 = pictureBox;
         }
 
+        private void UpdateAdpicTimeInterval(object sender, EventArgs e)
+        {
+            int newInterval = GetAdpicTimeFromDatabase();
+            if (newInterval != imageLoopTimer.Interval)
+            {
+                imageLoopTimer.Interval = newInterval;
+            }
+        }
+
         public void ImageSlideshow()
         {
 
             imageLoopTimer = new System.Windows.Forms.Timer();
-            imageLoopTimer.Interval = GetAdpicTimeFromDatabase(); 
             imageLoopTimer.Tick += DisplayNextImage;
             imageLoopTimer.Start();
+
+            Timer updateTimer = new Timer();
+            updateTimer.Interval = 1000; 
+            updateTimer.Tick += UpdateAdpicTimeInterval;
+            updateTimer.Start();
 
 
             var enviroment = System.Environment.CurrentDirectory;
@@ -65,6 +78,7 @@ namespace Price_Checker.Configuration
                     }
                 }
             }
+
 
 
 
