@@ -16,7 +16,7 @@ namespace Price_Checker
         public settingsForm()
         {
             InitializeComponent();
-            LoadSettings(tb_appname, tb_adpictime, tb_adpicpath, tb_advidtime, tb_advidpath, tb_disptime, rb_ipos, rb_eipos);
+            LoadSettings(tb_appname, tb_adpictime, tb_adpicpath, tb_advidtime, tb_advidpath,  tb_disptime, rb_ipos, rb_eipos);
             btn_clear.Click += btn_clear_Click;
 
             this.KeyDown += SettingsForm_KeyDown;
@@ -169,7 +169,7 @@ namespace Price_Checker
 
         private void btnEdit_Click(object sender, EventArgs e)
         {
-            // Enable text boxes
+            // Enable text boxes when Edit button is clicked
             SetTextBoxesEnabled(true);
         }
 
@@ -187,5 +187,4 @@ namespace Price_Checker
                 }
             }
         }
-    }
 }
