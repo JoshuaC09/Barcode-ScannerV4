@@ -455,5 +455,14 @@
   <ItemGroup>
     <None Include="Resources\plus.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ellipsis %281%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\dots.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ads here.jpg" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

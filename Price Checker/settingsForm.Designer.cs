@@ -38,13 +38,11 @@
             this.tb_advidpath = new System.Windows.Forms.TextBox();
             this.tb_adpictime = new System.Windows.Forms.TextBox();
             this.tb_advidtime = new System.Windows.Forms.TextBox();
-            this.btnBrowseVideos = new System.Windows.Forms.Button();
             this.btn_clear = new System.Windows.Forms.Button();
             this.btnEdit = new System.Windows.Forms.Button();
             this.label10 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
             this.label13 = new System.Windows.Forms.Label();
-            this.btnBrowseImages = new System.Windows.Forms.Button();
             this.tb_disptime = new System.Windows.Forms.TextBox();
             this.rb_eipos = new System.Windows.Forms.RadioButton();
             this.label8 = new System.Windows.Forms.Label();
@@ -55,6 +53,8 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.btnBrowseVideos = new System.Windows.Forms.Button();
+            this.btnBrowseImages = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -159,18 +159,6 @@
             this.tb_advidtime.TabIndex = 13;
             this.tb_advidtime.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // btnBrowseVideos
-            // 
-            this.btnBrowseVideos.BackColor = System.Drawing.Color.White;
-            this.btnBrowseVideos.BackgroundImage = global::Price_Checker.Properties.Resources.plus;
-            this.btnBrowseVideos.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.btnBrowseVideos.Location = new System.Drawing.Point(736, 427);
-            this.btnBrowseVideos.Name = "btnBrowseVideos";
-            this.btnBrowseVideos.Size = new System.Drawing.Size(35, 35);
-            this.btnBrowseVideos.TabIndex = 15;
-            this.btnBrowseVideos.UseVisualStyleBackColor = false;
-            this.btnBrowseVideos.Click += new System.EventHandler(this.btnBrowseVideos_Click);
-            // 
             // btn_clear
             // 
             this.btn_clear.Location = new System.Drawing.Point(645, 531);
@@ -220,18 +208,6 @@
             this.label13.Size = new System.Drawing.Size(146, 29);
             this.label13.TabIndex = 27;
             this.label13.Text = "Ad Settings";
-            // 
-            // btnBrowseImages
-            // 
-            this.btnBrowseImages.BackColor = System.Drawing.Color.White;
-            this.btnBrowseImages.BackgroundImage = global::Price_Checker.Properties.Resources.plus;
-            this.btnBrowseImages.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.btnBrowseImages.Location = new System.Drawing.Point(736, 339);
-            this.btnBrowseImages.Name = "btnBrowseImages";
-            this.btnBrowseImages.Size = new System.Drawing.Size(35, 35);
-            this.btnBrowseImages.TabIndex = 14;
-            this.btnBrowseImages.UseVisualStyleBackColor = false;
-            this.btnBrowseImages.Click += new System.EventHandler(this.btnBrowseImages_Click_1);
             // 
             // tb_disptime
             // 
@@ -338,11 +314,36 @@
             this.panel1.Size = new System.Drawing.Size(787, 56);
             this.panel1.TabIndex = 28;
             // 
+            // btnBrowseVideos
+            // 
+            this.btnBrowseVideos.BackColor = System.Drawing.Color.White;
+            this.btnBrowseVideos.BackgroundImage = global::Price_Checker.Properties.Resources.dots;
+            this.btnBrowseVideos.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.btnBrowseVideos.Location = new System.Drawing.Point(736, 427);
+            this.btnBrowseVideos.Name = "btnBrowseVideos";
+            this.btnBrowseVideos.Size = new System.Drawing.Size(35, 35);
+            this.btnBrowseVideos.TabIndex = 15;
+            this.btnBrowseVideos.UseVisualStyleBackColor = false;
+            this.btnBrowseVideos.Click += new System.EventHandler(this.btnBrowseVideos_Click);
+            // 
+            // btnBrowseImages
+            // 
+            this.btnBrowseImages.BackColor = System.Drawing.Color.White;
+            this.btnBrowseImages.BackgroundImage = global::Price_Checker.Properties.Resources.dots;
+            this.btnBrowseImages.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.btnBrowseImages.Location = new System.Drawing.Point(736, 339);
+            this.btnBrowseImages.Name = "btnBrowseImages";
+            this.btnBrowseImages.Size = new System.Drawing.Size(35, 35);
+            this.btnBrowseImages.TabIndex = 14;
+            this.btnBrowseImages.UseVisualStyleBackColor = false;
+            this.btnBrowseImages.Click += new System.EventHandler(this.btnBrowseImages_Click_1);
+            // 
             // settingsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
+            this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(787, 589);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.label12);
