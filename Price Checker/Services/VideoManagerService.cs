@@ -28,14 +28,117 @@ public class VideoManagerService
         playbackTimer.Elapsed += PlaybackTimer_Elapsed;
 
         PlayNextVideo();
+        System.Timers.Timer updateTimer = new System.Timers.Timer();
+        updateTimer.Interval = 1000; // Check for updates every 1 second
+        updateTimer.Elapsed += CheckAndUpdateFilePath;
+        updateTimer.Start();
+    }
+    private string assetsFolder;
+    private string appDirectory;
+    string environment = System.Environment.CurrentDirectory;
+
+    private void CheckAndUpdateFilePath(object sender, System.Timers.ElapsedEventArgs e)
+    {
+        DatabaseConfig _config = new DatabaseConfig();
+        string connstring = ConnectionStringService.ConnectionString;
+
+        // Get the updated assetsFolder from the database
+        string updatedAssetsFolder = GetAssetsFolder(connstring);
+
+        if (updatedAssetsFolder != assetsFolder)
+        {
+            assetsFolder = updatedAssetsFolder;
+
+            // Clear the existing videoQueue and videoFilePaths
+            videoQueue.Clear();
+            videoFilePaths.Clear();
+
+            string videosFolder;
+            if (string.IsNullOrEmpty(assetsFolder) || !Directory.EnumerateFiles(assetsFolder).Any())
+            {
+                string projectDirectory = Directory.GetParent(environment)?.Parent?.FullName;
+                if (string.IsNullOrEmpty(projectDirectory))
+                {
+                    // Handle the case where the projectDirectory is null or empty
+                    return;
+                }
+
+                appDirectory = projectDirectory;
+                videosFolder = Path.Combine(appDirectory, "assets", "Videos");
+            }
+            else
+            {
+                videosFolder = assetsFolder;
+            }
+
+
+            // Fetch all video files in the updated directory
+            List<string> videoExtensions = new List<string> { "*.mp4", "*.avi", "*.mov", "*.mkv", "*.flv", "*.wmv", "*.m4v", "*.3gp", "*.ogv", "*.webm", "*.mpeg" };
+            List<string> allVideoPaths = new List<string>();
+
+            foreach (string extension in videoExtensions)
+            {
+                allVideoPaths.AddRange(Directory.EnumerateFiles(videosFolder, extension));
+            }
+
+            // Filter out the files with invalid names
+            List<string> invalidVideoPaths = allVideoPaths.Where(file => Path.GetFileNameWithoutExtension(file).Split('_').Length <= 1 || !int.TryParse(Path.GetFileNameWithoutExtension(file).Split('_')[0], out _)).ToList();
+            allVideoPaths = allVideoPaths.Except(invalidVideoPaths).ToList();
+
+            if (invalidVideoPaths.Any())
+            {
+                MessageBox.Show($"{invalidFileNameMessage}\n{skippedFilesMessage}", caption, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+
+            try
+            {
+                // Sort the valid video file paths
+                videoFilePaths = allVideoPaths.OrderBy(x => int.Parse(Path.GetFileNameWithoutExtension(x).Split('_')[0])).ToList();
+            }
+            catch (InvalidOperationException)
+            {
+                MessageBox.Show($"{invalidFileNameMessage}\n{skippedFilesMessage}", caption, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            // Populate the videoQueue with the updated video file paths
+            videoQueue = new Queue<string>(videoFilePaths);
+
+            // Play the next video from the updated file path
+            PlayNextVideo();
+        }
     }
 
+    private string GetAssetsFolder(string connstring)
+    {
+        string assetsFolder = null;
+
+        using (MySqlConnection con = new MySqlConnection(connstring))
+        {
+            con.Open();
+            string sql = "SELECT set_advid FROM settings";
+            MySqlCommand cmd = new MySqlCommand(sql, con);
+            MySqlDataReader reader = cmd.ExecuteReader();
+
+            if (reader.Read())
+            {
+                string setAdvid = reader.IsDBNull(0) ? null : reader.GetString(0);
+                reader.Close();
+
+                if (!string.IsNullOrEmpty(setAdvid))
+                {
+                    assetsFolder = setAdvid.Replace("$", "\\");
+                }
+            }
+        }
+
+        return assetsFolder;
+    }
+   
     public void LoadVideoFilePaths()
     {
-        var environment = System.Environment.CurrentDirectory;
         string projectDirectory = Directory.GetParent(environment).Parent.FullName;
-
-        string appDirectory = projectDirectory;
+         appDirectory = projectDirectory;
 
         // string appDirectory = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
 
@@ -67,6 +170,8 @@ public class VideoManagerService
         string videosFolder;
         if (string.IsNullOrEmpty(assetsFolder) || !Directory.EnumerateFiles(assetsFolder).Any())
         {
+             projectDirectory = Directory.GetParent(environment).Parent.FullName;
+            appDirectory = projectDirectory;
             videosFolder = Path.Combine(appDirectory, "assets", "Videos");
         }
         else
@@ -137,10 +242,6 @@ public class VideoManagerService
                 {
                     intervalFromDatabase = 100000; // or any other default value you want to use
                 }
-                else
-                {
-                    intervalFromDatabase = GetAdvidTimeFromDatabase();
-                }
 
                 playbackTimer.Interval = (double)intervalFromDatabase;
                 playbackTimer.Start();
@@ -148,6 +249,25 @@ public class VideoManagerService
         }
         else
         {
+            // Instead of recursively calling PlayNextVideo(), reload the video file paths
+            LoadVideoFilePaths();
+
+            // If videoFilePaths is empty after reloading, play the current or default videos
+            if (videoFilePaths.Count == 0)
+            {
+                // Play the current or default videos
+                int? intervalFromDatabase = GetAdvidTimeFromDatabase();
+
+                if (intervalFromDatabase == 0 || intervalFromDatabase == null)
+                {
+                    intervalFromDatabase = 100000; // or any other default value you want to use
+                }
+
+                playbackTimer.Interval = (double)intervalFromDatabase;
+                playbackTimer.Start();
+                return;
+            }
+
             // Repopulate the queue with the video file paths
             videoQueue = new Queue<string>(videoFilePaths);
             PlayNextVideo();
