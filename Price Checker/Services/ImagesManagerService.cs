@@ -237,7 +237,6 @@ namespace Price_Checker.Configuration
             }
         }
 
-
         internal int ConvertSecondsToValue(int seconds)
         {
             if (seconds >= 60)
