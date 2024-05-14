@@ -204,7 +204,7 @@
             this.lbl_appname.Name = "lbl_appname";
             this.lbl_appname.Size = new System.Drawing.Size(1432, 72);
             this.lbl_appname.TabIndex = 0;
-            this.lbl_appname.Text = "BLUEGATES CUBE PHARMACY";
+            this.lbl_appname.Text = "Price Verifier";
             this.lbl_appname.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // pictureBox3
