@@ -91,6 +91,7 @@ namespace Price_Checker
                 try
                 {
                     serverStatusManager.UpdateStatusLabel(lbl_status, bottomPanel, lbl_appname);
+                    serverStatusManager.Appname(lbl_appname);
                 }
                 catch (Exception ex)
                 {

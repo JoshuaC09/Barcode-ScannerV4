@@ -16,7 +16,7 @@ namespace Price_Checker
         public settingsForm()
         {
             InitializeComponent();
-            LoadSettings(tb_appname, tb_adpictime, tb_adpicpath, tb_advidtime, tb_advidpath,  tb_disptime, rb_ipos, rb_eipos);
+            LoadSettings(tb_appname, tb_adpictime, tb_adpicpath, tb_advidtime, tb_advidpath, tb_disptime, rb_ipos, rb_eipos);
             btn_clear.Click += btn_clear_Click;
 
             this.KeyDown += SettingsForm_KeyDown;
@@ -169,24 +169,23 @@ namespace Price_Checker
 
         private void btnEdit_Click(object sender, EventArgs e)
         {
-            // Enable text boxes when Edit button is clicked
+            // Enable text boxes
             SetTextBoxesEnabled(true);
         }
 
         private void SetTextBoxesEnabled(bool enabled)
         {
-            tb_appname.Enabled = enabled;
-            tb_adpictime.Enabled = enabled;
-            tb_adpicpath.Enabled = enabled;
-            tb_advidtime.Enabled = enabled;
-            tb_advidpath.Enabled = enabled;
-            tb_disptime.Enabled = enabled;
-            rb_ipos.Enabled = enabled;
-            rb_eipos.Enabled = enabled;
-            btnBrowseImages.Enabled = enabled;
-            btnBrowseVideos.Enabled = enabled;
-            btn_clear.Enabled = enabled;
+            foreach (Control control in this.Controls)
+            {
+                if (control is TextBox || control is RadioButton || control is Button)
+                {
+                    if (control != btnEdit)
+                    {
+                        control.Enabled = enabled;
+                    }
 
+                }
+            }
         }
     }
 }
