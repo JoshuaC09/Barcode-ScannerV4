@@ -21,7 +21,8 @@ namespace Price_Checker.Services
             var enviroment = System.Environment.CurrentDirectory;
             string projectDirectory = Directory.GetParent(enviroment).Parent.FullName;
             // Get the directory path of the currently executing assembly
-            string appDirectory = projectDirectory;
+               string appDirectory = projectDirectory;
+            //string appDirectory = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
 
             // Construct the font file path relative to the application directory
             string fontFilePath = Path.Combine(appDirectory, "assets", "Fonts", "Schibsted_Grotesk", "static", "SchibstedGrotesk-Regular.ttf");

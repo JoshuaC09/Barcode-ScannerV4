@@ -120,8 +120,8 @@ namespace Price_Checker.Services
             _config = new DatabaseConfig();
             string connString = $"server={_config.Server};port={_config.Port};uid={_config.Uid};pwd={_config.Pwd};database={_config.Database}";
 
-            // SQL query (fixed)
-            string sql = "SELECT prod_itemcode FROM prod_verifier WHERE prod_barcode = @Barcode";
+            // SQL query (modified)
+            string sql = $"SELECT prod_itemcode FROM prod_verifier WHERE prod_barcode = '{barcode}'";
 
             try
             {
@@ -130,7 +130,6 @@ namespace Price_Checker.Services
                     conn.Open();
                     using (MySqlCommand cmd = new MySqlCommand(sql, conn))
                     {
-                        cmd.Parameters.AddWithValue("@Barcode", barcode);
                         using (MySqlDataReader reader = cmd.ExecuteReader())
                         {
                             barcodeExists = reader.HasRows;

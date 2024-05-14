@@ -27,7 +27,7 @@ public class DatabaseConfig
         var enviroment = System.Environment.CurrentDirectory;
         string projectDirectory = Directory.GetParent(enviroment).Parent.FullName;
 
-        // Get the directory path of the currently executing assembly
+                // Get the directory path of the currently executing assembly
         string appDirectory = projectDirectory; //Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
 
         // Construct the config file path relative to the application directory
@@ -37,6 +37,7 @@ public class DatabaseConfig
         {
             if (File.Exists(configFilePath))
             {
+
                 var doc = XDocument.Load(configFilePath);
                 var databaseSettings = doc.Element("configuration").Element("databaseSettings");
 
