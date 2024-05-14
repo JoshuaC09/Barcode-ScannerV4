@@ -37,7 +37,6 @@ public class DatabaseConfig
         {
             if (File.Exists(configFilePath))
             {
-
                 var doc = XDocument.Load(configFilePath);
                 var databaseSettings = doc.Element("configuration").Element("databaseSettings");
 
@@ -46,12 +45,27 @@ public class DatabaseConfig
                 Port = databaseSettings.Element("add").Attribute("port").Value;
                 Pwd = _securityService.Decrypt(databaseSettings.Element("add").Attribute("pwd").Value);
                 Database = databaseSettings.Element("add").Attribute("database").Value;
+
+                // Check if all values are correct
+                if (string.IsNullOrEmpty(Server) || string.IsNullOrEmpty(Uid) || string.IsNullOrEmpty(Port) || string.IsNullOrEmpty(Pwd) || string.IsNullOrEmpty(Database))
+                {
+                    throw new FormatException("One or more configuration values are missing or incorrect.");
+                }
             }
             else
             {
                 // Handle the case where the config file is not found
                 throw new FileNotFoundException($"The configuration file 'config.xml' was not found in the directory '{appDirectory}'.");
             }
+        }
+        catch (MySql.Data.MySqlClient.MySqlException ex)
+        {
+            // Log or handle the exception as needed
+            Console.WriteLine($"MySQL Error: {ex.Message}");
+
+            // Display the error message and exit the application
+            MessageBox.Show($"An error occurred while connecting to the MySQL server: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            Application.Exit();
         }
         catch (CryptographicException ex)
         {
@@ -68,9 +82,11 @@ public class DatabaseConfig
             Console.WriteLine($"Format Error: {ex.Message}");
 
             // Display the error message and exit the application
-            MessageBox.Show("The encrypted data is not in the correct format.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBox.Show("The encrypted data is not in the correct format, or one or more configuration values are missing or incorrect.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             Application.Exit();
         }
+
+
     }
 }
 
