@@ -14,6 +14,7 @@ namespace Price_Checker
         private readonly FontManagerService fontManager;
         private readonly VideoManagerService videoManager;
         private readonly ServerStatusService serverStatusManager;
+        private settingsForm settingsForm;
 
         public mainForm()
         {
@@ -22,8 +23,14 @@ namespace Price_Checker
             KeyPreview = true;
             this.Shown += MainForm_Shown;
 
+            // Create an instance of the SettingsForm
+            settingsForm = new settingsForm();
+
+            // Add the KeyDown event handler to the main form
+            this.KeyDown += MainForm_KeyDown;
+
             serverStatusManager = new ServerStatusService();
-            serverStatusManager.UpdateStatusLabel(lbl_status, bottomPanel); // Call the UpdateStatusLabel method
+            serverStatusManager.UpdateStatusLabel(lbl_status, bottomPanel, lbl_appname); // Call the UpdateStatusLabel method
             serverStatusManager.Appname(lbl_appname); // Call the Appname method
             // ... other code ...
             UpdateStatusLabelPeriodically(); // Start the periodic status label update
@@ -36,6 +43,19 @@ namespace Price_Checker
             lbl_barcode.Font = fontManager.GetCustomFont();
             videoManager = new VideoManagerService(axWindowsMediaPlayer1);
         }
+        private void MainForm_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Alt && e.Shift && e.KeyCode == Keys.Enter)
+            {
+                if (settingsForm == null || settingsForm.IsDisposed)
+                {
+                    settingsForm = new settingsForm();
+                }
+
+                settingsForm.Show();
+            }
+        }
+
 
         private void MainForm_Shown(object sender, EventArgs e)
         {
@@ -70,7 +90,7 @@ namespace Price_Checker
             {
                 try
                 {
-                    serverStatusManager.UpdateStatusLabel(lbl_status, bottomPanel);
+                    serverStatusManager.UpdateStatusLabel(lbl_status, bottomPanel, lbl_appname);
                 }
                 catch (Exception ex)
                 {
