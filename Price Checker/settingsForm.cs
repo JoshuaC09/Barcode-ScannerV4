@@ -13,7 +13,7 @@ namespace Price_Checker
         public settingsForm()
         {
             InitializeComponent();
-            LoadSettings(tb_appname, tb_adpictime, tb_adpicpath, tb_advidtime, tb_advidpath, tb_disptime, rb_ipos, rb_eipos);
+            LoadSettings(tb_appname, tb_adpictime, tb_adpicpath, tb_advidtime, tb_advidpath,  tb_disptime, rb_ipos, rb_eipos);
             btn_clear.Click += btn_clear_Click;
 
             this.KeyDown += SettingsForm_KeyDown;
@@ -100,39 +100,26 @@ namespace Price_Checker
 
             using (MySqlConnection conn = new MySqlConnection(connString))
             {
-                string query = "SELECT * FROM settings";
-
-                MySqlCommand command = new MySqlCommand(query, conn);
-
                 conn.Open();
-                MySqlDataReader reader = command.ExecuteReader();
 
-                if (reader.Read())
+                string query = "SELECT * FROM settings";
+                using (MySqlCommand command = new MySqlCommand(query, conn))
+                using (MySqlDataReader reader = command.ExecuteReader())
                 {
-                    tb_appname.Text = reader["set_appname"].ToString();
-                    tb_adpictime.Text = reader["set_adpictime"].ToString();
-                    tb_adpicpath.Text = reader["set_adpic"].ToString();
-                    tb_advidtime.Text = reader["set_advidtime"].ToString();
-                    tb_advidpath.Text = reader["set_advid"].ToString();
-                    tb_disptime.Text = reader["set_disptime"].ToString();
-                    // Retrieve the set_code value from the reader
-                    int setCode = reader.GetInt32("set_code");
+                    if (reader.Read())
+                    {
+                        tb_appname.Text = reader["set_appname"].ToString();
+                        tb_adpictime.Text = reader["set_adpictime"].ToString();
+                        tb_adpicpath.Text = reader["set_adpic"].ToString();
+                        tb_advidtime.Text = reader["set_advidtime"].ToString();
+                        tb_advidpath.Text = reader["set_advid"].ToString();
+                        tb_disptime.Text = reader["set_disptime"].ToString();
 
-                    // Set the radio button based on the set_code value
-                    if (setCode == 1)
-                    {
-                        rb_ipos.Checked = true;
-                        rb_eipos.Checked = false;
-                    }
-                    else if (setCode == 2)
-                    {
-                        rb_ipos.Checked = false;
-                        rb_eipos.Checked = true;
+                        int setCode = reader.GetInt32(reader.GetOrdinal("set_code"));
+                        rb_ipos.Checked = setCode == 1;
+                        rb_eipos.Checked = setCode != 1;
                     }
                 }
-
-                reader.Close();
-                conn.Close();
             }
         }
 
@@ -165,7 +152,7 @@ namespace Price_Checker
 
         private void btnEdit_Click(object sender, EventArgs e)
         {
-            // Enable text boxes
+            // Enable text boxes when Edit button is clicked
             SetTextBoxesEnabled(true);
         }
 
@@ -183,7 +170,5 @@ namespace Price_Checker
                 }
             }
         }
-
-
     }
 }
