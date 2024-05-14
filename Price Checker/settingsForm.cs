@@ -147,7 +147,7 @@ namespace Price_Checker
 
         private void btn_clear_Click(object sender, EventArgs e)
         {
-            Controls.OfType<TextBox>().ToList().ForEach(textBox => textBox.Clear());
+            this.Close();
         }
 
         private void btnEdit_Click(object sender, EventArgs e)
