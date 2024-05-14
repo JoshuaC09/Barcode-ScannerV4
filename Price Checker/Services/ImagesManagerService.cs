@@ -144,7 +144,14 @@ namespace Price_Checker.Configuration
                 string imagesFolder;
                 if (string.IsNullOrEmpty(assetsFolder) || !Directory.EnumerateFiles(assetsFolder).Any())
                 {
-                    imagesFolder = assetsFolder;
+
+                    string projectDirectory = Directory.GetParent(enviroment).Parent.FullName;
+
+                    appDirectory = projectDirectory;
+
+                    imagesFolder = Path.Combine(appDirectory, "assets", "Images");
+
+
                 }
                 else
                 {
