@@ -38,7 +38,7 @@
             this.tb_advidpath = new System.Windows.Forms.TextBox();
             this.tb_adpictime = new System.Windows.Forms.TextBox();
             this.tb_advidtime = new System.Windows.Forms.TextBox();
-            this.btn_clear = new System.Windows.Forms.Button();
+            this.btn_close = new System.Windows.Forms.Button();
             this.btnEdit = new System.Windows.Forms.Button();
             this.label10 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
@@ -159,15 +159,15 @@
             this.tb_advidtime.TabIndex = 13;
             this.tb_advidtime.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // btn_clear
+            // btn_close
             // 
-            this.btn_clear.Location = new System.Drawing.Point(645, 531);
-            this.btn_clear.Name = "btn_clear";
-            this.btn_clear.Size = new System.Drawing.Size(101, 40);
-            this.btn_clear.TabIndex = 19;
-            this.btn_clear.Text = "&Close";
-            this.btn_clear.UseVisualStyleBackColor = true;
-            this.btn_clear.Click += new System.EventHandler(this.btn_clear_Click);
+            this.btn_close.Location = new System.Drawing.Point(645, 531);
+            this.btn_close.Name = "btn_close";
+            this.btn_close.Size = new System.Drawing.Size(101, 40);
+            this.btn_close.TabIndex = 19;
+            this.btn_close.Text = "&Close";
+            this.btn_close.UseVisualStyleBackColor = true;
+            this.btn_close.Click += new System.EventHandler(this.btn_close_Click);
             // 
             // btnEdit
             // 
@@ -357,7 +357,7 @@
             this.Controls.Add(this.label7);
             this.Controls.Add(this.tb_advidtime);
             this.Controls.Add(this.label8);
-            this.Controls.Add(this.btn_clear);
+            this.Controls.Add(this.btn_close);
             this.Controls.Add(this.rb_eipos);
             this.Controls.Add(this.tb_adpictime);
             this.Controls.Add(this.tb_disptime);
@@ -395,7 +395,7 @@
         private System.Windows.Forms.TextBox tb_advidtime;
         private System.Windows.Forms.Button btnBrowseImages;
         private System.Windows.Forms.Button btnBrowseVideos;
-        private System.Windows.Forms.Button btn_clear;
+        private System.Windows.Forms.Button btn_close;
         private System.Windows.Forms.Button btnEdit;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.Label label9;
