@@ -35,9 +35,12 @@ namespace Price_Checker.Configuration
             }
         }
 
+        private string assetsFolder = null; // Remove the = null part
+        private string appDirectory;
+        string enviroment = System.Environment.CurrentDirectory;
+        
         public void ImageSlideshow()
         {
-
             imageLoopTimer = new System.Windows.Forms.Timer();
             imageLoopTimer.Tick += DisplayNextImage;
 
@@ -54,41 +57,21 @@ namespace Price_Checker.Configuration
             Timer updateTimer = new Timer();
             updateTimer.Interval = 1000;
             updateTimer.Tick += UpdateAdpicTimeInterval;
+            updateTimer.Tick += CheckAndUpdateFilePath;
             updateTimer.Start();
 
-            var enviroment = System.Environment.CurrentDirectory;
+
             string projectDirectory = Directory.GetParent(enviroment).Parent.FullName;
 
-            // Get the directory path of the currently executing assembly
-            string appDirectory = projectDirectory;
+            appDirectory = projectDirectory;
 
             // string appDirectory = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
 
             DatabaseConfig _config = new DatabaseConfig();
             string connstring = ConnectionStringService.ConnectionString;
-            string assetsFolder = null;
 
-            using (MySqlConnection con = new MySqlConnection(connstring))
-            {
-                con.Open();
-                string sql = "SELECT set_adpic FROM settings";
-                MySqlCommand cmd = new MySqlCommand(sql, con);
-                MySqlDataReader reader = cmd.ExecuteReader();
-
-                if (reader.Read())
-                {
-                    string setAdPic = reader.IsDBNull(0) ? null : reader.GetString(0);
-                    reader.Close();
-
-                    if (!string.IsNullOrEmpty(setAdPic))
-                    {
-                        assetsFolder = setAdPic.Replace("$", "\\");
-                    }
-                }
-            }
-
-
-
+            // Initialize assetsFolder with the initial value from the database
+            string assetsFolder = GetAssetsFolder(connstring);
 
             string imagesFolder;
             if (string.IsNullOrEmpty(assetsFolder) || !Directory.EnumerateFiles(assetsFolder).Any())
@@ -99,7 +82,6 @@ namespace Price_Checker.Configuration
             {
                 imagesFolder = assetsFolder;
             }
-
 
             // Fetch all image files in the specified directory
             List<string> imageFiles = Directory.EnumerateFiles(imagesFolder, "*.*")
@@ -144,8 +126,84 @@ namespace Price_Checker.Configuration
             DisplayNextImage(null, EventArgs.Empty);
         }
 
+        private void CheckAndUpdateFilePath(object sender, EventArgs e)
+        {
+            DatabaseConfig _config = new DatabaseConfig();
+            string connstring = ConnectionStringService.ConnectionString;
 
+            // Get the updated assetsFolder from the database
+            string updatedAssetsFolder = GetAssetsFolder(connstring);
 
+            if (updatedAssetsFolder != assetsFolder)
+            {
+                assetsFolder = updatedAssetsFolder;
+
+                // Clear the existing imageQueue
+                imageQueue.Clear();
+
+                string imagesFolder;
+                if (string.IsNullOrEmpty(assetsFolder) || !Directory.EnumerateFiles(assetsFolder).Any())
+                {
+                    imagesFolder = assetsFolder;
+                }
+                else
+                {
+                    imagesFolder = assetsFolder;
+                }
+
+                // Fetch all image files in the updated directory
+                List<string> imageFiles = Directory.EnumerateFiles(imagesFolder, "*.*")
+                    .Where(file => IsImageFile(file) && IsValidFileName(file))
+                    .ToList();
+
+                // Sort the image files based on the numeric prefix
+                imageFiles.Sort((x, y) =>
+                {
+                    string xFileName = Path.GetFileNameWithoutExtension(x);
+                    string yFileName = Path.GetFileNameWithoutExtension(y);
+
+                    int xPrefix = int.Parse(xFileName.Split('_')[0]);
+                    int yPrefix = int.Parse(yFileName.Split('_')[0]);
+
+                    return xPrefix.CompareTo(yPrefix);
+                });
+
+                // Populate the imageQueue with the updated image file paths
+                foreach (string imagePath in imageFiles)
+                {
+                    imageQueue.Enqueue(imagePath);
+                }
+
+                // Display the first image from the updated file path
+                DisplayNextImage(null, EventArgs.Empty);
+            }
+        }
+
+        private string GetAssetsFolder(string connstring)
+        {
+            string assetsFolder = null;
+
+            using (MySqlConnection con = new MySqlConnection(connstring))
+            {
+                con.Open();
+                string sql = "SELECT set_adpic FROM settings";
+                MySqlCommand cmd = new MySqlCommand(sql, con);
+                MySqlDataReader reader = cmd.ExecuteReader();
+
+                if (reader.Read())
+                {
+                    string setAdPic = reader.IsDBNull(0) ? null : reader.GetString(0);
+                    reader.Close();
+
+                    if (!string.IsNullOrEmpty(setAdPic))
+                    {
+                        assetsFolder = setAdPic.Replace("$", "\\");
+                    }
+                }
+            }
+
+            return assetsFolder;
+        }
         public int GetAdpicTimeFromDatabase()
         {
             DatabaseConfig _config = new DatabaseConfig();
