@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Data.SqlClient;
 using System.Linq;
 using System.Windows.Forms;
 using MySql.Data.MySqlClient;
-using Price_Checker.Configuration;
-using Price_Checker.Services;
 
 
 namespace Price_Checker
@@ -70,26 +67,24 @@ namespace Price_Checker
         {
             _config = new DatabaseConfig();
             string connString = $"server={_config.Server};port={_config.Port};uid={_config.Uid};pwd={_config.Pwd};database={_config.Database}";
-
+            int adpictime, advidtime, disptime;
             // Check if any required fields are empty
-            if (string.IsNullOrEmpty(tb_appname.Text) || string.IsNullOrEmpty(tb_adpictime.Text) || string.IsNullOrEmpty(tb_advidtime.Text) || string.IsNullOrEmpty(tb_disptime.Text))
+            if (string.IsNullOrEmpty(tb_appname.Text) || string.IsNullOrEmpty(tb_adpictime.Text) || string.IsNullOrEmpty(tb_advidtime.Text)     || string.IsNullOrEmpty(tb_disptime.Text) ||!int.TryParse(tb_adpictime.Text, out adpictime) || !int.TryParse(tb_advidtime.Text, out advidtime) || !int.TryParse(tb_disptime.Text, out disptime))
             {
                 MessageBox.Show("Please enter values for all required fields.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return; // Exit the method if any required fields are empty
             }
 
+            if (adpictime == 0 || advidtime == 0 || disptime == 0)
+            {
+                MessageBox.Show("One of the fields is zero.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return; // Exit the method if any of the fields is zero
+            }
+
             using (MySqlConnection conn = new MySqlConnection(connString))
             {
-                string query = "UPDATE settings SET set_appname = @appName, set_adpictime = @adPicTime, set_adpic = @adPicPath, set_advidtime = @adVidTime, set_advid = @adVidPath, set_disptime = @dispTime";
-
+                string query = $"UPDATE settings SET set_appname = '{tb_appname.Text}', set_adpictime = '{tb_adpictime.Text}', set_adpic = '{tb_adpicpath.Text.Replace("\\", "$")}', set_advidtime = '{tb_advidtime.Text}', set_advid = '{tb_advidpath.Text.Replace("\\", "$")}', set_disptime = '{tb_disptime.Text}'";
                 MySqlCommand command = new MySqlCommand(query, conn);
-
-                command.Parameters.AddWithValue("@appName", tb_appname.Text);
-                command.Parameters.AddWithValue("@adPicTime", tb_adpictime.Text);
-                command.Parameters.AddWithValue("@adPicPath", tb_adpicpath.Text.Replace("\\", "$"));
-                command.Parameters.AddWithValue("@adVidTime", tb_advidtime.Text);
-                command.Parameters.AddWithValue("@adVidPath", tb_advidpath.Text.Replace("\\", "$"));
-                command.Parameters.AddWithValue("@dispTime", tb_disptime.Text);
 
                 conn.Open();
                 command.ExecuteNonQuery();
@@ -189,6 +184,6 @@ namespace Price_Checker
             }
         }
 
-  
+
     }
 }
