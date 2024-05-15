@@ -71,7 +71,8 @@ namespace Price_Checker.Configuration
                 Console.WriteLine($"Format Error: {ex.Message}");
 
                 // Show a more user-friendly message
-                MessageBox.Show("The encrypted data is not in the correct format.", "Format Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Decryption error. Verify the encryption key and data format.", "Format Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+
 
                 // Exit the application
                 Environment.Exit(1);

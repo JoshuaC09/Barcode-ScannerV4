@@ -375,6 +375,7 @@
     <Compile Include="settingsForm.Designer.cs">
       <DependentUpon>settingsForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="SettingsHelpers\SettingsManager.cs" />
     <EmbeddedResource Include="PriceForm.resx">
       <DependentUpon>PriceForm.cs</DependentUpon>
     </EmbeddedResource>

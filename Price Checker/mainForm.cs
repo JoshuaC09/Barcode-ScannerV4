@@ -30,9 +30,7 @@ namespace Price_Checker
             this.KeyDown += MainForm_KeyDown;
 
             serverStatusManager = new ServerStatusService();
-            serverStatusManager.UpdateStatusLabel(lbl_status, bottomPanel, lbl_appname); // Call the UpdateStatusLabel method
-            serverStatusManager.Appname(lbl_appname); // Call the Appname method
-            // ... other code ...
+        
             UpdateStatusLabelPeriodically(); // Start the periodic status label update
             scanBarcodeService = new ScanBarcodeService();
             scanBarcodeService.BarcodeScanned += ScanBarcodeService_BarcodeScanned;
@@ -90,8 +88,9 @@ namespace Price_Checker
             {
                 try
                 {
-                    serverStatusManager.UpdateStatusLabel(lbl_status, bottomPanel, lbl_appname);
                     serverStatusManager.Appname(lbl_appname);
+                    serverStatusManager.UpdateStatusLabel(lbl_status, bottomPanel);
+                  
                 }
                 catch (Exception ex)
                 {

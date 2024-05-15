@@ -1,12 +1,9 @@
-﻿using AxWMPLib;
-using MySql.Data.MySqlClient;
+﻿using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Price_Checker.Configuration
 {
@@ -66,8 +63,7 @@ namespace Price_Checker.Configuration
             appDirectory = projectDirectory;
 
             // string appDirectory = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
-
-            DatabaseConfig _config = new DatabaseConfig();
+           
             string connstring = ConnectionStringService.ConnectionString;
 
             // Initialize assetsFolder with the initial value from the database
@@ -128,7 +124,7 @@ namespace Price_Checker.Configuration
 
         private void CheckAndUpdateFilePath(object sender, EventArgs e)
         {
-            DatabaseConfig _config = new DatabaseConfig();
+            
             string connstring = ConnectionStringService.ConnectionString;
 
             // Get the updated assetsFolder from the database
@@ -213,7 +209,6 @@ namespace Price_Checker.Configuration
         }
         public int GetAdpicTimeFromDatabase()
         {
-            DatabaseConfig _config = new DatabaseConfig();
             string connstring = ConnectionStringService.ConnectionString;
 
             using (MySqlConnection con = new MySqlConnection(connstring))

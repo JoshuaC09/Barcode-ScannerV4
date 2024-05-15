@@ -12,9 +12,8 @@ namespace Price_Checker
         private DateTime lastOnlineTime = DateTime.MinValue;
         private bool wasOnlinePreviously = false;
 
-        public void UpdateStatusLabel(Label lbl_status, Panel bottomPanel, Label lbl_appname)
+        public void UpdateStatusLabel(Label lbl_status, Panel bottomPanel)
         {
-            DatabaseConfig _config = new DatabaseConfig();
             string connstring = ConnectionStringService.ConnectionString;
             string status = "Server Offline"; // Default status
             Color panelColor = Color.Red;
@@ -65,7 +64,6 @@ namespace Price_Checker
 
         public void Appname(Label lbl_appname)
         {
-            DatabaseConfig _config = new DatabaseConfig();
             string connstring = ConnectionStringService.ConnectionString;
             using (MySqlConnection con = new MySqlConnection(connstring))
             {

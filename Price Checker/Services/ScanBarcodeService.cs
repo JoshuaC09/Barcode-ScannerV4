@@ -1,17 +1,15 @@
 ﻿using MySql.Data.MySqlClient;
+using Price_Checker.Configuration;
 using System;
 using System.Drawing;
 using System.Threading;
-using System.Timers;
 using System.Windows.Forms;
 
 namespace Price_Checker.Services
 {
     public class ScanBarcodeService
-
+        
     {
-
-        private DatabaseConfig _config;
         public event EventHandler<string> BarcodeScanned;
 
 
@@ -117,8 +115,7 @@ namespace Price_Checker.Services
         {
             bool barcodeExists = false;
 
-            _config = new DatabaseConfig();
-            string connString = $"server={_config.Server};port={_config.Port};uid={_config.Uid};pwd={_config.Pwd};database={_config.Database}";
+            string connString = ConnectionStringService.ConnectionString; 
 
             // SQL query (modified)
             string sql = $"SELECT prod_itemcode FROM prod_verifier WHERE prod_barcode = '{barcode}'";
