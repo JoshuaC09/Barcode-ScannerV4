@@ -95,7 +95,6 @@ public class DatabaseConfig
             using (var connection = new MySqlConnection(connectionString))
             {
                 connection.Open();
-                MessageBox.Show("Connection successful!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 _hasConnected = true; // Set the flag to true after a successful connection
             }
         }
