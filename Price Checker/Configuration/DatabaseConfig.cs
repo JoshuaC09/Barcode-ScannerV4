@@ -26,11 +26,12 @@ public class DatabaseConfig
         // Initialize the SecurityService with the key and salt
         _securityService = new SecurityService(encryptionKey, _salt);
 
-        var enviroment = System.Environment.CurrentDirectory;
-        string projectDirectory = Directory.GetParent(enviroment).Parent.FullName;
+        //var enviroment = System.Environment.CurrentDirectory;
+        //string projectDirectory = Directory.GetParent(enviroment).Parent.FullName;
+        //string appDirectory = projectDirectory;
 
         // Get the directory path of the currently executing assembly
-        string appDirectory = projectDirectory; //Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+        string appDirectory = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
 
         // Construct the config file path relative to the application directory
         string configFilePath = Path.Combine(appDirectory, "config.xml");
