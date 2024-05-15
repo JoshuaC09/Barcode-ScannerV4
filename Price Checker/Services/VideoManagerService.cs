@@ -136,10 +136,10 @@ public class VideoManagerService
    
     public void LoadVideoFilePaths()
     {
-        string projectDirectory = Directory.GetParent(environment).Parent.FullName;
-         appDirectory = projectDirectory;
+        //string projectDirectory = Directory.GetParent(environment).Parent.FullName;
+        // appDirectory = projectDirectory;
 
-        // string appDirectory = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+        string appDirectory = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
         string connstring = ConnectionStringService.ConnectionString;
 
         string assetsFolder = null;
@@ -167,8 +167,8 @@ public class VideoManagerService
         string videosFolder;
         if (string.IsNullOrEmpty(assetsFolder) || !Directory.EnumerateFiles(assetsFolder).Any())
         {
-             projectDirectory = Directory.GetParent(environment).Parent.FullName;
-            appDirectory = projectDirectory;
+            // projectDirectory = Directory.GetParent(environment).Parent.FullName;
+            //appDirectory = projectDirectory;
             videosFolder = Path.Combine(appDirectory, "assets", "Videos");
         }
         else

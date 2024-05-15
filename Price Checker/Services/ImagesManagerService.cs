@@ -58,12 +58,12 @@ namespace Price_Checker.Configuration
             updateTimer.Start();
 
 
-            string projectDirectory = Directory.GetParent(enviroment).Parent.FullName;
+            //string projectDirectory = Directory.GetParent(enviroment).Parent.FullName;
 
-            appDirectory = projectDirectory;
+            //appDirectory = projectDirectory;
 
-            // string appDirectory = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
-           
+            string appDirectory = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+
             string connstring = ConnectionStringService.ConnectionString;
 
             // Initialize assetsFolder with the initial value from the database
