@@ -27,7 +27,7 @@ namespace Price_Checker
             settingsForm = new settingsForm();
 
             // Add the KeyDown event handler to the main form
-            this.KeyDown += MainForm_KeyDown;
+            this.KeyDown += SettingsForm_KeyDown;
 
             serverStatusManager = new ServerStatusService();
         
@@ -41,16 +41,17 @@ namespace Price_Checker
             lbl_barcode.Font = fontManager.GetCustomFont();
             videoManager = new VideoManagerService(axWindowsMediaPlayer1);
         }
-        private void MainForm_KeyDown(object sender, KeyEventArgs e)
+        private void SettingsForm_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Alt && e.Shift && e.KeyCode == Keys.Enter)
+            // Alt + Shift + Enter
+            if (e.KeyData == (Keys.Alt | Keys.Shift | Keys.Enter))
             {
-                if (settingsForm == null || settingsForm.IsDisposed)
-                {
-                    settingsForm = new settingsForm();
-                }
-
-                settingsForm.Show();
+                settingsForm newSettingsForm = new settingsForm();
+                newSettingsForm.Show();
+            }
+            else if (e.KeyCode == Keys.Escape)
+            {
+                this.Close();
             }
         }
 
@@ -71,8 +72,7 @@ namespace Price_Checker
             barcodeTimer.StartTimer();
         }
 
-       
-
+      
         internal void HandleError(string errorMessage)
         {
             DialogResult result = MessageBox.Show(errorMessage, "Error", MessageBoxButtons.OKCancel, MessageBoxIcon.Error);
