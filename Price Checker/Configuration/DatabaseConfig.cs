@@ -4,10 +4,12 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Windows.Forms;
 using System.Xml.Linq;
+using MySql.Data.MySqlClient;
 
 public class DatabaseConfig
 {
     private readonly SecurityService _securityService;
+  
     #region Additional
     private const string encryptionKey = "In the eye of the beholder doth lie beauty's true essence, for each gaze doth fashion its own fair visage";
     private readonly byte[] _salt = new byte[] { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f };
@@ -27,7 +29,7 @@ public class DatabaseConfig
         var enviroment = System.Environment.CurrentDirectory;
         string projectDirectory = Directory.GetParent(enviroment).Parent.FullName;
 
-                // Get the directory path of the currently executing assembly
+        // Get the directory path of the currently executing assembly
         string appDirectory = projectDirectory; //Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
 
         // Construct the config file path relative to the application directory
@@ -51,6 +53,8 @@ public class DatabaseConfig
                 {
                     throw new FormatException("One or more configuration values are missing or incorrect.");
                 }
+
+                TryConnectToDatabase();
             }
             else
             {
@@ -58,36 +62,57 @@ public class DatabaseConfig
                 throw new FileNotFoundException($"The configuration file 'config.xml' was not found in the directory '{appDirectory}'.");
             }
         }
-        catch (MySql.Data.MySqlClient.MySqlException ex)
+        catch (FileNotFoundException ex)
         {
-            // Log or handle the exception as needed
-            Console.WriteLine($"MySQL Error: {ex.Message}");
-
-            // Display the error message and exit the application
-            MessageBox.Show($"An error occurred while connecting to the MySQL server: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            Application.Exit();
+            HandleException(ex, "The configuration file was not found.");
         }
         catch (CryptographicException ex)
         {
-            // Log or handle the exception as needed
-            Console.WriteLine($"Decryption Error: {ex.Message}");
-
-            // Display the error message and exit the application
-            MessageBox.Show("An error occurred while decrypting the data. Please check the encryption key and the encrypted data.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            Application.Exit();
+            HandleException(ex, "An error occurred while decrypting the data. Please check the encryption key and the encrypted data.");
         }
         catch (FormatException ex)
         {
-            // Handle the FormatException as needed
-            Console.WriteLine($"Format Error: {ex.Message}");
-
-            // Display the error message and exit the application
-            MessageBox.Show("The encrypted data is not in the correct format, or one or more configuration values are missing or incorrect.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            Application.Exit();
+            HandleException(ex, "One or more configuration values are missing or incorrect.");
         }
+        catch (Exception ex)
+        {
+            HandleException(ex, "One or more configuration values are missing or incorrect.");
+        }
+    }
 
+    private static bool _hasConnected = false;
+    private void TryConnectToDatabase()
+    {
+        // Check if the method has already been called
+        if (_hasConnected)
+        {
+            return;
+        }
+        try
+        {
+            string connectionString = $"Server={Server};Port={Port};Database={Database};Uid={Uid};Pwd={Pwd};";
+            using (var connection = new MySqlConnection(connectionString))
+            {
+                connection.Open();
+                MessageBox.Show("Connection successful!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                _hasConnected = true; // Set the flag to true after a successful connection
+            }
+        }
+        catch (MySqlException ex)
+        {
+            HandleException(ex, $"An error occurred while connecting to the MySQL server: {ex.Message}");
+        }
+    }
 
+    private object HandleException(Exception ex, string userMessage)
+    {
+        // Log the exception (you can replace this with your logging framework)
+        Console.WriteLine($"{ex.GetType().Name}: {ex.Message}");
+
+        // Display the error message and exit the application
+        MessageBox.Show(userMessage, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        // Exit the application
+        Environment.Exit(1);
+        return null;
     }
 }
-
-

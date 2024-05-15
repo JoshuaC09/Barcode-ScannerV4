@@ -8,7 +8,7 @@ namespace Price_Checker.Configuration
     internal class ProductDetailService
     {
         private readonly string connstring;
-        private DatabaseConfig _config;
+      
 
         //
         private Timer timer = new Timer();
@@ -18,8 +18,7 @@ namespace Price_Checker.Configuration
         private Form formInstance;
 
         public ProductDetailService(Form form)
-        {
-            _config = new DatabaseConfig();
+        {    
             connstring = ConnectionStringService.ConnectionString;
             formInstance = form;
 

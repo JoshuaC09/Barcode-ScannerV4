@@ -39,7 +39,6 @@ public class VideoManagerService
 
     private void CheckAndUpdateFilePath(object sender, System.Timers.ElapsedEventArgs e)
     {
-        DatabaseConfig _config = new DatabaseConfig();
         string connstring = ConnectionStringService.ConnectionString;
 
         // Get the updated assetsFolder from the database
@@ -141,8 +140,6 @@ public class VideoManagerService
          appDirectory = projectDirectory;
 
         // string appDirectory = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
-
-        DatabaseConfig _config = new DatabaseConfig();
         string connstring = ConnectionStringService.ConnectionString;
 
         string assetsFolder = null;
@@ -276,7 +273,7 @@ public class VideoManagerService
 
     public int GetAdvidTimeFromDatabase()
     {
-        DatabaseConfig _config = new DatabaseConfig();
+       
         string connstring = ConnectionStringService.ConnectionString;
 
         using (MySqlConnection con = new MySqlConnection(connstring))

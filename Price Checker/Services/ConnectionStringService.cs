@@ -3,7 +3,7 @@
     internal class ConnectionStringService
     {
         private static string _connectionString;
-        private static DatabaseConfig _config = new DatabaseConfig();
+        private static readonly DatabaseConfig _config = new DatabaseConfig();
 
         public static string ConnectionString
         {
