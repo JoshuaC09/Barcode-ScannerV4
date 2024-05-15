@@ -15,8 +15,6 @@ namespace Price_Checker
             _settingsManager.LoadSettings(tb_appname, tb_adpictime, tb_adpicpath, tb_advidtime, tb_advidpath, tb_disptime, rb_ipos, rb_eipos);
             btn_close.Click += btn_close_Click;
 
-            this.KeyDown += SettingsForm_KeyDown;
-
             rb_ipos.CheckedChanged += RadioButton_CheckedChanged;
             rb_eipos.CheckedChanged += RadioButton_CheckedChanged;
 
@@ -24,20 +22,6 @@ namespace Price_Checker
             SetTextBoxesEnabled(false);
 
             btnEdit.Click += btnEdit_Click;
-        }
-
-        private void SettingsForm_KeyDown(object sender, KeyEventArgs e)
-        {
-            // Alt + Shift + Enter
-            if (e.Alt && e.Shift && e.KeyCode == Keys.Enter)
-            {
-                settingsForm newSettingsForm = new settingsForm();
-                newSettingsForm.Show();
-            }
-            else if (e.KeyCode == Keys.Escape)
-            {
-                this.Close();
-            }
         }
 
         private void btnBrowseImages_Click_1(object sender, EventArgs e)
