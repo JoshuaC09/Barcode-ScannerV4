@@ -26,8 +26,11 @@ namespace Price_Checker
             // Create an instance of the SettingsForm
             settingsForm = new settingsForm();
 
-            // Add the KeyDown event handler to the main form
+            // Open Settings
             this.KeyDown += SettingsForm_KeyDown;
+
+            // Close main form
+            this.KeyDown += MainForm_KeyDown;
 
             serverStatusManager = new ServerStatusService();
         
@@ -40,6 +43,20 @@ namespace Price_Checker
             fontManager = new FontManagerService();
             lbl_barcode.Font = fontManager.GetCustomFont();
             videoManager = new VideoManagerService(axWindowsMediaPlayer1);
+        }
+
+        private void MainForm_KeyDown(object sender, KeyEventArgs e)
+        {
+            // Alt + Conrol + Backspace
+            if (e.KeyData == (Keys.Alt | Keys.Control | Keys.Back))
+            {
+                DialogResult result = MessageBox.Show("Are you sure you want to close the program?", "Confirm Close", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+                if (result == DialogResult.Yes)
+                {
+                    this.Close();
+                }
+            }
         }
         private void SettingsForm_KeyDown(object sender, KeyEventArgs e)
         {
