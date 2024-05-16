@@ -39,7 +39,7 @@ namespace Price_Checker
             scanBarcodeService.BarcodeScanned += ScanBarcodeService_BarcodeScanned;
             barcodeTimer = new BarcodeTimer(lbl_barcode);
             imageManager = new ImagesManagerService(pictureBox1);
-            imageManager.ImageSlideshow();
+            imageManager.LoadImageFiles();
             fontManager = new FontManagerService();
             lbl_barcode.Font = fontManager.GetCustomFont();
             videoManager = new VideoManagerService(axWindowsMediaPlayer1);

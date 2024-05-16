@@ -4,7 +4,6 @@ using System;
 using System.Drawing;
 using System.Threading;
 using System.Windows.Forms;
-
 namespace Price_Checker.Services
 {
     public class ScanBarcodeService
@@ -56,7 +55,6 @@ namespace Price_Checker.Services
 
             }
         }
-
         protected virtual void OnBarcodeScanned(string barcode)
         {
             BarcodeScanned?.Invoke(this, barcode);

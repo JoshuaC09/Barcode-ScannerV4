@@ -33,6 +33,8 @@ public class DatabaseConfig
         // Get the directory path of the currently executing assembly
         string appDirectory = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
 
+        //  string appDirectory = AppContext.BaseDirectory;
+
         // Construct the config file path relative to the application directory
         string configFilePath = Path.Combine(appDirectory, "config.xml");
 

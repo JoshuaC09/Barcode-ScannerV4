@@ -17,7 +17,6 @@ namespace Price_Checker.Services
 
         private void LoadFont()
         {
-
             //var enviroment = System.Environment.CurrentDirectory;
             //string projectDirectory = Directory.GetParent(enviroment).Parent.FullName;
             //// Get the directory path of the currently executing assembly
