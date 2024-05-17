@@ -16,6 +16,7 @@ namespace Price_Checker
         private readonly ServerStatusService serverStatusManager;
         private settingsForm settingsForm;
 
+
         public mainForm()
         {
             InitializeComponent();
@@ -112,5 +113,7 @@ namespace Price_Checker
                 await Task.Delay(1000); //1sec
             }
         }
+
+        
     }
 }
