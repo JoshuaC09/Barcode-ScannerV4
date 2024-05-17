@@ -73,9 +73,9 @@ namespace Price_Checker
             this.panel1.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(113)))), ((int)(((byte)(192)))));
             this.panel1.Controls.Add(this.lbl_uom);
-            this.panel1.Location = new System.Drawing.Point(816, 272);
+            this.panel1.Location = new System.Drawing.Point(752, 272);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(581, 79);
+            this.panel1.Size = new System.Drawing.Size(645, 79);
             this.panel1.TabIndex = 29;
             // 
             // lbl_uom
@@ -86,7 +86,7 @@ namespace Price_Checker
             this.lbl_uom.ForeColor = System.Drawing.Color.White;
             this.lbl_uom.Location = new System.Drawing.Point(0, 0);
             this.lbl_uom.Name = "lbl_uom";
-            this.lbl_uom.Size = new System.Drawing.Size(581, 79);
+            this.lbl_uom.Size = new System.Drawing.Size(645, 79);
             this.lbl_uom.TabIndex = 23;
             this.lbl_uom.Text = "*";
             this.lbl_uom.TextAlign = System.Drawing.ContentAlignment.TopCenter;
@@ -100,7 +100,11 @@ namespace Price_Checker
             this.lbl_generic.ForeColor = System.Drawing.Color.Black;
             this.lbl_generic.Location = new System.Drawing.Point(182, 202);
             this.lbl_generic.Name = "lbl_generic";
+
+            this.lbl_generic.Size = new System.Drawing.Size(544, 34);
+
             this.lbl_generic.Size = new System.Drawing.Size(613, 34);
+
             this.lbl_generic.TabIndex = 28;
             this.lbl_generic.Text = "*";
             // 
@@ -120,9 +124,9 @@ namespace Price_Checker
             this.panel3.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.panel3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(113)))), ((int)(((byte)(192)))));
             this.panel3.Controls.Add(this.lbl_price);
-            this.panel3.Location = new System.Drawing.Point(816, 151);
+            this.panel3.Location = new System.Drawing.Point(752, 151);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(581, 122);
+            this.panel3.Size = new System.Drawing.Size(645, 122);
             this.panel3.TabIndex = 26;
             // 
             // lbl_price
@@ -134,7 +138,7 @@ namespace Price_Checker
             this.lbl_price.Location = new System.Drawing.Point(0, 0);
             this.lbl_price.Name = "lbl_price";
             this.lbl_price.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.lbl_price.Size = new System.Drawing.Size(581, 122);
+            this.lbl_price.Size = new System.Drawing.Size(645, 122);
             this.lbl_price.TabIndex = 11;
             this.lbl_price.Text = "*";
             this.lbl_price.TextAlign = System.Drawing.ContentAlignment.TopCenter;
@@ -148,7 +152,7 @@ namespace Price_Checker
             this.lbl_manufacturer.ForeColor = System.Drawing.Color.Black;
             this.lbl_manufacturer.Location = new System.Drawing.Point(255, 254);
             this.lbl_manufacturer.Name = "lbl_manufacturer";
-            this.lbl_manufacturer.Size = new System.Drawing.Size(540, 34);
+            this.lbl_manufacturer.Size = new System.Drawing.Size(477, 34);
             this.lbl_manufacturer.TabIndex = 22;
             this.lbl_manufacturer.Text = "*";
             // 

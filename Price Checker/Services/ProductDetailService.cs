@@ -100,7 +100,7 @@ namespace Price_Checker.Configuration
                 using (var con = new MySqlConnection(connstring))
                 {
                     con.Open();
-                    const string sql = "SELECT prod_description, CAST(prod_price AS DECIMAL(6,2)) as prod_price, prod_pincipal, prod_uom, prod_generic FROM prod_verifier WHERE prod_barcode = @barcode";
+                    const string sql = "SELECT prod_description, prod_price, prod_pincipal, prod_uom, prod_generic FROM prod_verifier WHERE prod_barcode = @barcode";
                     using (var cmd = new MySqlCommand(sql, con))
                     {
                         cmd.Parameters.AddWithValue("@barcode", barcode);
@@ -111,7 +111,7 @@ namespace Price_Checker.Configuration
                                 var product = new Product
                                 {
                                     Name = reader["prod_description"].ToString(),
-                                    Price = "₱ " + reader["prod_price"],
+                                    Price = "₱ " + Convert.ToDecimal(reader["prod_price"]).ToString("N2"),
                                     Manufacturer = reader["prod_pincipal"].ToString(),
                                     UOM = "per " + reader["prod_uom"],
                                     Generic = reader["prod_generic"].ToString()
@@ -128,5 +128,6 @@ namespace Price_Checker.Configuration
             }
             return products;
         }
+
     }
 }
