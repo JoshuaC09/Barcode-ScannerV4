@@ -95,13 +95,12 @@ namespace Price_Checker
             // 
             this.lbl_generic.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.lbl_generic.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lbl_generic.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.lbl_generic.Font = new System.Drawing.Font("Arial Rounded MT Bold", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbl_generic.ForeColor = System.Drawing.Color.Black;
-            this.lbl_generic.Location = new System.Drawing.Point(188, 202);
+            this.lbl_generic.Location = new System.Drawing.Point(182, 202);
             this.lbl_generic.Name = "lbl_generic";
-            this.lbl_generic.Size = new System.Drawing.Size(607, 34);
+            this.lbl_generic.Size = new System.Drawing.Size(613, 34);
             this.lbl_generic.TabIndex = 28;
             this.lbl_generic.Text = "*";
             // 
@@ -110,7 +109,7 @@ namespace Price_Checker
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Arial Rounded MT Bold", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label3.ForeColor = System.Drawing.Color.Black;
-            this.label3.Location = new System.Drawing.Point(36, 202);
+            this.label3.Location = new System.Drawing.Point(30, 202);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(141, 34);
             this.label3.TabIndex = 27;
@@ -144,7 +143,6 @@ namespace Price_Checker
             // 
             this.lbl_manufacturer.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.lbl_manufacturer.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lbl_manufacturer.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.lbl_manufacturer.Font = new System.Drawing.Font("Arial Rounded MT Bold", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbl_manufacturer.ForeColor = System.Drawing.Color.Black;
@@ -181,14 +179,14 @@ namespace Price_Checker
             // 
             this.lbl_name.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.lbl_name.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lbl_name.Font = new System.Drawing.Font("Arial Rounded MT Bold", 49.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbl_name.ForeColor = System.Drawing.Color.Black;
-            this.lbl_name.Location = new System.Drawing.Point(38, 35);
+            this.lbl_name.Location = new System.Drawing.Point(38, 23);
             this.lbl_name.Name = "lbl_name";
-            this.lbl_name.Size = new System.Drawing.Size(1359, 91);
+            this.lbl_name.Size = new System.Drawing.Size(1359, 116);
             this.lbl_name.TabIndex = 20;
             this.lbl_name.Text = "*";
+            this.lbl_name.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // name_barcode
             // 
