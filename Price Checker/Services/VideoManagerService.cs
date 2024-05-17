@@ -51,7 +51,11 @@ public class VideoManagerService
             g.DrawImage(bitmap, 0, 0, playerWidth, playerHeight);
         }
 
+
+        string tempFilePath = Path.Combine(Path.GetTempPath(), "defaultImage.png");
+
         string tempFilePath = Path.Combine(Path.GetTempPath(), "VideoDefault.jpg");
+
         resizedBitmap.Save(tempFilePath, System.Drawing.Imaging.ImageFormat.Png);
         return tempFilePath;
     }
@@ -110,7 +114,10 @@ public class VideoManagerService
 
     private List<string> GetAllVideoPaths(string videosFolder)
     {
+        var videoExtensions = new List<string> { "*.mp4", "*.avi", "*.mov", "*.mkv", "*.flv", "*.wmv", "*.m4v", "*.3gp", "*.ogv", "*.webm", "*.jpg", "*.mpeg" };
+
         var videoExtensions = new List<string> { "*.mp4", "*.avi", "*.mov", "*.mkv", "*.flv", "*.wmv", "*.m4v", "*.3gp", "*.ogv", "*.webm","*.mpeg" };
+
         return videoExtensions.SelectMany(ext => Directory.EnumerateFiles(videosFolder, ext)).ToList();
     }
 
