@@ -21,13 +21,13 @@ namespace Price_Checker.Configuration
             timer.Start();
         }
 
-        public void HandleProductDetails(string barcode, Label lbl_name, Label lbl_price, Label lbl_manufacturer, Label lbl_uom, Label lbl_generic)
+        public void HandleProductDetails(string barcode, Label lbl_name, Label lbl_price, Label lbl_manufacturer, Label lbl_uom, Label lbl_generic, Label lbl_vendor)
         {
             var products = GetProductDetails(barcode);
 
             if (products.Count == 1)
             {
-                SetLabelValues(lbl_name, lbl_price, lbl_manufacturer, lbl_uom, lbl_generic, products[0]);
+                SetLabelValues(lbl_name, lbl_price, lbl_manufacturer, lbl_uom, lbl_generic, lbl_vendor, products[0]);
             }
             else if (products.Count > 1)
             {
@@ -37,11 +37,11 @@ namespace Price_Checker.Configuration
 
                     if (result == DialogResult.OK)
                     {
-                        SetLabelValues(lbl_name, lbl_price, lbl_manufacturer, lbl_uom, lbl_generic, chooseProductForm.SelectedProduct);
+                        SetLabelValues(lbl_name, lbl_price, lbl_manufacturer, lbl_uom, lbl_generic, lbl_vendor, chooseProductForm.SelectedProduct);
                     }
                     else
                     {
-                        SetLabelValuesToNA(lbl_name, lbl_price, lbl_manufacturer, lbl_uom, lbl_generic);
+                        SetLabelValuesToNA(lbl_name, lbl_price, lbl_manufacturer, lbl_uom, lbl_generic, lbl_vendor);
                     }
                 }
             }
@@ -51,22 +51,24 @@ namespace Price_Checker.Configuration
             }
         }
 
-        private void SetLabelValues(Label lbl_name, Label lbl_price, Label lbl_manufacturer, Label lbl_uom, Label lbl_generic, Product product)
+        private void SetLabelValues(Label lbl_name, Label lbl_price, Label lbl_manufacturer, Label lbl_uom, Label lbl_generic, Label lbl_vendor, Product product)
         {
             lbl_name.Text = product.Name;
             lbl_price.Text = product.Price;
             lbl_manufacturer.Text = product.Manufacturer;
             lbl_uom.Text = product.UOM;
             lbl_generic.Text = product.Generic;
+            lbl_vendor.Text = product.Vendor;
         }
 
-        private void SetLabelValuesToNA(Label lbl_name, Label lbl_price, Label lbl_manufacturer, Label lbl_uom, Label lbl_generic)
+        private void SetLabelValuesToNA(Label lbl_name, Label lbl_price, Label lbl_manufacturer, Label lbl_uom, Label lbl_generic, Label lbl_vendor)
         {
             lbl_name.Text = "N/A";
             lbl_price.Text = "N/A";
             lbl_manufacturer.Text = "N/A";
             lbl_uom.Text = "N/A";
             lbl_generic.Text = "N/A";
+            lbl_vendor.Text = "N/A";
         }
 
         private void SetTimerInterval()
@@ -100,7 +102,7 @@ namespace Price_Checker.Configuration
                 using (var con = new MySqlConnection(connstring))
                 {
                     con.Open();
-                    const string sql = "SELECT prod_description, CAST(prod_price AS DECIMAL(6,2)) as prod_price, prod_pincipal, prod_uom, prod_generic FROM prod_verifier WHERE prod_barcode = @barcode";
+                    const string sql = "SELECT prod_description, CAST(prod_price AS DECIMAL(6,2)) as prod_price, prod_pincipal, prod_uom, prod_generic, prod_vendor FROM prod_verifier WHERE prod_barcode = @barcode";
                     using (var cmd = new MySqlCommand(sql, con))
                     {
                         cmd.Parameters.AddWithValue("@barcode", barcode);
@@ -114,7 +116,8 @@ namespace Price_Checker.Configuration
                                     Price = "₱ " + reader["prod_price"],
                                     Manufacturer = reader["prod_pincipal"].ToString(),
                                     UOM = "per " + reader["prod_uom"],
-                                    Generic = reader["prod_generic"].ToString()
+                                    Generic = reader["prod_generic"].ToString(),
+                                    Vendor = reader["prod_vendor"].ToString()
                                 };
                                 products.Add(product);
                             }

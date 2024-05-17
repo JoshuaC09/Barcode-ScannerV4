@@ -10,6 +10,7 @@ namespace Price_Checker.Services
     public class ScanBarcodeService
     {
         public event EventHandler<string> BarcodeScanned;
+
         public void HandleBarcodeInput(KeyEventArgs e, TextBox barcodeLabel, Panel detailPanel, mainForm mainForm)
         {
             if (e.KeyCode == Keys.Enter)
@@ -21,35 +22,14 @@ namespace Price_Checker.Services
                     {
                         DisplayPriceForm(barcode, detailPanel);
                         OnBarcodeScanned(barcode);
-
-                        // Refocus the barcodeLabel
-                        barcodeLabel.Focus();
-
-                        // Update the display price form
-                        UpdateDisplayPriceForm(barcode, detailPanel);
                     }
                     else
                     {
                         ShowMessageBoxAndDisappear("Product not found", 3000, mainForm, barcodeLabel);
-
-                        // Refocus the barcodeLabel
-                        barcodeLabel.Focus();
                     }
                 }
             }
         }
-        private void UpdateDisplayPriceForm(string barcode, Control detailPanel)
-        {
-            foreach (Control control in detailPanel.Controls)
-            {
-                if (control is PriceCheckerForm priceForm)
-                {
-                    priceForm.SetBarcode(barcode);
-                    break;
-                }
-            }
-        }
-
 
         protected virtual void OnBarcodeScanned(string barcode)
         {
