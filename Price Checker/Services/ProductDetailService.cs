@@ -106,7 +106,6 @@ namespace Price_Checker.Configuration
                 using (var con = new MySqlConnection(connstring))
                 {
                     con.Open();
-
                     const string sql = "SELECT * FROM prod_verifier WHERE prod_barcode = @barcode";
                     using (var cmd = new MySqlCommand(sql, con))
 
