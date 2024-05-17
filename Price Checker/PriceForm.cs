@@ -12,7 +12,7 @@ namespace Price_Checker
             InitializeComponent();
 
             productDetailService = new ProductDetailService(this);
-            productDetailService.HandleProductDetails(barcode, lbl_name, lbl_price, lbl_manufacturer, lbl_uom, lbl_generic, lbl_vendor);
+            productDetailService.HandleProductDetails(barcode, lbl_name, lbl_price, lbl_manufacturer, lbl_uom, lbl_generic);
 
         }
 

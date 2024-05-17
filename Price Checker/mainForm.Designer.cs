@@ -69,12 +69,11 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.lbl_barcode.Cursor = System.Windows.Forms.Cursors.WaitCursor;
             this.lbl_barcode.Font = new System.Drawing.Font("Arial Rounded MT Bold", 28.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbl_barcode.Location = new System.Drawing.Point(574, 120);
+            this.lbl_barcode.Location = new System.Drawing.Point(0, 137);
             this.lbl_barcode.Name = "lbl_barcode";
-            this.lbl_barcode.Size = new System.Drawing.Size(452, 62);
+            this.lbl_barcode.Size = new System.Drawing.Size(316, 62);
             this.lbl_barcode.TabIndex = 1;
             this.lbl_barcode.Text = " ";
-            this.lbl_barcode.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // label3
             // 
@@ -244,7 +243,7 @@
             this.detailPanel.Controls.Add(this.lbl_barcode);
             this.detailPanel.Location = new System.Drawing.Point(1, 75);
             this.detailPanel.Name = "detailPanel";
-            this.detailPanel.Size = new System.Drawing.Size(1431, 381);
+            this.detailPanel.Size = new System.Drawing.Size(1431, 398);
             this.detailPanel.TabIndex = 4;
             // 
             // bottomPanel
@@ -298,7 +297,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.KeyPreview = true;
             this.Name = "mainForm";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.WindowsDefaultBounds;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "mainForm";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.panel1.ResumeLayout(false);
