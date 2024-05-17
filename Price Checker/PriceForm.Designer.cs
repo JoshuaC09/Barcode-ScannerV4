@@ -157,7 +157,7 @@ namespace Price_Checker
             // 
             this.lbl_price.BackColor = System.Drawing.Color.Transparent;
             this.lbl_price.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lbl_price.Font = new System.Drawing.Font("Arial Rounded MT Bold", 60F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbl_price.Font = new System.Drawing.Font("Arial Rounded MT Bold", 49.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbl_price.ForeColor = System.Drawing.Color.White;
             this.lbl_price.Location = new System.Drawing.Point(0, 0);
             this.lbl_price.Name = "lbl_price";
@@ -246,7 +246,7 @@ namespace Price_Checker
             this.Name = "PriceCheckerForm";
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "s";
+            this.Text = "Price Checker Form";
             this.pricePanel.ResumeLayout(false);
             this.pricePanel.PerformLayout();
             this.panel1.ResumeLayout(false);
