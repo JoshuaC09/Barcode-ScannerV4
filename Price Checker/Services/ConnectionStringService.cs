@@ -1,26 +1,15 @@
-﻿namespace Price_Checker.Configuration
+﻿using System;
+
+namespace Price_Checker.Configuration
 {
-    internal class ConnectionStringService
+    internal static class ConnectionStringService
     {
-        private static string _connectionString;
-        private static readonly DatabaseConfig _config = new DatabaseConfig();
-
-        public static string ConnectionString
+        private static readonly Lazy<string> _connectionString = new Lazy<string>(() =>
         {
-            get
-            {
-                return _connectionString;
-            }
-            set
-            {
-                _connectionString = value;
-            }
-        }
+            var config = new DatabaseConfig();
+            return $"server={config.Server};port={config.Port};uid={config.Uid};pwd={config.Pwd};database={config.Database}";
+        });
 
-        static ConnectionStringService()
-        {
-            // Set the initial connection string
-            _connectionString = $"server={_config.Server};port={_config.Port};uid={_config.Uid};pwd={_config.Pwd};database={_config.Database}";
-        }
+        public static string ConnectionString => _connectionString.Value;
     }
 }

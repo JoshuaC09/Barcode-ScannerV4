@@ -347,6 +347,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Configuration\DatabaseConfig.cs" />
+    <Compile Include="Helpers\DatabaseHelpers.cs" />
+    <Compile Include="Helpers\SettingsHelper.cs" />
     <Compile Include="PriceForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -388,7 +390,6 @@
     <Compile Include="settingsForm.Designer.cs">
       <DependentUpon>settingsForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="SettingsHelpers\SettingsManager.cs" />
     <EmbeddedResource Include="PriceForm.resx">
       <DependentUpon>PriceForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -479,5 +480,6 @@
   <ItemGroup>
     <None Include="Resources\ads_here.jpg" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

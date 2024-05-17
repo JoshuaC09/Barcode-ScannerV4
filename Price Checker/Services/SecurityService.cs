@@ -19,67 +19,48 @@ namespace Price_Checker.Configuration
 
         private byte[] DeriveKeyFromPassword(string password, byte[] salt)
         {
-            var iterations = 1000;
-            var desiredKeyLength = 32; // 256 bits
-            var hashMethod = HashAlgorithmName.SHA256;
-
-            using (var deriveBytes = new Rfc2898DeriveBytes(Encoding.UTF8.GetBytes(password), salt, iterations, hashMethod))
+            const int iterations = 1000;
+            const int desiredKeyLength = 32; // 256 bits
+            using (var deriveBytes = new Rfc2898DeriveBytes(Encoding.UTF8.GetBytes(password), salt, iterations, HashAlgorithmName.SHA256))
             {
                 return deriveBytes.GetBytes(desiredKeyLength);
             }
         }
-
 
         public string Decrypt(string cipherText)
         {
             try
             {
                 byte[] cipherBytes = Convert.FromBase64String(cipherText);
-
-                using (Aes aes = Aes.Create())
+                using (var aes = Aes.Create())
                 {
                     aes.Key = _key;
                     aes.IV = _iv;
-
-                    using (MemoryStream ms = new MemoryStream(cipherBytes))
+                    using (var ms = new MemoryStream(cipherBytes))
+                    using (var cs = new CryptoStream(ms, aes.CreateDecryptor(), CryptoStreamMode.Read))
+                    using (var sr = new StreamReader(cs))
                     {
-                        using (CryptoStream cs = new CryptoStream(ms, aes.CreateDecryptor(), CryptoStreamMode.Read))
-                        {
-                            using (StreamReader sr = new StreamReader((Stream)cs))
-                            {
-                                return sr.ReadToEnd();
-                            }
-                        }
+                        return sr.ReadToEnd();
                     }
                 }
             }
             catch (CryptographicException ex)
             {
-                // Log or handle the exception as needed
-                Console.WriteLine($"Decryption Error: {ex.Message}");
-
-                // Show a more user-friendly message
-                MessageBox.Show("An error occurred while decrypting the data. Please check the encryption key and the encrypted data.", "Decryption Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-
-                // Exit the application
-                Environment.Exit(1);
+                HandleDecryptionError(ex.Message);
                 return null;
             }
             catch (FormatException ex)
             {
-                // Handle the FormatException as needed
-                Console.WriteLine($"Format Error: {ex.Message}");
-
-                // Show a more user-friendly message
-                MessageBox.Show("Decryption error. Verify the encryption key and data format.", "Format Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-
-
-                // Exit the application
-                Environment.Exit(1);
+                HandleDecryptionError(ex.Message);
                 return null;
             }
         }
 
-
+        private void HandleDecryptionError(string message)
+        {
+            Console.WriteLine($"Decryption Error: {message}");
+            MessageBox.Show("An error occurred while decrypting the data. Please check the encryption key and the encrypted data.", "Decryption Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            Environment.Exit(1);
+        }
     }
 }

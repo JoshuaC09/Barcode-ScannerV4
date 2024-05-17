@@ -4,7 +4,6 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 
-
 namespace Price_Checker
 {
     public class ServerStatusService
@@ -20,33 +19,18 @@ namespace Price_Checker
 
             try
             {
-                using (MySqlConnection con = new MySqlConnection(connstring))
+                using (var con = new MySqlConnection(connstring))
                 {
                     con.Open();
-                    string sql = "SELECT set_status FROM settings";
-                    MySqlCommand cmd = new MySqlCommand(sql, con);
-                    MySqlDataReader reader = cmd.ExecuteReader();
-
-                    if (reader.Read())
+                    using (var cmd = new MySqlCommand("SELECT set_status FROM settings", con))
+                    using (var reader = cmd.ExecuteReader())
                     {
-                        int statusValue = reader.GetInt32(0);
-                        if (statusValue == 1)
+                        if (reader.Read() && reader.GetInt32(0) == 1)
                         {
-                            lastOnlineTime = DateTime.Now;
-                            wasOnlinePreviously = true;
                             status = "Server Online";
                             panelColor = Color.FromArgb(22, 113, 192);
-                        }
-                        else
-                        {
-                            if (wasOnlinePreviously)
-                            {
-                                status = "Server Offline";
-                            }
-                            else
-                            {
-                                status = "Server Offline";
-                            }
+                            lastOnlineTime = DateTime.Now;
+                            wasOnlinePreviously = true;
                         }
                     }
                 }
@@ -54,38 +38,33 @@ namespace Price_Checker
             catch (MySqlException ex)
             {
                 status = "Error";
-                panelColor = Color.Red; // Set panel color to red in case of error
                 MessageBox.Show(ex.Message);
             }
 
-            lbl_status.Text = $"{status} as of {(status == "Server Offline" ? lastOnlineTime.ToString() : DateTime.Now.ToString())}";
-            bottomPanel.BackColor = panelColor; // Set bottom panel's back color
+            lbl_status.Text = $"{status} as of {(status == "Server Offline" ? lastOnlineTime : DateTime.Now)}";
+            bottomPanel.BackColor = panelColor;
         }
 
         public void Appname(Label lbl_appname)
         {
             string connstring = ConnectionStringService.ConnectionString;
-            using (MySqlConnection con = new MySqlConnection(connstring))
+            try
             {
-                con.Open();
-                string sql = "SELECT set_appname FROM settings";
-                MySqlCommand cmd = new MySqlCommand(sql, con);
-                MySqlDataReader reader = cmd.ExecuteReader();
-
-                if (reader.Read())
+                using (var con = new MySqlConnection(connstring))
                 {
-                    string appName = reader.GetString(0);
-
-                    reader.Close();
-
-                    lbl_appname.Text = appName;
-                }
-                else
-                {
-                    lbl_appname.Text = "No app name found";
+                    con.Open();
+                    using (var cmd = new MySqlCommand("SELECT set_appname FROM settings", con))
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        lbl_appname.Text = reader.Read() ? reader.GetString(0) : "No app name found";
+                    }
                 }
             }
+            catch (MySqlException ex)
+            {
+                lbl_appname.Text = "Error retrieving app name";
+                MessageBox.Show(ex.Message);
+            }
         }
-
     }
 }
