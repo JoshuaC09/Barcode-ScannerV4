@@ -31,7 +31,10 @@ public class VideoManagerService
         // Create and save the default image
         defaultImagePath = CreateAndSaveDefaultImage(Price_Checker.Properties.Resources.ads_here);
 
-        PlayNextVideo();
+        if (mediaPlayer.URL != defaultImagePath)
+        {
+            PlayNextVideo();
+        }
         System.Timers.Timer updateTimer = new System.Timers.Timer
         {
             Interval = 1000 // Check for updates every 1 second
@@ -51,8 +54,6 @@ public class VideoManagerService
             g.DrawImage(bitmap, 0, 0, playerWidth, playerHeight);
         }
 
-
-        string tempFilePath = Path.Combine(Path.GetTempPath(), "defaultImage.png");
 
         string tempFilePath = Path.Combine(Path.GetTempPath(), "VideoDefault.jpg");
 
@@ -80,7 +81,9 @@ public class VideoManagerService
             videoFilePaths = SortVideoFilePaths(allVideoPaths, invalidVideoPaths);
             videoQueue = new Queue<string>(videoFilePaths);
 
-            PlayNextVideo();
+          
+                PlayNextVideo();
+           
         }
     }
 
@@ -114,7 +117,7 @@ public class VideoManagerService
 
     private List<string> GetAllVideoPaths(string videosFolder)
     {
-        var videoExtensions = new List<string> { "*.mp4", "*.avi", "*.mov", "*.mkv", "*.flv", "*.wmv", "*.m4v", "*.3gp", "*.ogv", "*.webm", "*.jpg", "*.mpeg" };
+     
 
         var videoExtensions = new List<string> { "*.mp4", "*.avi", "*.mov", "*.mkv", "*.flv", "*.wmv", "*.m4v", "*.3gp", "*.ogv", "*.webm","*.mpeg" };
 
@@ -188,19 +191,21 @@ public class VideoManagerService
                 DisplayDefaultImage();
                 return;
             }
-
             videoQueue = new Queue<string>(videoFilePaths);
             PlayNextVideo();
+
         }
     }
 
     private void DisplayDefaultImage()
     {
-        mediaPlayer.URL = defaultImagePath;
-        mediaPlayer.uiMode = "none";
-        mediaPlayer.stretchToFit = true;
-        playbackTimer.Interval = GetAdvidTimeFromDatabase() ?? 100000;
-        playbackTimer.Start();
+       
+            mediaPlayer.URL = defaultImagePath;
+            mediaPlayer.uiMode = "none";
+            mediaPlayer.stretchToFit = true;
+            mediaPlayer.Ctlcontrols.play();
+      
+
     }
 
     private int? GetAdvidTimeFromDatabase()
