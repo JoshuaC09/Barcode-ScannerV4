@@ -91,7 +91,11 @@ namespace Price_Checker.Configuration
         private void Timer_Tick(object sender, EventArgs e)
         {
             formInstance.Close();
+
             timer.Stop();
+
+            timer.Stop(); // Stop the timer once form sis closed
+
         }
 
         public List<Product> GetProductDetails(string barcode)
@@ -104,6 +108,12 @@ namespace Price_Checker.Configuration
                     con.Open();
                     const string sql = "SELECT * FROM prod_verifier WHERE prod_barcode = @barcode";
                     using (var cmd = new MySqlCommand(sql, con))
+
+                    string sql = $"SELECT prod_description, CAST(prod_price AS DECIMAL(6,2)) as prod_price, prod_pincipal, prod_uom, prod_generic, prod_vendor  FROM prod_verifier WHERE prod_barcode = '{barcode}'";
+                    MySqlCommand cmd = new MySqlCommand(sql, con);
+                    MySqlDataReader reader = cmd.ExecuteReader();
+                    while (reader.Read())
+
                     {
                         cmd.Parameters.AddWithValue("@barcode", barcode);
                         using (var reader = cmd.ExecuteReader())

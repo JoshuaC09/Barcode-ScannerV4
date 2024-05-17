@@ -12,6 +12,10 @@ namespace Price_Checker.Configuration
         {
             this.barcodeLabel = barcodeLabel;
             timer = new Timer { Interval = 3000 };
+
+            timer = new Timer();
+            timer.Interval = 1000;
+
             timer.Tick += Timer_Tick;
         }
 
