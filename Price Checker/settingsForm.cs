@@ -1,4 +1,5 @@
-﻿using Price_Checker.Managers;
+﻿using Price_Checker.Configuration;
+using Price_Checker.SettingsHelpers;
 using System;
 using System.Windows.Forms;
 
@@ -6,12 +7,13 @@ namespace Price_Checker
 {
     public partial class settingsForm : Form
     {
-        private readonly SettingsManager _settingsManager;
+        private readonly SettingsHelper _settingsManager;
+        private string connString = ConnectionStringService.ConnectionString;
 
         public settingsForm()
         {
             InitializeComponent();
-            _settingsManager = new SettingsManager();
+            _settingsManager = new SettingsHelper(connString);
             _settingsManager.LoadSettings(tb_appname, tb_adpictime, tb_adpicpath, tb_advidtime, tb_advidpath, tb_disptime, rb_ipos, rb_eipos);
             btn_close.Click += btn_close_Click;
 

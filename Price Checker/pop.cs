@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing.Text;
-using System.Drawing;
 using System.Windows.Forms;
-using static Price_Checker.PriceCheckerForm;
 
 namespace Price_Checker
 {

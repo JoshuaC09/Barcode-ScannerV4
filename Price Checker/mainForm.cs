@@ -68,7 +68,6 @@ namespace Price_Checker
             }
         }
 
-
         private void MainForm_Shown(object sender, EventArgs e)
         {
             // Set focus to lbl_barcode when the form is shown

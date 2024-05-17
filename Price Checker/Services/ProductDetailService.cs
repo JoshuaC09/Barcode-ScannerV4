@@ -5,65 +5,43 @@ using MySql.Data.MySqlClient;
 
 namespace Price_Checker.Configuration
 {
-    internal class ProductDetailService
+    internal class ProductDetailService 
     {
         private readonly string connstring;
-      
-
-        //
-        private Timer timer = new Timer();
-        private int intervalInSeconds = 0;
-
-
-        private Form formInstance;
+        private readonly Timer timer;
+        private readonly Form formInstance;
 
         public ProductDetailService(Form form)
-        {    
+        {
             connstring = ConnectionStringService.ConnectionString;
             formInstance = form;
-
+            timer = new Timer();
             timer.Tick += Timer_Tick;
             SetTimerInterval();
             timer.Start();
         }
+
         public void HandleProductDetails(string barcode, Label lbl_name, Label lbl_price, Label lbl_manufacturer, Label lbl_uom, Label lbl_generic, Label lbl_vendor)
         {
-            List<Product> products = GetProductDetails(barcode);
+            var products = GetProductDetails(barcode);
 
             if (products.Count == 1)
             {
-                lbl_name.Text = products[0].Name;
-                lbl_price.Text = products[0].Price;
-                lbl_manufacturer.Text = products[0].Manufacturer;
-                lbl_uom.Text = products[0].UOM;
-                lbl_generic.Text = products[0].Generic;
-                lbl_vendor.Text = products[0].Vendor;
+                SetLabelValues(lbl_name, lbl_price, lbl_manufacturer, lbl_uom, lbl_generic, lbl_vendor, products[0]);
             }
             else if (products.Count > 1)
             {
-                // Prompt user to choose the product
-                using (pop chooseProductForm = new pop(products))
+                using (var chooseProductForm = new pop(products))
                 {
-                    DialogResult result = chooseProductForm.ShowDialog();
+                    var result = chooseProductForm.ShowDialog();
 
                     if (result == DialogResult.OK)
                     {
-                        lbl_name.Text = chooseProductForm.SelectedProduct.Name;
-                        lbl_price.Text = chooseProductForm.SelectedProduct.Price;
-                        lbl_manufacturer.Text = chooseProductForm.SelectedProduct.Manufacturer;
-                        lbl_uom.Text = chooseProductForm.SelectedProduct.UOM;
-                        lbl_generic.Text = chooseProductForm.SelectedProduct.Generic;
-                        lbl_vendor.Text = chooseProductForm.SelectedProduct.Vendor;
+                        SetLabelValues(lbl_name, lbl_price, lbl_manufacturer, lbl_uom, lbl_generic, lbl_vendor, chooseProductForm.SelectedProduct);
                     }
                     else
                     {
-                        lbl_name.Text = "N/A";
-                        lbl_price.Text = "N/A";
-                        lbl_manufacturer.Text = "N/A";
-                        lbl_uom.Text = "N/A";
-                        lbl_generic.Text = "N/A";
-                        lbl_vendor.Text = "N/A";
-
+                        SetLabelValuesToNA(lbl_name, lbl_price, lbl_manufacturer, lbl_uom, lbl_generic, lbl_vendor);
                     }
                 }
             }
@@ -71,27 +49,40 @@ namespace Price_Checker.Configuration
             {
                 MessageBox.Show("Product Not Found");
             }
+        }
 
-            //// Timer logic
-            //Timer timer = new Timer();
-            //timer.Interval = 5000; // Form interval to 3 seconds
-            //timer.Tick += Timer_Tick;
-            //timer.Start();
+        private void SetLabelValues(Label lbl_name, Label lbl_price, Label lbl_manufacturer, Label lbl_uom, Label lbl_generic, Label lbl_vendor, Product product)
+        {
+            lbl_name.Text = product.Name;
+            lbl_price.Text = product.Price;
+            lbl_manufacturer.Text = product.Manufacturer;
+            lbl_uom.Text = product.UOM;
+            lbl_generic.Text = product.Generic;
+            lbl_vendor.Text = product.Vendor;
+        }
+
+        private void SetLabelValuesToNA(Label lbl_name, Label lbl_price, Label lbl_manufacturer, Label lbl_uom, Label lbl_generic, Label lbl_vendor)
+        {
+            lbl_name.Text = "N/A";
+            lbl_price.Text = "N/A";
+            lbl_manufacturer.Text = "N/A";
+            lbl_uom.Text = "N/A";
+            lbl_generic.Text = "N/A";
+            lbl_vendor.Text = "N/A";
         }
 
         private void SetTimerInterval()
         {
-            using (MySqlConnection con = new MySqlConnection(connstring))
+            using (var con = new MySqlConnection(connstring))
             {
                 con.Open();
-                string sql = "SELECT set_disptime FROM settings";
-                MySqlCommand cmd = new MySqlCommand(sql, con);
-                using (MySqlDataReader reader = cmd.ExecuteReader())
+                const string sql = "SELECT set_disptime FROM settings";
+                using (var cmd = new MySqlCommand(sql, con))
+                using (var reader = cmd.ExecuteReader())
                 {
                     if (reader.Read())
                     {
-                        intervalInSeconds = reader.GetInt32(0);
-                        timer.Interval = intervalInSeconds * 1000; // Multiply by 1000 to convert to milliseconds
+                        timer.Interval = reader.GetInt32(0) * 1000; // Convert to milliseconds
                     }
                 }
             }
@@ -100,30 +91,48 @@ namespace Price_Checker.Configuration
         private void Timer_Tick(object sender, EventArgs e)
         {
             formInstance.Close();
+
+            timer.Stop();
+
             timer.Stop(); // Stop the timer once form sis closed
+
         }
 
         public List<Product> GetProductDetails(string barcode)
         {
-            List<Product> products = new List<Product>();
+            var products = new List<Product>();
             try
             {
-                using (MySqlConnection con = new MySqlConnection(connstring))
+                using (var con = new MySqlConnection(connstring))
                 {
                     con.Open();
+
+                    const string sql = "SELECT * FROM prod_verifier WHERE prod_barcode = @barcode";
+                    using (var cmd = new MySqlCommand(sql, con))
+
                     string sql = $"SELECT prod_description, CAST(prod_price AS DECIMAL(6,2)) as prod_price, prod_pincipal, prod_uom, prod_generic, prod_vendor  FROM prod_verifier WHERE prod_barcode = '{barcode}'";
                     MySqlCommand cmd = new MySqlCommand(sql, con);
                     MySqlDataReader reader = cmd.ExecuteReader();
                     while (reader.Read())
+
                     {
-                        Product product = new Product();
-                        product.Name = reader["prod_description"].ToString();
-                        product.Price = "₱ " + reader["prod_price"].ToString();
-                        product.Manufacturer = reader["prod_pincipal"].ToString();
-                        product.UOM = "per " + reader["prod_uom"].ToString();
-                        product.Generic = reader["prod_generic"].ToString();
-                        product.Vendor = reader["prod_vendor"].ToString();
-                        products.Add(product);
+                        cmd.Parameters.AddWithValue("@barcode", barcode);
+                        using (var reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                var product = new Product
+                                {
+                                    Name = reader["prod_description"].ToString(),
+                                    Price = "₱ " + reader["prod_price"],
+                                    Manufacturer = reader["prod_pincipal"].ToString(),
+                                    UOM = "per " + reader["prod_uom"],
+                                    Generic = reader["prod_generic"].ToString(),
+                                    Vendor = reader["prod_vendor"].ToString()
+                                };
+                                products.Add(product);
+                            }
+                        }
                     }
                 }
             }
