@@ -1,10 +1,13 @@
 ﻿using AxWMPLib;
 using MySql.Data.MySqlClient;
 using Price_Checker.Configuration;
+using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 public class VideoManagerService
 {
@@ -14,6 +17,7 @@ public class VideoManagerService
     private AxWindowsMediaPlayer mediaPlayer;
     private string assetsFolder;
     private string appDirectory;
+    private string defaultImagePath;
 
     public VideoManagerService(AxWindowsMediaPlayer player)
     {
@@ -24,6 +28,9 @@ public class VideoManagerService
         playbackTimer = new System.Timers.Timer();
         playbackTimer.Elapsed += PlaybackTimer_Elapsed;
 
+        // Create and save the default image
+        defaultImagePath = CreateAndSaveDefaultImage(Price_Checker.Properties.Resources.ads_here);
+
         PlayNextVideo();
         System.Timers.Timer updateTimer = new System.Timers.Timer
         {
@@ -31,6 +38,22 @@ public class VideoManagerService
         };
         updateTimer.Elapsed += CheckAndUpdateFilePath;
         updateTimer.Start();
+    }
+
+    private string CreateAndSaveDefaultImage(Bitmap bitmap)
+    {
+        int playerWidth = mediaPlayer.Width;
+        int playerHeight = mediaPlayer.Height;
+
+        Bitmap resizedBitmap = new Bitmap(playerWidth, playerHeight);
+        using (Graphics g = Graphics.FromImage(resizedBitmap))
+        {
+            g.DrawImage(bitmap, 0, 0, playerWidth, playerHeight);
+        }
+
+        string tempFilePath = Path.Combine(Path.GetTempPath(), "VideoDefault.jpg");
+        resizedBitmap.Save(tempFilePath, System.Drawing.Imaging.ImageFormat.Png);
+        return tempFilePath;
     }
 
     private void CheckAndUpdateFilePath(object sender, System.Timers.ElapsedEventArgs e)
@@ -74,6 +97,7 @@ public class VideoManagerService
         }
         return null;
     }
+
     private string GetVideosFolder(string assetsFolder)
     {
         if (string.IsNullOrEmpty(assetsFolder) || !Directory.Exists(assetsFolder) || !Directory.EnumerateFiles(assetsFolder).Any())
@@ -86,7 +110,7 @@ public class VideoManagerService
 
     private List<string> GetAllVideoPaths(string videosFolder)
     {
-        var videoExtensions = new List<string> { "*.mp4", "*.avi", "*.mov", "*.mkv", "*.flv", "*.wmv", "*.m4v", "*.3gp", "*.ogv", "*.webm", "*.mpeg" };
+        var videoExtensions = new List<string> { "*.mp4", "*.avi", "*.mov", "*.mkv", "*.flv", "*.wmv", "*.m4v", "*.3gp", "*.ogv", "*.webm","*.mpeg" };
         return videoExtensions.SelectMany(ext => Directory.EnumerateFiles(videosFolder, ext)).ToList();
     }
 
@@ -102,6 +126,7 @@ public class VideoManagerService
         sortedValidPaths.AddRange(invalidVideoPaths);
         return sortedValidPaths;
     }
+
     public void LoadVideoFilePaths()
     {
         string connstring = ConnectionStringService.ConnectionString;
@@ -122,20 +147,29 @@ public class VideoManagerService
         if (videoQueue.Count > 0)
         {
             string videoPath = videoQueue.Dequeue();
-            mediaPlayer.URL = videoPath;
-            mediaPlayer.Ctlcontrols.play();
-            mediaPlayer.uiMode = "none";
-            mediaPlayer.stretchToFit = true;
+            try
+            {
+                mediaPlayer.URL = videoPath;
+                mediaPlayer.Ctlcontrols.play();
+                mediaPlayer.uiMode = "none";
+                mediaPlayer.stretchToFit = true;
 
-            if (mediaPlayer.currentMedia.duration > 0)
-            {
-                playbackTimer.Interval = (mediaPlayer.currentMedia.duration + 1) * 1000;
-                playbackTimer.Start();
+                if (mediaPlayer.currentMedia != null && mediaPlayer.currentMedia.duration > 0)
+                {
+                    playbackTimer.Interval = (mediaPlayer.currentMedia.duration + 1) * 1000;
+                    playbackTimer.Start();
+                }
+                else
+                {
+                    playbackTimer.Interval = GetAdvidTimeFromDatabase() ?? 100000;
+                    playbackTimer.Start();
+                }
             }
-            else
+            catch (Exception ex)
             {
-                playbackTimer.Interval = GetAdvidTimeFromDatabase() ?? 100000;
-                playbackTimer.Start();
+                // Handle the exception and display the default image
+                Console.WriteLine($"Error loading video: {ex.Message}");
+                DisplayDefaultImage();
             }
         }
         else
@@ -143,14 +177,23 @@ public class VideoManagerService
             LoadVideoFilePaths();
             if (videoFilePaths.Count == 0)
             {
-                playbackTimer.Interval = GetAdvidTimeFromDatabase() ?? 100000;
-                playbackTimer.Start();
+                // Display the default image when there are no videos available
+                DisplayDefaultImage();
                 return;
             }
 
             videoQueue = new Queue<string>(videoFilePaths);
             PlayNextVideo();
         }
+    }
+
+    private void DisplayDefaultImage()
+    {
+        mediaPlayer.URL = defaultImagePath;
+        mediaPlayer.uiMode = "none";
+        mediaPlayer.stretchToFit = true;
+        playbackTimer.Interval = GetAdvidTimeFromDatabase() ?? 100000;
+        playbackTimer.Start();
     }
 
     private int? GetAdvidTimeFromDatabase()
@@ -181,7 +224,7 @@ public class VideoManagerService
     {
         if (e.newState == 8) // 8 represents MediaEnded state
         {
-            await Task.Delay(200); // Wait for 200 milliseconds
+            await Task.Delay(100); // Wait for 100 milliseconds
             PlayNextVideo();
         }
     }
