@@ -11,9 +11,9 @@ namespace Price_Checker.Configuration
         public BarcodeTimer(TextBox barcodeLabel)
         {
             this.barcodeLabel = barcodeLabel;
-            timer = new Timer { Interval = 3000 };
+            timer = new Timer { Interval = 100 };
             timer = new Timer();
-            timer.Interval = 1000;
+            timer.Interval = 100;
 
             timer.Tick += Timer_Tick;
         }
@@ -25,5 +25,7 @@ namespace Price_Checker.Configuration
             barcodeLabel.Text = string.Empty;
             timer.Stop();
         }
+
+
     }
 }
