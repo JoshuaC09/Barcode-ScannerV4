@@ -50,7 +50,7 @@ namespace Price_Checker
             // Alt + Conrol + Backspace
             if (e.KeyData == (Keys.Alt | Keys.Control | Keys.Back))
             {
-                DialogResult result = MessageBox.Show("Are you sure you want to close the program?", "Confirm Close", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                DialogResult result = MessageBox.Show("Are you sure you want to close the program?", "Confirm Close", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
 
                 if (result == DialogResult.Yes)
                 {
@@ -65,10 +65,6 @@ namespace Price_Checker
             {
                 settingsForm newSettingsForm = new settingsForm();
                 newSettingsForm.Show();
-            }
-            else if (e.KeyCode == Keys.Escape)
-            {
-                this.Close();
             }
         }
 

@@ -52,7 +52,6 @@ namespace Price_Checker.Services
 
                     }
                 }
-
             }
         }
         protected virtual void OnBarcodeScanned(string barcode)
