@@ -1,6 +1,7 @@
 ﻿using System.Drawing.Text;
 using System.Drawing;
 using System.IO;
+using System;
 
 namespace Price_Checker.Services
 {
@@ -26,7 +27,11 @@ namespace Price_Checker.Services
             }
             else
             {
-                throw new FileNotFoundException($"The font file 'SchibstedGrotesk-Regular.ttf' was not found in the directory '{Path.GetFullPath(Path.Combine(appDirectory, "assets", "Fonts", "Schibsted_Grotesk", "static"))}'.");
+                // Log a warning message or take appropriate action
+                Console.WriteLine($"Warning: The font file 'SchibstedGrotesk-Regular.ttf' was not found in the directory '{Path.GetFullPath(Path.Combine(appDirectory, "assets", "Fonts", "Schibsted_Grotesk", "static"))}'. Using default font.");
+
+                // Use Consolas as the default fallback font
+                return new Font("Consolas", 28f, FontStyle.Regular);
             }
         }
 

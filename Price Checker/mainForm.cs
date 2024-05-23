@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Price_Checker.Configuration;
@@ -15,8 +16,7 @@ namespace Price_Checker
         private readonly VideoManagerService videoManager;
         private readonly ServerStatusService serverStatusManager;
         private settingsForm settingsForm;
-
-
+        private bool isDefaultPictureBoxShown = false;
         public mainForm()
         {
             InitializeComponent();
@@ -43,9 +43,9 @@ namespace Price_Checker
             imageManager.LoadImageFiles();
             fontManager = new FontManagerService();
             lbl_barcode.Font = fontManager.GetCustomFont();
-            videoManager = new VideoManagerService(axWindowsMediaPlayer1);
+            videoManager = new VideoManagerService(axWindowsMediaPlayer1,pictureBox2);
         }
-
+      
         private void MainForm_KeyDown(object sender, KeyEventArgs e)
         {
             // Alt + Conrol + Backspace

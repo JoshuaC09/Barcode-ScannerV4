@@ -61,39 +61,54 @@ namespace Price_Checker.Configuration
         internal void LoadImageFiles()
         {
             imageQueue.Clear();
-            string imagesFolder = !string.IsNullOrEmpty(assetsFolder) && Directory.Exists(assetsFolder) && Directory.EnumerateFiles(assetsFolder).Any()
-                ? assetsFolder
-                : Path.Combine(appDirectory, "assets", "Images");
+            string imagesFolder = Path.Combine(appDirectory, "assets", "Images");
 
-            var validImageFiles = Directory.EnumerateFiles(imagesFolder, "*.*")
-                .Where(IsImageFile)
-                .Where(IsValidFileName)
-                .OrderBy(ParseFileName)
-                .ToList();
+            if (!string.IsNullOrEmpty(assetsFolder) && Directory.Exists(assetsFolder))
+            {
+                imagesFolder = assetsFolder;
+            }
 
-            var invalidImageFiles = Directory.EnumerateFiles(imagesFolder, "*.*")
-                .Where(IsImageFile)
-                .Where(file => !IsValidFileName(file))
-                .OrderBy(ParseFileName)
-                .ToList();
+            try
+            {
+                var validImageFiles = Directory.EnumerateFiles(imagesFolder, "*.*")
+                    .Where(IsImageFile)
+                    .Where(IsValidFileName)
+                    .OrderBy(ParseFileName)
+                    .ToList();
 
-            var allImageFiles = validImageFiles.Concat(invalidImageFiles).ToList();
+                var invalidImageFiles = Directory.EnumerateFiles(imagesFolder, "*.*")
+                    .Where(IsImageFile)
+                    .Where(file => !IsValidFileName(file))
+                    .OrderBy(ParseFileName)
+                    .ToList();
 
+                var allImageFiles = validImageFiles.Concat(invalidImageFiles).ToList();
 
-            if (allImageFiles.Count == 0)
+                if (allImageFiles.Count == 0)
+                {
+                    pictureBox1.Image = Properties.Resources.ads_here;
+                }
+                else
+                {
+                    foreach (string imagePath in allImageFiles)
+                    {
+                        imageQueue.Enqueue(imagePath);
+                    }
+
+                    DisplayNextImage(null, EventArgs.Empty);
+                }
+            }
+            catch (DirectoryNotFoundException)
             {
                 pictureBox1.Image = Properties.Resources.ads_here;
             }
-            else
+            catch (Exception ex)
             {
-                foreach (string imagePath in allImageFiles)
-                {
-                    imageQueue.Enqueue(imagePath);
-                }
-
-                DisplayNextImage(null, EventArgs.Empty);
+                MessageBox.Show($"An unexpected error occurred: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                pictureBox1.Image = Properties.Resources.ads_here;
             }
         }
+
 
         private string GetAssetsFolder(string connstring)
         {
