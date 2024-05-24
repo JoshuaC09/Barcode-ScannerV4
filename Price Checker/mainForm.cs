@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Price_Checker.Configuration;
@@ -17,6 +18,8 @@ namespace Price_Checker
         private readonly ServerStatusService serverStatusManager;
         private settingsForm settingsForm;
         private bool isDefaultPictureBoxShown = false;
+
+        private string connString = ConnectionStringService.ConnectionString;
         public mainForm()
         {
             InitializeComponent();
@@ -34,12 +37,14 @@ namespace Price_Checker
             this.KeyDown += MainForm_KeyDown;
 
             serverStatusManager = new ServerStatusService();
-        
+
+            this.Load += mainForm_Load;
+            this.Resize += mainForm_Resize;
             UpdateStatusLabelPeriodically(); // Start the periodic status label update
             scanBarcodeService = new ScanBarcodeService();
             scanBarcodeService.BarcodeScanned += ScanBarcodeService_BarcodeScanned;
             barcodeTimer = new BarcodeTimer(lbl_barcode);
-            imageManager = new ImagesManagerService(pictureBox1);
+            imageManager = new ImagesManagerService(pictureBox1,connString);
             imageManager.LoadImageFiles();
             fontManager = new FontManagerService();
             lbl_barcode.Font = fontManager.GetCustomFont();
@@ -114,6 +119,30 @@ namespace Price_Checker
             }
         }
 
-        
+        private void mainForm_Load(object sender, EventArgs e)
+        {
+            AdjustFontSizes();
+        }
+
+        private void mainForm_Resize(object sender, EventArgs e)
+        {
+            AdjustFontSizes();
+        }
+
+        private void AdjustFontSizes()
+        {
+            // Get the screen resolution
+            float screenWidth = Screen.PrimaryScreen.Bounds.Width;
+            float screenHeight = Screen.PrimaryScreen.Bounds.Height;
+
+            // Calculate the screen ratio
+            float screenRatio = screenWidth / screenHeight;
+
+            // Adjust the font sizes based on the screen ratio
+            // You can tweak the multiplication factors to suit your needs
+            label3.Font = new Font(label3.Font.FontFamily, label3.Font.Size * screenRatio / 1.8f);
+            label3.Location = new Point((int)(screenWidth / 2 - label3.Width / 2), 320);
+            lbl_appname.Font = new Font(lbl_appname.Font.FontFamily, lbl_appname.Font.Size * screenRatio / 1.8f);
+        }
     }
 }
