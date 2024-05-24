@@ -6,12 +6,34 @@ using System.Data;
 public class DatabaseHelper
 {
     private readonly string _connectionString;
-
+    private MySqlConnection _connection;
     public DatabaseHelper(string connectionString)
     {
         _connectionString = connectionString;
     }
 
+
+    public MySqlDataReader ExecuteReader(string query, Dictionary<string, object> parameters = null)
+    {
+        if (_connection == null || _connection.State != ConnectionState.Open)
+        {
+            _connection = new MySqlConnection(_connectionString);
+            _connection.Open();
+        }
+
+        using (var command = new MySqlCommand(query, _connection))
+        {
+            if (parameters != null)
+            {
+                foreach (var param in parameters)
+                {
+                    command.Parameters.AddWithValue(param.Key, param.Value);
+                }
+            }
+
+            return command.ExecuteReader();
+        }
+    }
     // Method to execute a query and return the result as a DataTable
     public DataTable ExecuteQuery(string query, Dictionary<string, object> parameters = null)
     {
