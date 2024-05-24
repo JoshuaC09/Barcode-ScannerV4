@@ -1,28 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Data;
+using System.Data.Common;
+using System.Drawing;
 using System.Windows.Forms;
 using Microsoft.Extensions.Logging;
-using MySql.Data.MySqlClient;
 
 namespace Price_Checker.Configuration
 {
     internal class ProductDetailService
     {
-        private readonly DatabaseHelper _dbHelper;
-        private readonly Timer _timer;
-        private readonly Form _formInstance;
-
+        private readonly string connstring;
+        private readonly Timer timer;
+        private readonly Form formInstance;
+        private readonly DatabaseHelper databaseHelper;
 
         public ProductDetailService(Form form)
         {
-            _dbHelper = new DatabaseHelper(ConnectionStringService.ConnectionString);
-            _formInstance = form;
-            _timer = new Timer();
-            _timer.Tick += Timer_Tick;
+            connstring = ConnectionStringService.ConnectionString;
+            formInstance = form;
+            timer = new Timer();
+            timer.Tick += Timer_Tick;
+            databaseHelper = new DatabaseHelper(connstring);
             SetTimerInterval();
-            _timer.Start();
+            timer.Start();
         }
 
         public void HandleProductDetails(string barcode, Label lbl_name, Label lbl_price, Label lbl_manufacturer, Label lbl_uom, Label lbl_generic)
@@ -39,7 +40,6 @@ namespace Price_Checker.Configuration
                 {
                     chooseProductForm.ShowDialog();
                 }
-
             }
             else
             {
@@ -56,15 +56,14 @@ namespace Price_Checker.Configuration
             lbl_generic.Text = product.Generic;
         }
 
-
         private void SetTimerInterval()
         {
             const string sql = "SELECT set_disptime FROM settings";
-            var result = _dbHelper.ExecuteScalar(sql);
+            var dataTable = databaseHelper.ExecuteQuery(sql);
 
-            if (result != null && int.TryParse(result.ToString(), out int interval))
+            if (dataTable.Rows.Count > 0)
             {
-                _timer.Interval = interval * 1000; // Convert to milliseconds
+                timer.Interval = Convert.ToInt32(dataTable.Rows[0]["set_disptime"]) * 1000; // Convert to milliseconds
             }
         }
 
@@ -75,30 +74,31 @@ namespace Price_Checker.Configuration
                 formInstance.Close();
             }
             timer.Stop(); // Stop the timer once form is closed
-            _formInstance.Close();
-            _timer.Stop(); // Stop the timer once form is closed
         }
-
         public List<Product> GetProductDetails(string barcode)
         {
             var products = new List<Product>();
             const string sql = "SELECT prod_description, prod_price, prod_pincipal, prod_uom, prod_generic FROM prod_verifier WHERE prod_barcode = @barcode";
-            var parameters = new Dictionary<string, object> { { "@barcode", barcode } };
-            var dataTable = _dbHelper.ExecuteQuery(sql, parameters);
+            var parameters = new Dictionary<string, object>
+    {
+        { "@barcode", barcode }
+    };
 
-            foreach (DataRow row in dataTable.Rows)
+            using (var dataReader = databaseHelper.ExecuteReader(sql, parameters))
             {
-                var product = new Product
+                foreach (DbDataRecord record in dataReader)
                 {
-                    Name = row["prod_description"].ToString(),
-                    Price = "₱ " + Convert.ToDecimal(row["prod_price"]).ToString("N2"),
-                    Manufacturer = "Manufacturer: " + row["prod_pincipal"].ToString(),
-                    UOM = "per " + row["prod_uom"],
-                    Generic = "Generic: " + row["prod_generic"].ToString()
-                };
-                products.Add(product);
+                    var product = new Product
+                    {
+                        Name = record["prod_description"].ToString(),
+                        Price = "₱ " + Convert.ToDecimal(record["prod_price"]).ToString("N2"),
+                        Manufacturer = record["prod_pincipal"].ToString(),
+                        UOM = "per " + record["prod_uom"],
+                        Generic = record["prod_generic"].ToString()
+                    };
+                    products.Add(product);
+                }
             }
-
             return products;
         }
     }
