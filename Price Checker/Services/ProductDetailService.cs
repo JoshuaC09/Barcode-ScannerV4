@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Windows.Forms;
+using Microsoft.Extensions.Logging;
 using MySql.Data.MySqlClient;
 
 namespace Price_Checker.Configuration
@@ -10,6 +12,7 @@ namespace Price_Checker.Configuration
         private readonly string connstring;
         private readonly Timer timer;
         private readonly Form formInstance;
+
 
         public ProductDetailService(Form form)
         {
@@ -33,17 +36,9 @@ namespace Price_Checker.Configuration
             {
                 using (var chooseProductForm = new pop(products))
                 {
-                    var result = chooseProductForm.ShowDialog();
-
-                    if (result == DialogResult.OK)
-                    {
-                        SetLabelValues(lbl_name, lbl_price, lbl_manufacturer, lbl_uom, lbl_generic, chooseProductForm.SelectedProduct);
-                    }
-                    else
-                    {
-                        SetLabelValuesToNA(lbl_name, lbl_price, lbl_manufacturer, lbl_uom, lbl_generic);
-                    }
+                    chooseProductForm.ShowDialog();
                 }
+
             }
             else
             {
@@ -60,14 +55,6 @@ namespace Price_Checker.Configuration
             lbl_generic.Text = product.Generic;
         }
 
-        private void SetLabelValuesToNA(Label lbl_name, Label lbl_price, Label lbl_manufacturer, Label lbl_uom, Label lbl_generic)
-        {
-            lbl_name.Text = "N/A";
-            lbl_price.Text = "N/A";
-            lbl_manufacturer.Text = "N/A";
-            lbl_uom.Text = "N/A";
-            lbl_generic.Text = "N/A";
-        }
 
         private void SetTimerInterval()
         {
@@ -88,7 +75,10 @@ namespace Price_Checker.Configuration
 
         private void Timer_Tick(object sender, EventArgs e)
         {
-            formInstance.Close();
+            if (formInstance != null)
+            {
+                formInstance.Close();
+            }
             timer.Stop(); // Stop the timer once form is closed
         }
 

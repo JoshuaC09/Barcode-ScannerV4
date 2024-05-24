@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Price_Checker.Configuration;
@@ -15,7 +16,6 @@ namespace Price_Checker
         private readonly VideoManagerService videoManager;
         private readonly ServerStatusService serverStatusManager;
         private settingsForm settingsForm;
-
 
         public mainForm()
         {
@@ -44,6 +44,7 @@ namespace Price_Checker
             fontManager = new FontManagerService();
             lbl_barcode.Font = fontManager.GetCustomFont();
             videoManager = new VideoManagerService(axWindowsMediaPlayer1);
+
         }
 
         private void MainForm_KeyDown(object sender, KeyEventArgs e)
@@ -74,6 +75,7 @@ namespace Price_Checker
             // Set focus to lbl_barcode when the form is shown
             lbl_barcode.Focus();
         }
+
 
         private void Lbl_barcode_KeyDown(object sender, KeyEventArgs e)
         {
@@ -114,6 +116,6 @@ namespace Price_Checker
             }
         }
 
-        
+
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Windows.Forms;
+﻿using System.Collections.Generic;
+using System.Windows.Forms;
 using Price_Checker.Configuration;
 
 namespace Price_Checker
@@ -6,6 +7,7 @@ namespace Price_Checker
     public partial class PriceCheckerForm : Form
     {
         private readonly ProductDetailService productDetailService;
+
 
         public PriceCheckerForm(string barcode)
         {
