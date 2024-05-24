@@ -19,7 +19,7 @@ namespace Price_Checker
         private readonly FontManagerService fontManager;
         private readonly VideoManagerService videoManager;
         private readonly ServerStatusService serverStatusManager;
-        private settingsForm settingsForm;
+        private  settingsForm settingsForm;
         private bool isDefaultPictureBoxShown = false;
         private string connString = ConnectionStringService.ConnectionString;
         public mainForm()
