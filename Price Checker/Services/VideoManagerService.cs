@@ -1,5 +1,4 @@
-﻿
-using AxWMPLib;
+﻿using AxWMPLib;
 using MySql.Data.MySqlClient;
 using Price_Checker.Configuration;
 using System;
@@ -17,12 +16,15 @@ public class VideoManagerService
     private AxWindowsMediaPlayer mediaPlayer;
     private string assetsFolder;
     private string appDirectory;
-    PictureBox PictureBox;
+    private PictureBox pictureBox;
+    private readonly DatabaseHelper dbHelper;
 
     public VideoManagerService(AxWindowsMediaPlayer player, PictureBox pictureBox)
     {
         mediaPlayer = player;
-        PictureBox = pictureBox;
+        this.pictureBox = pictureBox;
+        dbHelper = new DatabaseHelper(ConnectionStringService.ConnectionString);
+
         mediaPlayer.PlayStateChange += new _WMPOCXEvents_PlayStateChangeEventHandler(AxWindowsMediaPlayer1_PlayStateChange);
         LoadVideoFilePaths();
 
@@ -41,8 +43,7 @@ public class VideoManagerService
 
     private async Task CheckAndUpdateFilePathAsync(object sender, System.Timers.ElapsedEventArgs e)
     {
-        string connstring = ConnectionStringService.ConnectionString;
-        string updatedAssetsFolder = GetAssetsFolder(connstring);
+        string updatedAssetsFolder = GetAssetsFolder();
 
         if (updatedAssetsFolder != assetsFolder)
         {
@@ -63,22 +64,11 @@ public class VideoManagerService
         }
     }
 
-    private string GetAssetsFolder(string connstring)
+    private string GetAssetsFolder()
     {
-        using (var con = new MySqlConnection(connstring))
-        {
-            con.Open();
-            var sql = "SELECT set_advid FROM settings";
-            using (var cmd = new MySqlCommand(sql, con))
-            using (var reader = cmd.ExecuteReader())
-            {
-                if (reader.Read() && !reader.IsDBNull(0))
-                {
-                    return reader.GetString(0).Replace("$", "\\");
-                }
-            }
-        }
-        return null;
+        string query = "SELECT set_advid FROM settings";
+        object result = dbHelper.ExecuteScalar(query);
+        return result?.ToString().Replace("$", "\\");
     }
 
     private string GetVideosFolder(string assetsFolder)
@@ -98,7 +88,6 @@ public class VideoManagerService
         }
         return assetsFolder;
     }
-
 
     private List<string> GetAllVideoPaths(string videosFolder)
     {
@@ -121,8 +110,7 @@ public class VideoManagerService
 
     public void LoadVideoFilePaths()
     {
-        string connstring = ConnectionStringService.ConnectionString;
-        assetsFolder = GetAssetsFolder(connstring);
+        assetsFolder = GetAssetsFolder();
 
         string videosFolder = GetVideosFolder(assetsFolder);
         List<string> allVideoPaths = GetAllVideoPaths(videosFolder);
@@ -171,19 +159,12 @@ public class VideoManagerService
 
     private int? GetAdvidTimeFromDatabase()
     {
-        string connstring = ConnectionStringService.ConnectionString;
-        using (var con = new MySqlConnection(connstring))
+        string query = "SELECT set_advidtime FROM settings";
+        object result = dbHelper.ExecuteScalar(query);
+
+        if (result != null && int.TryParse(result.ToString(), out int seconds))
         {
-            con.Open();
-            var sql = "SELECT set_advidtime FROM settings";
-            using (var cmd = new MySqlCommand(sql, con))
-            {
-                var result = cmd.ExecuteScalar();
-                if (result != null && int.TryParse(result.ToString(), out int seconds))
-                {
-                    return ConvertSecondsToValue(seconds);
-                }
-            }
+            return ConvertSecondsToValue(seconds);
         }
         return 100000;
     }
@@ -195,7 +176,6 @@ public class VideoManagerService
 
     private async void AxWindowsMediaPlayer1_PlayStateChange(object sender, _WMPOCXEvents_PlayStateChangeEvent e)
     {
-
         if (e.newState == 8) // 8 represents MediaEnded state
         {
             await Task.Delay(100); // Wait for 100 milliseconds
@@ -203,11 +183,11 @@ public class VideoManagerService
         }
         else if (e.newState == 0 || e.newState == 1) // 0 is Undefined, 1 is Stopped
         {
-            PictureBox.Invoke((MethodInvoker)(() => PictureBox.Visible = string.IsNullOrEmpty(assetsFolder)));
+            pictureBox.Invoke((MethodInvoker)(() => pictureBox.Visible = string.IsNullOrEmpty(assetsFolder)));
         }
         else if (e.newState == 3) // 3 represents PlayingState
         {
-            PictureBox.Invoke((MethodInvoker)(() => PictureBox.Visible = false));
+            pictureBox.Invoke((MethodInvoker)(() => pictureBox.Visible = false));
         }
     }
 

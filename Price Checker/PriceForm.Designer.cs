@@ -100,11 +100,7 @@ namespace Price_Checker
             this.lbl_generic.ForeColor = System.Drawing.Color.Black;
             this.lbl_generic.Location = new System.Drawing.Point(182, 202);
             this.lbl_generic.Name = "lbl_generic";
-
-            this.lbl_generic.Size = new System.Drawing.Size(544, 34);
-
-            this.lbl_generic.Size = new System.Drawing.Size(613, 34);
-
+            this.lbl_generic.Size = new System.Drawing.Size(550, 34);
             this.lbl_generic.TabIndex = 28;
             this.lbl_generic.Text = "*";
             // 
