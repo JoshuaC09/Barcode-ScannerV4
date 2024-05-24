@@ -100,9 +100,9 @@ namespace Price_Checker.Configuration
                 {
                     Name = row["prod_description"].ToString(),
                     Price = "₱ " + Convert.ToDecimal(row["prod_price"]).ToString("N2"),
-                    Manufacturer = row["prod_pincipal"].ToString(),
+                    Manufacturer = "Manufacturer: " + row["prod_pincipal"].ToString(),
                     UOM = "per " + row["prod_uom"],
-                    Generic = row["prod_generic"].ToString()
+                    Generic = "Generic: " + row["prod_generic"].ToString()
                 };
                 products.Add(product);
             }

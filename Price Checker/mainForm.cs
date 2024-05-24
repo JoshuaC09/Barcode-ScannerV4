@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Security.Policy;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Price_Checker.Configuration;
@@ -40,6 +42,8 @@ namespace Price_Checker
 
             this.Load += mainForm_Load;
             this.Resize += mainForm_Resize;
+
+
             UpdateStatusLabelPeriodically(); // Start the periodic status label update
             scanBarcodeService = new ScanBarcodeService();
             scanBarcodeService.BarcodeScanned += ScanBarcodeService_BarcodeScanned;
@@ -118,9 +122,22 @@ namespace Price_Checker
                 await Task.Delay(1000); //1sec
             }
         }
+        
+        private readonly float originalFormWidth = 1438f;  
+        private readonly float originalFormHeight = 1150f; 
+
+        private Dictionary<Control, float> originalFontSizes = new Dictionary<Control, float>();
 
         private void mainForm_Load(object sender, EventArgs e)
         {
+            StoreOriginalSizesAndPositions(scanPanel);
+            StoreOriginalSizesAndPositions(panel2);
+
+            if (!originalFontSizes.ContainsKey(lbl_appname))
+            {
+                originalFontSizes[lbl_appname] = lbl_appname.Font.Size;
+            }
+
             AdjustFontSizes();
         }
 
@@ -129,20 +146,56 @@ namespace Price_Checker
             AdjustFontSizes();
         }
 
+        private void StoreOriginalSizesAndPositions(Panel panel)
+        {
+            foreach (Control control in panel.Controls)
+            {
+                if (control is Label label)
+                {
+                    if (!originalFontSizes.ContainsKey(label))
+                    {
+                        originalFontSizes[label] = label.Font.Size;
+                    }
+                }
+            }
+        }
+
         private void AdjustFontSizes()
         {
-            // Get the screen resolution
-            float screenWidth = Screen.PrimaryScreen.Bounds.Width;
-            float screenHeight = Screen.PrimaryScreen.Bounds.Height;
+            float currentFormWidth = this.ClientSize.Width;
+            float currentFormHeight = this.ClientSize.Height;
 
-            // Calculate the screen ratio
-            float screenRatio = screenWidth / screenHeight;
+            
+            float widthRatio = currentFormWidth / originalFormWidth;
+            float heightRatio = currentFormHeight / originalFormHeight;
 
-            // Adjust the font sizes based on the screen ratio
-            // You can tweak the multiplication factors to suit your needs
-            label3.Font = new Font(label3.Font.FontFamily, label3.Font.Size * screenRatio / 1.8f);
-            label3.Location = new Point((int)(screenWidth / 2 - label3.Width / 2), 320);
-            lbl_appname.Font = new Font(lbl_appname.Font.FontFamily, lbl_appname.Font.Size * screenRatio / 1.8f);
+            float formRatio = Math.Max(widthRatio, heightRatio);
+
+            AdjustPanelFontSizes(scanPanel, widthRatio, heightRatio, formRatio);
+            AdjustPanelFontSizes(panel2, widthRatio, heightRatio, formRatio);
+
+            if (originalFontSizes.ContainsKey(lbl_appname))
+            {
+                float originalFontSizeAppName = originalFontSizes[lbl_appname];
+                lbl_appname.Font = new Font(lbl_appname.Font.FontFamily, originalFontSizeAppName * formRatio);
+            }
         }
+
+        private void AdjustPanelFontSizes(Panel panel, float widthRatio, float heightRatio, float formRatio)
+        {
+            foreach (Control control in panel.Controls)
+            {
+                if (control is Label label3)
+                {
+                    if (originalFontSizes.ContainsKey(label3))
+                    {
+                        float originalFontSize = originalFontSizes[label3];
+                        label3.Font = new Font(label3.Font.FontFamily, originalFontSize * formRatio);;
+                    }
+                }
+            }
+        }
+
     }
+
 }
