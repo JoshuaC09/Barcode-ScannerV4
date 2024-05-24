@@ -69,7 +69,6 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.lbl_barcode.Cursor = System.Windows.Forms.Cursors.WaitCursor;
             this.lbl_barcode.Font = new System.Drawing.Font("Arial Rounded MT Bold", 28.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbl_barcode.Location = new System.Drawing.Point(603, 134);
             this.lbl_barcode.Location = new System.Drawing.Point(722, 141);
             this.lbl_barcode.Name = "lbl_barcode";
             this.lbl_barcode.Size = new System.Drawing.Size(316, 62);
@@ -84,7 +83,6 @@
             this.label3.Cursor = System.Windows.Forms.Cursors.WaitCursor;
             this.label3.Font = new System.Drawing.Font("Arial Rounded MT Bold", 40.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(113)))), ((int)(((byte)(192)))));
-            this.label3.Location = new System.Drawing.Point(370, 464);
             this.label3.Location = new System.Drawing.Point(4, 383);
             this.label3.Margin = new System.Windows.Forms.Padding(0);
             this.label3.Name = "label3";
@@ -169,7 +167,7 @@
             this.pictureBox2.Image = global::Price_Checker.Properties.Resources.ads_here;
             this.pictureBox2.Location = new System.Drawing.Point(0, 0);
             this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(694, 521);
+            this.pictureBox2.Size = new System.Drawing.Size(694, 426);
             this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBox2.TabIndex = 1;
             this.pictureBox2.TabStop = false;
@@ -229,8 +227,7 @@
             this.pictureBox3.Image = global::Price_Checker.Properties.Resources.Animation___1714451965175;
             this.pictureBox3.Location = new System.Drawing.Point(0, 0);
             this.pictureBox3.Name = "pictureBox3";
-            this.pictureBox3.Size = new System.Drawing.Size(748, 573);
-            this.pictureBox3.Size = new System.Drawing.Size(1432, 473);
+            this.pictureBox3.Size = new System.Drawing.Size(1432, 541);
             this.pictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBox3.TabIndex = 3;
             this.pictureBox3.TabStop = false;

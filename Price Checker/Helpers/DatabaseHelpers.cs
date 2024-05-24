@@ -2,137 +2,133 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Windows.Forms;
 
-public class DatabaseHelper
+public class DatabaseHelper : IDisposable
 {
     private readonly string _connectionString;
     private MySqlConnection _connection;
+
     public DatabaseHelper(string connectionString)
     {
         _connectionString = connectionString;
+        _connection = new MySqlConnection(_connectionString);
+        try
+        {
+            _connection.Open();
+        }
+        catch (Exception ex)
+        {
+            // Display error message in a message box
+            MessageBox.Show("Error opening connection: " + ex.Message, "Connection Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            throw; // Re-throw the exception if you want it to propagate
+        }
     }
 
+    private void AddParameters(MySqlCommand command, Dictionary<string, object> parameters)
+    {
+        if (parameters != null)
+        {
+            foreach (var param in parameters)
+            {
+                command.Parameters.AddWithValue(param.Key, param.Value);
+            }
+        }
+    }
 
     public MySqlDataReader ExecuteReader(string query, Dictionary<string, object> parameters = null)
     {
-        if (_connection == null || _connection.State != ConnectionState.Open)
+        try
         {
-            _connection = new MySqlConnection(_connectionString);
-            _connection.Open();
+            var command = new MySqlCommand(query, _connection);
+            AddParameters(command, parameters);
+            return command.ExecuteReader(); // Note: Caller is responsible for closing the reader
         }
-
-        using (var command = new MySqlCommand(query, _connection))
+        catch (Exception ex)
         {
-            if (parameters != null)
-            {
-                foreach (var param in parameters)
-                {
-                    command.Parameters.AddWithValue(param.Key, param.Value);
-                }
-            }
-
-            return command.ExecuteReader();
+            // Display error message in a message box
+            MessageBox.Show("Error executing reader: " + ex.Message, "Query Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            throw; // Re-throw the exception if you want it to propagate
         }
     }
-    // Method to execute a query and return the result as a DataTable
+
     public DataTable ExecuteQuery(string query, Dictionary<string, object> parameters = null)
     {
         DataTable dataTable = new DataTable();
-
         try
         {
-            using (var conn = new MySqlConnection(_connectionString))
+            using (var command = new MySqlCommand(query, _connection))
             {
-                conn.Open();
-                using (var command = new MySqlCommand(query, conn))
+                AddParameters(command, parameters);
+                using (var reader = command.ExecuteReader())
                 {
-                    if (parameters != null)
-                    {
-                        foreach (var param in parameters)
-                        {
-                            command.Parameters.AddWithValue(param.Key, param.Value);
-                        }
-                    }
-
-                    using (var reader = command.ExecuteReader())
-                    {
-                        dataTable.Load(reader);
-                    }
+                    dataTable.Load(reader);
                 }
             }
         }
-        catch (MySqlException ex)
+        catch (Exception ex)
         {
-            // Handle the exception as needed
-            Console.WriteLine($"Database Error: {ex.Message}");
+            // Display error message in a message box
+            MessageBox.Show("Error executing query: " + ex.Message, "Query Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            throw; // Re-throw the exception if you want it to propagate
         }
 
         return dataTable;
     }
 
-    // Method to execute a non-query command (INSERT, UPDATE, DELETE)
     public int ExecuteNonQuery(string query, Dictionary<string, object> parameters = null)
     {
-        int rowsAffected = 0;
-
         try
         {
-            using (var conn = new MySqlConnection(_connectionString))
+            using (var command = new MySqlCommand(query, _connection))
             {
-                conn.Open();
-                using (var command = new MySqlCommand(query, conn))
-                {
-                    if (parameters != null)
-                    {
-                        foreach (var param in parameters)
-                        {
-                            command.Parameters.AddWithValue(param.Key, param.Value);
-                        }
-                    }
-
-                    rowsAffected = command.ExecuteNonQuery();
-                }
+                AddParameters(command, parameters);
+                return command.ExecuteNonQuery();
             }
         }
-        catch (MySqlException ex)
+        catch (Exception ex)
         {
-            // Handle the exception as needed
-            Console.WriteLine($"Database Error: {ex.Message}");
+            // Display error message in a message box
+            MessageBox.Show("Error executing non-query: " + ex.Message, "Query Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            throw; // Re-throw the exception if you want it to propagate
         }
-
-        return rowsAffected;
     }
 
-    // Method to execute a scalar query (e.g., SELECT COUNT(*))
     public object ExecuteScalar(string query, Dictionary<string, object> parameters = null)
     {
-        object result = null;
-
         try
         {
-            using (var conn = new MySqlConnection(_connectionString))
+            using (var command = new MySqlCommand(query, _connection))
             {
-                conn.Open();
-                using (var command = new MySqlCommand(query, conn))
-                {
-                    if (parameters != null)
-                    {
-                        foreach (var param in parameters)
-                        {
-                            command.Parameters.AddWithValue(param.Key, param.Value);
-                        }
-                    }
-
-                    result = command.ExecuteScalar();
-                }
+                AddParameters(command, parameters);
+                return command.ExecuteScalar();
             }
         }
-        catch (MySqlException ex)
+        catch (Exception ex)
         {
-            // Handle the exception as needed
-            Console.WriteLine($"Database Error: {ex.Message}");
+            // Display error message in a message box
+            MessageBox.Show("Error executing scalar: " + ex.Message, "Query Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            throw; // Re-throw the exception if you want it to propagate
         }
+    }
 
-        return result;
+    public void Dispose()
+    {
+        if (_connection != null)
+        {
+            try
+            {
+                _connection.Close();
+            }
+            catch (Exception ex)
+            {
+                // Display error message in a message box
+                MessageBox.Show("Error closing connection: " + ex.Message, "Connection Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                _connection.Dispose();
+            }
+        }
     }
 }
