@@ -94,6 +94,7 @@ namespace Price_Checker
             this.lbl_generic.ForeColor = System.Drawing.Color.Black;
             this.lbl_generic.Location = new System.Drawing.Point(27, 202);
             this.lbl_generic.Name = "lbl_generic";
+            this.lbl_generic.Size = new System.Drawing.Size(540, 34);
             this.lbl_generic.Size = new System.Drawing.Size(695, 34);
             this.lbl_generic.TabIndex = 28;
             this.lbl_generic.Text = "Generic: ";
@@ -132,6 +133,7 @@ namespace Price_Checker
             this.lbl_manufacturer.ForeColor = System.Drawing.Color.Black;
             this.lbl_manufacturer.Location = new System.Drawing.Point(27, 261);
             this.lbl_manufacturer.Name = "lbl_manufacturer";
+            this.lbl_manufacturer.Size = new System.Drawing.Size(467, 34);
             this.lbl_manufacturer.Size = new System.Drawing.Size(695, 34);
             this.lbl_manufacturer.TabIndex = 22;
             this.lbl_manufacturer.Text = "Manufacturer: ";
@@ -145,6 +147,7 @@ namespace Price_Checker
             this.lbl_barcode.ForeColor = System.Drawing.Color.Black;
             this.lbl_barcode.Location = new System.Drawing.Point(27, 317);
             this.lbl_barcode.Name = "lbl_barcode";
+            this.lbl_barcode.Size = new System.Drawing.Size(534, 34);
             this.lbl_barcode.Size = new System.Drawing.Size(695, 34);
             this.lbl_barcode.TabIndex = 19;
             this.lbl_barcode.Text = "Barcode: ";

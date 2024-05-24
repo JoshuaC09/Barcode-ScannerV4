@@ -69,6 +69,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.lbl_barcode.Cursor = System.Windows.Forms.Cursors.WaitCursor;
             this.lbl_barcode.Font = new System.Drawing.Font("Arial Rounded MT Bold", 28.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbl_barcode.Location = new System.Drawing.Point(603, 134);
             this.lbl_barcode.Location = new System.Drawing.Point(722, 141);
             this.lbl_barcode.Name = "lbl_barcode";
             this.lbl_barcode.Size = new System.Drawing.Size(316, 62);
@@ -83,6 +84,7 @@
             this.label3.Cursor = System.Windows.Forms.Cursors.WaitCursor;
             this.label3.Font = new System.Drawing.Font("Arial Rounded MT Bold", 40.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(113)))), ((int)(((byte)(192)))));
+            this.label3.Location = new System.Drawing.Point(370, 464);
             this.label3.Location = new System.Drawing.Point(4, 383);
             this.label3.Margin = new System.Windows.Forms.Padding(0);
             this.label3.Name = "label3";
@@ -133,7 +135,7 @@
             this.tableLayoutPanel1.RowCount = 1;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(1399, 527);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(1399, 432);
             this.tableLayoutPanel1.TabIndex = 6;
             // 
             // pictureBox1
@@ -143,7 +145,7 @@
             this.pictureBox1.InitialImage = null;
             this.pictureBox1.Location = new System.Drawing.Point(3, 3);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(693, 521);
+            this.pictureBox1.Size = new System.Drawing.Size(693, 426);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBox1.TabIndex = 1;
             this.pictureBox1.TabStop = false;
@@ -158,7 +160,7 @@
             this.panel4.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.panel4.Location = new System.Drawing.Point(702, 3);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(694, 521);
+            this.panel4.Size = new System.Drawing.Size(694, 426);
             this.panel4.TabIndex = 5;
             // 
             // pictureBox2
@@ -179,7 +181,7 @@
             this.axWindowsMediaPlayer1.Location = new System.Drawing.Point(0, 0);
             this.axWindowsMediaPlayer1.Name = "axWindowsMediaPlayer1";
             this.axWindowsMediaPlayer1.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("axWindowsMediaPlayer1.OcxState")));
-            this.axWindowsMediaPlayer1.Size = new System.Drawing.Size(694, 521);
+            this.axWindowsMediaPlayer1.Size = new System.Drawing.Size(694, 426);
             this.axWindowsMediaPlayer1.TabIndex = 0;
             // 
             // scanPanel
@@ -191,9 +193,9 @@
             this.scanPanel.Controls.Add(this.detailPanel);
             this.scanPanel.Cursor = System.Windows.Forms.Cursors.Default;
             this.scanPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.scanPanel.Location = new System.Drawing.Point(0, 550);
+            this.scanPanel.Location = new System.Drawing.Point(0, 482);
             this.scanPanel.Name = "scanPanel";
-            this.scanPanel.Size = new System.Drawing.Size(1432, 473);
+            this.scanPanel.Size = new System.Drawing.Size(1432, 541);
             this.scanPanel.TabIndex = 9;
             // 
             // panel3
@@ -227,6 +229,7 @@
             this.pictureBox3.Image = global::Price_Checker.Properties.Resources.Animation___1714451965175;
             this.pictureBox3.Location = new System.Drawing.Point(0, 0);
             this.pictureBox3.Name = "pictureBox3";
+            this.pictureBox3.Size = new System.Drawing.Size(748, 573);
             this.pictureBox3.Size = new System.Drawing.Size(1432, 473);
             this.pictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBox3.TabIndex = 3;
@@ -237,7 +240,7 @@
             this.detailPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.detailPanel.BackColor = System.Drawing.Color.White;
             this.detailPanel.Controls.Add(this.lbl_barcode);
-            this.detailPanel.Location = new System.Drawing.Point(1, 75);
+            this.detailPanel.Location = new System.Drawing.Point(1, 109);
             this.detailPanel.Name = "detailPanel";
             this.detailPanel.Size = new System.Drawing.Size(1431, 398);
             this.detailPanel.TabIndex = 4;

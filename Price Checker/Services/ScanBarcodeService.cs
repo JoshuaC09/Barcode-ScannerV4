@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Threading;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
 using Price_Checker.Configuration;
 
@@ -10,6 +12,12 @@ namespace Price_Checker.Services
     public class ScanBarcodeService
     {
         public event EventHandler<string> BarcodeScanned;
+        private PriceCheckerForm _currentPriceForm;
+        private readonly ProductDetailService _productDetailService;
+
+        public ScanBarcodeService()
+        {
+            _productDetailService = new ProductDetailService(_currentPriceForm);
         private readonly DatabaseHelper _dbHelper;
 
         public ScanBarcodeService()
@@ -24,9 +32,17 @@ namespace Price_Checker.Services
                 string barcode = barcodeLabel.Text.Trim();
                 if (!string.IsNullOrEmpty(barcode))
                 {
-                    if (IsBarcodeInDatabase(barcode))
+                    var products = _productDetailService.GetProductDetails(barcode);
+                    if (products.Count > 0)
                     {
-                        DisplayPriceForm(barcode, detailPanel);
+                        if (products.Count > 1)
+                        {
+                            DisplayPriceForm2(barcode, detailPanel);
+                        }
+                        else
+                        {
+                            DisplayPriceForm(barcode, detailPanel);
+                        }
                         OnBarcodeScanned(barcode);
 
                         // Refocus the barcodeLabel
@@ -65,19 +81,74 @@ namespace Price_Checker.Services
 
         private void DisplayPriceForm(string barcode, Panel detailPanel)
         {
-            var priceForm = new PriceCheckerForm(barcode)
+            // Remove and dispose existing PriceCheckerForm if it exists
+            foreach (Control control in detailPanel.Controls)
+            {
+                if (control is PriceCheckerForm existingPriceForm)
+                {
+                    if (!existingPriceForm.IsDisposed)
+                    {
+                        detailPanel.Controls.Remove(existingPriceForm);
+                        existingPriceForm.Dispose();
+                    }
+                    break;
+                }
+            }
+
+            // Create a new instance of PriceCheckerForm
+            _currentPriceForm = new PriceCheckerForm(barcode)
             {
                 Dock = DockStyle.Fill,
                 Size = detailPanel.Size,
                 FormBorderStyle = FormBorderStyle.None,
                 TopLevel = false
             };
-            detailPanel.Controls.Add(priceForm);
-            priceForm.BringToFront();
-            priceForm.TabIndex = 0;
-            priceForm.SetBarcode(barcode);
-            priceForm.Show();
+            detailPanel.Controls.Add(_currentPriceForm);
+            _currentPriceForm.BringToFront();
+            _currentPriceForm.TabIndex = 0;
+            _currentPriceForm.SetBarcode(barcode);
+
+            // Show the form
+            _currentPriceForm.Show();
         }
+
+        private void DisplayPriceForm2(string barcode, Panel detailPanel)
+        {
+            // Remove and dispose existing PriceCheckerForm if it exists
+            foreach (Control control in detailPanel.Controls)
+            {
+                if (control is PriceCheckerForm existingPriceForm)
+                {
+                    if (!existingPriceForm.IsDisposed)
+                    {
+                        detailPanel.Controls.Remove(existingPriceForm);
+                        existingPriceForm.Dispose();
+                    }
+                    break;
+                }
+            }
+
+            // Create a new instance of PriceCheckerForm
+            _currentPriceForm = new PriceCheckerForm(barcode)
+            {
+                Dock = DockStyle.Fill,
+                Size = detailPanel.Size,
+                FormBorderStyle = FormBorderStyle.None,
+                TopLevel = false
+            };
+            detailPanel.Controls.Add(_currentPriceForm);
+            _currentPriceForm.BringToFront();
+            _currentPriceForm.TabIndex = 0;
+            _currentPriceForm.SetBarcode(barcode);
+
+            // Note: Do not call _currentPriceForm.Show() here
+        }
+
+        private List<Product> GetProductDetails(string barcode)
+        {
+            return _productDetailService.GetProductDetails(barcode);
+        }
+
 
         private void ShowMessageBoxAndDisappear(string message, int milliseconds, mainForm mainForm, TextBox barcodeLabel)
         {
@@ -139,3 +210,4 @@ namespace Price_Checker.Services
         }
     }
 }
+

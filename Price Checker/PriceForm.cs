@@ -10,6 +10,7 @@ namespace Price_Checker
     {
         private readonly ProductDetailService productDetailService;
 
+
         public PriceCheckerForm(string barcode)
         {
             InitializeComponent();

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
@@ -20,7 +21,6 @@ namespace Price_Checker
         private readonly ServerStatusService serverStatusManager;
         private settingsForm settingsForm;
         private bool isDefaultPictureBoxShown = false;
-
         private string connString = ConnectionStringService.ConnectionString;
         public mainForm()
         {
@@ -52,6 +52,8 @@ namespace Price_Checker
             imageManager.LoadImageFiles();
             fontManager = new FontManagerService();
             lbl_barcode.Font = fontManager.GetCustomFont();
+            videoManager = new VideoManagerService(axWindowsMediaPlayer1);
+
             videoManager = new VideoManagerService(axWindowsMediaPlayer1,pictureBox2);
         }
       
@@ -83,6 +85,7 @@ namespace Price_Checker
             // Set focus to lbl_barcode when the form is shown
             lbl_barcode.Focus();
         }
+
 
         private void Lbl_barcode_KeyDown(object sender, KeyEventArgs e)
         {
@@ -122,6 +125,7 @@ namespace Price_Checker
                 await Task.Delay(1000); //1sec
             }
         }
+
         
         private readonly float originalFormWidth = 1438f;  
         private readonly float originalFormHeight = 1150f; 
