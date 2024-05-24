@@ -1,6 +1,4 @@
-﻿using MySql.Data.MySqlClient;
-using Price_Checker.Configuration;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data;
 using System;
 using System.Windows.Forms;
@@ -9,7 +7,6 @@ namespace Price_Checker.SettingsHelpers
 {
     internal class SettingsHelper
     {
-
         private readonly DatabaseHelper _databaseHelper;
 
         public SettingsHelper(string connectionString)
@@ -27,22 +24,28 @@ namespace Price_Checker.SettingsHelpers
                 DataRow row = settingsTable.Rows[0];
 
                 tb_appname.Text = row["set_appname"].ToString();
-                tb_appname.GotFocus += TextBox_GotFocus;
+                tb_appname.Enter += TextBox_Enter;
+                tb_appname.Click += TextBox_Click;
 
                 tb_adpictime.Text = row["set_adpictime"].ToString();
-                tb_adpictime.GotFocus += TextBox_GotFocus;
+                tb_adpictime.Enter += TextBox_Enter;
+                tb_adpictime.Click += TextBox_Click;
 
                 tb_adpicpath.Text = row["set_adpic"].ToString();
-                tb_adpicpath.GotFocus += TextBox_GotFocus;
+                tb_adpicpath.Enter += TextBox_Enter;
+                tb_adpicpath.Click += TextBox_Click;
 
                 tb_advidtime.Text = row["set_advidtime"].ToString();
-                tb_advidtime.GotFocus += TextBox_GotFocus;
+                tb_advidtime.Enter += TextBox_Enter;
+                tb_advidtime.Click += TextBox_Click;
 
                 tb_advidpath.Text = row["set_advid"].ToString();
-                tb_advidpath.GotFocus += TextBox_GotFocus;
+                tb_advidpath.Enter += TextBox_Enter;
+                tb_advidpath.Click += TextBox_Click;
 
                 tb_disptime.Text = row["set_disptime"].ToString();
-                tb_disptime.GotFocus += TextBox_GotFocus;
+                tb_disptime.Enter += TextBox_Enter;
+                tb_disptime.Click += TextBox_Click;
 
                 int setCode = Convert.ToInt32(row["set_code"]);
                 rb_ipos.Checked = setCode == 1;
@@ -50,13 +53,23 @@ namespace Price_Checker.SettingsHelpers
             }
         }
 
-        private void TextBox_GotFocus(object sender, EventArgs e)
+        private void TextBox_Enter(object sender, EventArgs e)
         {
-            TextBox textBox = (TextBox)sender;
-            textBox.Text = string.Empty;
-            textBox.Tag = null;
+            if (sender is TextBox textBox)
+            {
+                textBox.BeginInvoke(new Action(() => textBox.SelectAll()));
+            }
         }
+        private bool textBoxJustEntered = false;
 
+        private void TextBox_Click(object sender, EventArgs e)
+        {
+            if (textBoxJustEntered)
+            {
+                (sender as TextBox).SelectAll();
+            }
+            textBoxJustEntered = false;
+        }
 
         public void SaveSettings(TextBox tb_appname, TextBox tb_adpictime, TextBox tb_adpicpath, TextBox tb_advidtime, TextBox tb_advidpath, TextBox tb_disptime)
         {

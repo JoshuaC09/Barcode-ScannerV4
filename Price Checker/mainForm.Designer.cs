@@ -38,6 +38,7 @@
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.panel4 = new System.Windows.Forms.Panel();
+            this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.axWindowsMediaPlayer1 = new AxWMPLib.AxWindowsMediaPlayer();
             this.scanPanel = new System.Windows.Forms.Panel();
             this.panel3 = new System.Windows.Forms.Panel();
@@ -53,6 +54,7 @@
             this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.panel4.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.axWindowsMediaPlayer1)).BeginInit();
             this.scanPanel.SuspendLayout();
             this.panel3.SuspendLayout();
@@ -68,6 +70,7 @@
             this.lbl_barcode.Cursor = System.Windows.Forms.Cursors.WaitCursor;
             this.lbl_barcode.Font = new System.Drawing.Font("Arial Rounded MT Bold", 28.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbl_barcode.Location = new System.Drawing.Point(603, 134);
+            this.lbl_barcode.Location = new System.Drawing.Point(722, 141);
             this.lbl_barcode.Name = "lbl_barcode";
             this.lbl_barcode.Size = new System.Drawing.Size(316, 62);
             this.lbl_barcode.TabIndex = 1;
@@ -75,18 +78,20 @@
             // 
             // label3
             // 
-            this.label3.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.label3.AutoSize = true;
+            this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.label3.BackColor = System.Drawing.Color.Transparent;
             this.label3.Cursor = System.Windows.Forms.Cursors.WaitCursor;
             this.label3.Font = new System.Drawing.Font("Arial Rounded MT Bold", 40.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(113)))), ((int)(((byte)(192)))));
             this.label3.Location = new System.Drawing.Point(370, 464);
+            this.label3.Location = new System.Drawing.Point(4, 383);
             this.label3.Margin = new System.Windows.Forms.Padding(0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(711, 77);
+            this.label3.Size = new System.Drawing.Size(1428, 77);
             this.label3.TabIndex = 3;
             this.label3.Text = "CHECK PRICE HERE";
+            this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // panel1
             // 
@@ -148,6 +153,7 @@
             // panel4
             // 
             this.panel4.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.panel4.Controls.Add(this.pictureBox2);
             this.panel4.Controls.Add(this.axWindowsMediaPlayer1);
             this.panel4.Cursor = System.Windows.Forms.Cursors.Default;
             this.panel4.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -156,6 +162,17 @@
             this.panel4.Name = "panel4";
             this.panel4.Size = new System.Drawing.Size(694, 426);
             this.panel4.TabIndex = 5;
+            // 
+            // pictureBox2
+            // 
+            this.pictureBox2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pictureBox2.Image = global::Price_Checker.Properties.Resources.ads_here;
+            this.pictureBox2.Location = new System.Drawing.Point(0, 0);
+            this.pictureBox2.Name = "pictureBox2";
+            this.pictureBox2.Size = new System.Drawing.Size(694, 521);
+            this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBox2.TabIndex = 1;
+            this.pictureBox2.TabStop = false;
             // 
             // axWindowsMediaPlayer1
             // 
@@ -194,7 +211,7 @@
             // lbl_appname
             // 
             this.lbl_appname.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(113)))), ((int)(((byte)(192)))));
-            this.lbl_appname.Cursor = System.Windows.Forms.Cursors.WaitCursor;
+            this.lbl_appname.Cursor = System.Windows.Forms.Cursors.Default;
             this.lbl_appname.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lbl_appname.Font = new System.Drawing.Font("Arial Rounded MT Bold", 36F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbl_appname.ForeColor = System.Drawing.Color.White;
@@ -207,14 +224,13 @@
             // 
             // pictureBox3
             // 
-            this.pictureBox3.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.pictureBox3.Cursor = System.Windows.Forms.Cursors.Default;
+            this.pictureBox3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pictureBox3.Image = global::Price_Checker.Properties.Resources.Animation___1714451965175;
-            this.pictureBox3.Location = new System.Drawing.Point(351, 0);
+            this.pictureBox3.Location = new System.Drawing.Point(0, 0);
             this.pictureBox3.Name = "pictureBox3";
             this.pictureBox3.Size = new System.Drawing.Size(748, 573);
+            this.pictureBox3.Size = new System.Drawing.Size(1432, 473);
             this.pictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBox3.TabIndex = 3;
             this.pictureBox3.TabStop = false;
@@ -277,7 +293,6 @@
             this.BackColor = System.Drawing.SystemColors.ActiveCaption;
             this.ClientSize = new System.Drawing.Size(1432, 1055);
             this.Controls.Add(this.panel1);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.KeyPreview = true;
             this.MinimizeBox = false;
             this.Name = "mainForm";
@@ -289,9 +304,9 @@
             this.tableLayoutPanel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.panel4.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.axWindowsMediaPlayer1)).EndInit();
             this.scanPanel.ResumeLayout(false);
-            this.scanPanel.PerformLayout();
             this.panel3.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
             this.detailPanel.ResumeLayout(false);
@@ -321,5 +336,6 @@
         private System.Windows.Forms.Label lbl_appname;
         private System.Windows.Forms.Panel detailPanel;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+        private System.Windows.Forms.PictureBox pictureBox2;
     }
 }

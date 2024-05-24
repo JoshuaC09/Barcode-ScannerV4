@@ -1,5 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Security.Policy;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Price_Checker.Configuration;
@@ -16,7 +20,8 @@ namespace Price_Checker
         private readonly VideoManagerService videoManager;
         private readonly ServerStatusService serverStatusManager;
         private settingsForm settingsForm;
-
+        private bool isDefaultPictureBoxShown = false;
+        private string connString = ConnectionStringService.ConnectionString;
         public mainForm()
         {
             InitializeComponent();
@@ -34,19 +39,24 @@ namespace Price_Checker
             this.KeyDown += MainForm_KeyDown;
 
             serverStatusManager = new ServerStatusService();
-        
+
+            this.Load += mainForm_Load;
+            this.Resize += mainForm_Resize;
+
+
             UpdateStatusLabelPeriodically(); // Start the periodic status label update
             scanBarcodeService = new ScanBarcodeService();
             scanBarcodeService.BarcodeScanned += ScanBarcodeService_BarcodeScanned;
             barcodeTimer = new BarcodeTimer(lbl_barcode);
-            imageManager = new ImagesManagerService(pictureBox1);
+            imageManager = new ImagesManagerService(pictureBox1,connString);
             imageManager.LoadImageFiles();
             fontManager = new FontManagerService();
             lbl_barcode.Font = fontManager.GetCustomFont();
             videoManager = new VideoManagerService(axWindowsMediaPlayer1);
 
+            videoManager = new VideoManagerService(axWindowsMediaPlayer1,pictureBox2);
         }
-
+      
         private void MainForm_KeyDown(object sender, KeyEventArgs e)
         {
             // Alt + Conrol + Backspace
@@ -116,6 +126,80 @@ namespace Price_Checker
             }
         }
 
+        
+        private readonly float originalFormWidth = 1438f;  
+        private readonly float originalFormHeight = 1150f; 
+
+        private Dictionary<Control, float> originalFontSizes = new Dictionary<Control, float>();
+
+        private void mainForm_Load(object sender, EventArgs e)
+        {
+            StoreOriginalSizesAndPositions(scanPanel);
+            StoreOriginalSizesAndPositions(panel2);
+
+            if (!originalFontSizes.ContainsKey(lbl_appname))
+            {
+                originalFontSizes[lbl_appname] = lbl_appname.Font.Size;
+            }
+
+            AdjustFontSizes();
+        }
+
+        private void mainForm_Resize(object sender, EventArgs e)
+        {
+            AdjustFontSizes();
+        }
+
+        private void StoreOriginalSizesAndPositions(Panel panel)
+        {
+            foreach (Control control in panel.Controls)
+            {
+                if (control is Label label)
+                {
+                    if (!originalFontSizes.ContainsKey(label))
+                    {
+                        originalFontSizes[label] = label.Font.Size;
+                    }
+                }
+            }
+        }
+
+        private void AdjustFontSizes()
+        {
+            float currentFormWidth = this.ClientSize.Width;
+            float currentFormHeight = this.ClientSize.Height;
+
+            
+            float widthRatio = currentFormWidth / originalFormWidth;
+            float heightRatio = currentFormHeight / originalFormHeight;
+
+            float formRatio = Math.Max(widthRatio, heightRatio);
+
+            AdjustPanelFontSizes(scanPanel, widthRatio, heightRatio, formRatio);
+            AdjustPanelFontSizes(panel2, widthRatio, heightRatio, formRatio);
+
+            if (originalFontSizes.ContainsKey(lbl_appname))
+            {
+                float originalFontSizeAppName = originalFontSizes[lbl_appname];
+                lbl_appname.Font = new Font(lbl_appname.Font.FontFamily, originalFontSizeAppName * formRatio);
+            }
+        }
+
+        private void AdjustPanelFontSizes(Panel panel, float widthRatio, float heightRatio, float formRatio)
+        {
+            foreach (Control control in panel.Controls)
+            {
+                if (control is Label label3)
+                {
+                    if (originalFontSizes.ContainsKey(label3))
+                    {
+                        float originalFontSize = originalFontSizes[label3];
+                        label3.Font = new Font(label3.Font.FontFamily, originalFontSize * formRatio);;
+                    }
+                }
+            }
+        }
 
     }
+
 }

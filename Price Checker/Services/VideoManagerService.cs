@@ -3,7 +3,6 @@ using MySql.Data.MySqlClient;
 using Price_Checker.Configuration;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -17,54 +16,34 @@ public class VideoManagerService
     private AxWindowsMediaPlayer mediaPlayer;
     private string assetsFolder;
     private string appDirectory;
-    private string defaultImagePath;
+    private PictureBox pictureBox;
+    private readonly DatabaseHelper dbHelper;
 
-    public VideoManagerService(AxWindowsMediaPlayer player)
+    public VideoManagerService(AxWindowsMediaPlayer player, PictureBox pictureBox)
     {
         mediaPlayer = player;
+        this.pictureBox = pictureBox;
+        dbHelper = new DatabaseHelper(ConnectionStringService.ConnectionString);
+
         mediaPlayer.PlayStateChange += new _WMPOCXEvents_PlayStateChangeEventHandler(AxWindowsMediaPlayer1_PlayStateChange);
         LoadVideoFilePaths();
 
         playbackTimer = new System.Timers.Timer();
         playbackTimer.Elapsed += PlaybackTimer_Elapsed;
 
-        // Create and save the default image
-        defaultImagePath = CreateAndSaveDefaultImage(Price_Checker.Properties.Resources.ads_here);
+        PlayNextVideoAsync().ConfigureAwait(false); // Fire and forget
 
-        if (mediaPlayer.URL != defaultImagePath)
-        {
-            PlayNextVideo();
-        }
         System.Timers.Timer updateTimer = new System.Timers.Timer
         {
-            Interval = 1000 // Check for updates every 1 second
+            Interval = 500 // Check for updates every 1 second
         };
-        updateTimer.Elapsed += CheckAndUpdateFilePath;
+        updateTimer.Elapsed += async (sender, e) => await CheckAndUpdateFilePathAsync(sender, e);
         updateTimer.Start();
     }
 
-    private string CreateAndSaveDefaultImage(Bitmap bitmap)
+    private async Task CheckAndUpdateFilePathAsync(object sender, System.Timers.ElapsedEventArgs e)
     {
-        int playerWidth = mediaPlayer.Width;
-        int playerHeight = mediaPlayer.Height;
-
-        Bitmap resizedBitmap = new Bitmap(playerWidth, playerHeight);
-        using (Graphics g = Graphics.FromImage(resizedBitmap))
-        {
-            g.DrawImage(bitmap, 0, 0, playerWidth, playerHeight);
-        }
-
-
-        string tempFilePath = Path.Combine(Path.GetTempPath(), "VideoDefault.jpg");
-
-        resizedBitmap.Save(tempFilePath, System.Drawing.Imaging.ImageFormat.Png);
-        return tempFilePath;
-    }
-
-    private void CheckAndUpdateFilePath(object sender, System.Timers.ElapsedEventArgs e)
-    {
-        string connstring = ConnectionStringService.ConnectionString;
-        string updatedAssetsFolder = GetAssetsFolder(connstring);
+        string updatedAssetsFolder = GetAssetsFolder();
 
         if (updatedAssetsFolder != assetsFolder)
         {
@@ -81,28 +60,15 @@ public class VideoManagerService
             videoFilePaths = SortVideoFilePaths(allVideoPaths, invalidVideoPaths);
             videoQueue = new Queue<string>(videoFilePaths);
 
-          
-                PlayNextVideo();
-           
+            await PlayNextVideoAsync();
         }
     }
 
-    private string GetAssetsFolder(string connstring)
+    private string GetAssetsFolder()
     {
-        using (var con = new MySqlConnection(connstring))
-        {
-            con.Open();
-            var sql = "SELECT set_advid FROM settings";
-            using (var cmd = new MySqlCommand(sql, con))
-            using (var reader = cmd.ExecuteReader())
-            {
-                if (reader.Read() && !reader.IsDBNull(0))
-                {
-                    return reader.GetString(0).Replace("$", "\\");
-                }
-            }
-        }
-        return null;
+        string query = "SELECT set_advid FROM settings";
+        object result = dbHelper.ExecuteScalar(query);
+        return result?.ToString().Replace("$", "\\");
     }
 
     private string GetVideosFolder(string assetsFolder)
@@ -110,17 +76,22 @@ public class VideoManagerService
         if (string.IsNullOrEmpty(assetsFolder) || !Directory.Exists(assetsFolder) || !Directory.EnumerateFiles(assetsFolder).Any())
         {
             appDirectory = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
-            return Path.Combine(appDirectory, "assets", "Videos");
+            string defaultVideosFolder = Path.Combine(appDirectory, "assets", "Videos");
+
+            // Ensure the default directory exists
+            if (!Directory.Exists(defaultVideosFolder))
+            {
+                Directory.CreateDirectory(defaultVideosFolder);
+            }
+
+            return defaultVideosFolder;
         }
         return assetsFolder;
     }
 
     private List<string> GetAllVideoPaths(string videosFolder)
     {
-     
-
-        var videoExtensions = new List<string> { "*.mp4", "*.avi", "*.mov", "*.mkv", "*.flv", "*.wmv", "*.m4v", "*.3gp", "*.ogv", "*.webm","*.mpeg" };
-
+        var videoExtensions = new List<string> { "*.mp4", "*.avi", "*.mov", "*.mkv", "*.flv", "*.wmv", "*.m4v", "*.3gp", "*.ogv", "*.webm", "*.mpeg" };
         return videoExtensions.SelectMany(ext => Directory.EnumerateFiles(videosFolder, ext)).ToList();
     }
 
@@ -139,90 +110,61 @@ public class VideoManagerService
 
     public void LoadVideoFilePaths()
     {
-        string connstring = ConnectionStringService.ConnectionString;
-        assetsFolder = GetAssetsFolder(connstring);
+        assetsFolder = GetAssetsFolder();
 
         string videosFolder = GetVideosFolder(assetsFolder);
         List<string> allVideoPaths = GetAllVideoPaths(videosFolder);
 
-        List<string> invalidVideoPaths = allVideoPaths.Where(file => !IsValidFileName(file)).ToList();
-        allVideoPaths = allVideoPaths.Except(invalidVideoPaths).ToList();
+        List<string> validVideoPaths = allVideoPaths.Where(file => IsValidFileName(file)).ToList();
+        List<string> invalidVideoPaths = allVideoPaths.Except(validVideoPaths).ToList();
 
-        videoFilePaths = SortVideoFilePaths(allVideoPaths, invalidVideoPaths);
+        videoFilePaths = SortVideoFilePaths(validVideoPaths, invalidVideoPaths);
         videoQueue = new Queue<string>(videoFilePaths);
     }
 
-    public void PlayNextVideo()
+    public async Task PlayNextVideoAsync()
     {
+        while (videoQueue.Count == 0)
+        {
+            // Queue is empty, repopulate it
+            videoQueue = new Queue<string>(videoFilePaths);
+            if (videoQueue.Count == 0)
+            {
+                // No videos available, wait for a while before checking again
+                await Task.Delay(5000); // Wait for 5 seconds
+            }
+        }
+
         if (videoQueue.Count > 0)
         {
             string videoPath = videoQueue.Dequeue();
-            try
-            {
-                mediaPlayer.URL = videoPath;
-                mediaPlayer.Ctlcontrols.play();
-                mediaPlayer.uiMode = "none";
-                mediaPlayer.stretchToFit = true;
-
-                if (mediaPlayer.currentMedia != null && mediaPlayer.currentMedia.duration > 0)
-                {
-                    playbackTimer.Interval = (mediaPlayer.currentMedia.duration + 1) * 1000;
-                    playbackTimer.Start();
-                }
-                else
-                {
-                    playbackTimer.Interval = GetAdvidTimeFromDatabase() ?? 100000;
-                    playbackTimer.Start();
-                }
-            }
-            catch (Exception ex)
-            {
-                // Handle the exception and display the default image
-                Console.WriteLine($"Error loading video: {ex.Message}");
-                DisplayDefaultImage();
-            }
-        }
-        else
-        {
-            LoadVideoFilePaths();
-            if (videoFilePaths.Count == 0)
-            {
-                // Display the default image when there are no videos available
-                DisplayDefaultImage();
-                return;
-            }
-            videoQueue = new Queue<string>(videoFilePaths);
-            PlayNextVideo();
-
-        }
-    }
-
-    private void DisplayDefaultImage()
-    {
-       
-            mediaPlayer.URL = defaultImagePath;
+            mediaPlayer.URL = videoPath;
+            mediaPlayer.Ctlcontrols.play();
             mediaPlayer.uiMode = "none";
             mediaPlayer.stretchToFit = true;
-            mediaPlayer.Ctlcontrols.play();
-      
 
+            double duration = mediaPlayer.currentMedia?.duration ?? 0;
+            if (duration > 0)
+            {
+                playbackTimer.Interval = (duration + 1) * 1000;
+                playbackTimer.Start();
+            }
+            else
+            {
+                playbackTimer.Interval = GetAdvidTimeFromDatabase() ?? 100000;
+                playbackTimer.Start();
+            }
+        }
     }
 
     private int? GetAdvidTimeFromDatabase()
     {
-        string connstring = ConnectionStringService.ConnectionString;
-        using (var con = new MySqlConnection(connstring))
+        string query = "SELECT set_advidtime FROM settings";
+        object result = dbHelper.ExecuteScalar(query);
+
+        if (result != null && int.TryParse(result.ToString(), out int seconds))
         {
-            con.Open();
-            var sql = "SELECT set_advidtime FROM settings";
-            using (var cmd = new MySqlCommand(sql, con))
-            {
-                var result = cmd.ExecuteScalar();
-                if (result != null && int.TryParse(result.ToString(), out int seconds))
-                {
-                    return ConvertSecondsToValue(seconds);
-                }
-            }
+            return ConvertSecondsToValue(seconds);
         }
         return 100000;
     }
@@ -237,13 +179,21 @@ public class VideoManagerService
         if (e.newState == 8) // 8 represents MediaEnded state
         {
             await Task.Delay(100); // Wait for 100 milliseconds
-            PlayNextVideo();
+            await PlayNextVideoAsync();
+        }
+        else if (e.newState == 0 || e.newState == 1) // 0 is Undefined, 1 is Stopped
+        {
+            pictureBox.Invoke((MethodInvoker)(() => pictureBox.Visible = string.IsNullOrEmpty(assetsFolder)));
+        }
+        else if (e.newState == 3) // 3 represents PlayingState
+        {
+            pictureBox.Invoke((MethodInvoker)(() => pictureBox.Visible = false));
         }
     }
 
-    private void PlaybackTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+    private async void PlaybackTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
     {
         playbackTimer.Stop(); // Stop the timer
-        PlayNextVideo(); // Play the next video
+        await PlayNextVideoAsync(); // Play the next video
     }
 }

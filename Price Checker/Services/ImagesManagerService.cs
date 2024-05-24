@@ -4,21 +4,23 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using System.Data;
 
 namespace Price_Checker.Configuration
 {
     internal class ImagesManagerService
     {
         private Queue<string> imageQueue = new Queue<string>();
-        private readonly System.Windows.Forms.Timer imageLoopTimer = new System.Windows.Forms.Timer();
-        private readonly System.Windows.Forms.PictureBox pictureBox1;
+        private readonly Timer imageLoopTimer = new Timer();
+        private readonly PictureBox pictureBox1;
         private string assetsFolder;
         private readonly string appDirectory = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
-        private readonly string connstring = ConnectionStringService.ConnectionString;
+        private readonly DatabaseHelper databaseHelper;
 
-        public ImagesManagerService(System.Windows.Forms.PictureBox pictureBox)
+        public ImagesManagerService(PictureBox pictureBox, string connectionString)
         {
             this.pictureBox1 = pictureBox;
+            this.databaseHelper = new DatabaseHelper(connectionString);
             InitializeImageSlideshow();
         }
 
@@ -28,7 +30,7 @@ namespace Price_Checker.Configuration
             imageLoopTimer.Interval = GetAdpicTimeFromDatabase();
             imageLoopTimer.Start();
 
-            var updateTimer = new System.Windows.Forms.Timer
+            var updateTimer = new Timer
             {
                 Interval = 1000
             };
@@ -50,7 +52,7 @@ namespace Price_Checker.Configuration
 
         private void CheckAndUpdateFilePath(object sender, EventArgs e)
         {
-            string updatedAssetsFolder = GetAssetsFolder(connstring);
+            string updatedAssetsFolder = GetAssetsFolder();
             if (updatedAssetsFolder != assetsFolder)
             {
                 assetsFolder = updatedAssetsFolder;
@@ -61,73 +63,76 @@ namespace Price_Checker.Configuration
         internal void LoadImageFiles()
         {
             imageQueue.Clear();
-            string imagesFolder = !string.IsNullOrEmpty(assetsFolder) && Directory.Exists(assetsFolder) && Directory.EnumerateFiles(assetsFolder).Any()
-                ? assetsFolder
-                : Path.Combine(appDirectory, "assets", "Images");
+            string imagesFolder = Path.Combine(appDirectory, "assets", "Images");
 
-            var validImageFiles = Directory.EnumerateFiles(imagesFolder, "*.*")
-                .Where(IsImageFile)
-                .Where(IsValidFileName)
-                .OrderBy(ParseFileName)
-                .ToList();
+            if (!string.IsNullOrEmpty(assetsFolder) && Directory.Exists(assetsFolder))
+            {
+                imagesFolder = assetsFolder;
+            }
 
-            var invalidImageFiles = Directory.EnumerateFiles(imagesFolder, "*.*")
-                .Where(IsImageFile)
-                .Where(file => !IsValidFileName(file))
-                .OrderBy(ParseFileName)
-                .ToList();
+            try
+            {
+                var validImageFiles = Directory.EnumerateFiles(imagesFolder, "*.*")
+                    .Where(IsImageFile)
+                    .Where(IsValidFileName)
+                    .OrderBy(ParseFileName)
+                    .ToList();
 
-            var allImageFiles = validImageFiles.Concat(invalidImageFiles).ToList();
+                var invalidImageFiles = Directory.EnumerateFiles(imagesFolder, "*.*")
+                    .Where(IsImageFile)
+                    .Where(file => !IsValidFileName(file))
+                    .OrderBy(ParseFileName)
+                    .ToList();
 
+                var allImageFiles = validImageFiles.Concat(invalidImageFiles).ToList();
 
-            if (allImageFiles.Count == 0)
+                if (allImageFiles.Count == 0)
+                {
+                    pictureBox1.Image = Properties.Resources.ads_here;
+                }
+                else
+                {
+                    foreach (string imagePath in allImageFiles)
+                    {
+                        imageQueue.Enqueue(imagePath);
+                    }
+
+                    DisplayNextImage(null, EventArgs.Empty);
+                }
+            }
+            catch (DirectoryNotFoundException)
             {
                 pictureBox1.Image = Properties.Resources.ads_here;
             }
-            else
+            catch (Exception ex)
             {
-                foreach (string imagePath in allImageFiles)
-                {
-                    imageQueue.Enqueue(imagePath);
-                }
-
-                DisplayNextImage(null, EventArgs.Empty);
+                MessageBox.Show($"An unexpected error occurred: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                pictureBox1.Image = Properties.Resources.ads_here;
             }
         }
 
-        private string GetAssetsFolder(string connstring)
+        private string GetAssetsFolder()
         {
-            using (var con = new MySqlConnection(connstring))
+            string query = "SELECT set_adpic FROM settings";
+            var result = databaseHelper.ExecuteScalar(query);
+            if (result != null && result != DBNull.Value)
             {
-                con.Open();
-                var cmd = new MySqlCommand("SELECT set_adpic FROM settings", con);
-                using (var reader = cmd.ExecuteReader())
-                {
-                    if (reader.Read())
-                    {
-                        string setAdPic = reader.IsDBNull(0) ? null : reader.GetString(0);
-                        return !string.IsNullOrEmpty(setAdPic) ? setAdPic.Replace("$", "\\") : null;
-                    }
-                }
+                return result.ToString().Replace("$", "\\");
             }
             return null;
         }
 
         private int GetAdpicTimeFromDatabase()
         {
-            using (var con = new MySqlConnection(connstring))
+            string query = "SELECT set_adpictime FROM settings";
+            var result = databaseHelper.ExecuteScalar(query);
+
+            if (result != null && result != DBNull.Value && int.TryParse(result.ToString(), out int seconds))
             {
-                con.Open();
-                var cmd = new MySqlCommand("SELECT set_adpictime FROM settings", con);
-                object result = cmd.ExecuteScalar();
-
-                if (result != null && result != DBNull.Value && int.TryParse(result.ToString(), out int seconds))
-                {
-                    return ConvertSecondsToValue(seconds);
-                }
-
-                return 10000; // Default value
+                return ConvertSecondsToValue(seconds);
             }
+
+            return 10000; // Default value
         }
 
         private int ConvertSecondsToValue(int seconds)

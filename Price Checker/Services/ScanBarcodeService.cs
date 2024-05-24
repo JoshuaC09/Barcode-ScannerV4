@@ -1,11 +1,11 @@
-﻿using MySql.Data.MySqlClient;
-using Price_Checker.Configuration;
-using System;
+﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
-using System.Windows.Forms;
 using System.Threading;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Forms;
+using Price_Checker.Configuration;
 
 namespace Price_Checker.Services
 {
@@ -18,6 +18,11 @@ namespace Price_Checker.Services
         public ScanBarcodeService()
         {
             _productDetailService = new ProductDetailService(_currentPriceForm);
+        private readonly DatabaseHelper _dbHelper;
+
+        public ScanBarcodeService()
+        {
+            _dbHelper = new DatabaseHelper(ConnectionStringService.ConnectionString);
         }
 
         public void HandleBarcodeInput(KeyEventArgs e, TextBox barcodeLabel, Panel detailPanel, mainForm mainForm)
@@ -48,7 +53,7 @@ namespace Price_Checker.Services
                     }
                     else
                     {
-                        ShowMessageBoxAndDisappear("Product not found", 3000, mainForm, barcodeLabel);
+                        ShowMessageBoxAndDisappear("Product not found", 400, mainForm, barcodeLabel);
 
                         // Refocus the barcodeLabel
                         barcodeLabel.Focus();
@@ -63,7 +68,7 @@ namespace Price_Checker.Services
             {
                 if (control is PriceCheckerForm priceForm)
                 {
-                    priceForm.SetBarcode(barcode);
+                    priceForm.SetBarcode("Barcode: " + barcode);
                     break;
                 }
             }
@@ -198,18 +203,10 @@ namespace Price_Checker.Services
         private bool IsBarcodeInDatabase(string barcode)
         {
             const string query = "SELECT prod_itemcode FROM prod_verifier WHERE prod_barcode = @barcode";
-            using (var conn = new MySqlConnection(ConnectionStringService.ConnectionString))
-            {
-                conn.Open();
-                using (var cmd = new MySqlCommand(query, conn))
-                {
-                    cmd.Parameters.AddWithValue("@barcode", barcode);
-                    using (var reader = cmd.ExecuteReader())
-                    {
-                        return reader.HasRows;
-                    }
-                }
-            }
+            var parameters = new Dictionary<string, object> { { "@barcode", barcode } };
+            var result = _dbHelper.ExecuteScalar(query, parameters);
+
+            return result != null;
         }
     }
 }
