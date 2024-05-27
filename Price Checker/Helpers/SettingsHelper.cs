@@ -104,9 +104,13 @@ namespace Price_Checker.SettingsHelpers
                 return;
             }
 
-            string query = "UPDATE settings SET set_appname = @appname, set_adpictime = @adpictime, set_adpic = @adpicpath, set_advidtime = @advidtime, set_advid = @advidpath, set_disptime = @disptime, set_muldisptime = @muldisptime";
+            int set_code = 1; 
+
+            string query = "INSERT INTO settings (set_code, set_appname, set_adpictime, set_adpic, set_advidtime, set_advid, set_disptime, set_muldisptime) VALUES (@set_code, @appname, @adpictime, @adpicpath, @advidtime, @advidpath, @disptime, @muldisptime) ON DUPLICATE KEY UPDATE set_appname = @appname, set_adpictime = @adpictime, set_adpic = @adpicpath, set_advidtime = @advidtime, set_advid = @advidpath, set_disptime = @disptime, set_muldisptime = @muldisptime;";
+
             var parameters = new Dictionary<string, object>
     {
+        { "@set_code", set_code },
         { "@appname", tb_appname.Text },
         { "@adpictime", tb_adpictime.Text },
         { "@adpicpath", tb_adpicpath.Text.Replace("\\", "$") },
@@ -119,6 +123,7 @@ namespace Price_Checker.SettingsHelpers
             _databaseHelper.ExecuteNonQuery(query, parameters);
             MessageBox.Show("Settings successfully saved.");
         }
+
 
         public void UpdateRadioButton(RadioButton rb_ipos, RadioButton rb_eipos)
         {
