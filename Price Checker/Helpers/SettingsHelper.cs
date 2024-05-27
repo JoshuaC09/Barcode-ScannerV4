@@ -8,7 +8,6 @@ namespace Price_Checker.SettingsHelpers
     internal class SettingsHelper
     {
         private readonly DatabaseHelper _databaseHelper;
-
         public SettingsHelper(string connectionString)
         {
             _databaseHelper = new DatabaseHelper(connectionString);

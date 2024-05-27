@@ -134,6 +134,8 @@ namespace Price_Checker
         {
             StoreOriginalSizesAndPositions(scanPanel);
             StoreOriginalSizesAndPositions(panel2);
+            StoreOriginalSizesAndPositions(panel3);
+   
 
             if (!originalFontSizes.ContainsKey(lbl_appname))
             {
@@ -175,11 +177,14 @@ namespace Price_Checker
 
             AdjustPanelFontSizes(scanPanel, widthRatio, heightRatio, formRatio);
             AdjustPanelFontSizes(panel2, widthRatio, heightRatio, formRatio);
+            AdjustPanelFontSizes(panel3, widthRatio, heightRatio, formRatio);
+         
 
             if (originalFontSizes.ContainsKey(lbl_appname))
             {
                 float originalFontSizeAppName = originalFontSizes[lbl_appname];
                 lbl_appname.Font = new Font(lbl_appname.Font.FontFamily, originalFontSizeAppName * formRatio);
+                label3.Font = new Font(label3.Font.FontFamily, originalFontSizeAppName * formRatio);
             }
         }
 
