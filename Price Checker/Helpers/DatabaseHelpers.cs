@@ -3,75 +3,136 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 
-public class DatabaseHelper : IDisposable
+public class DatabaseHelper
 {
     private readonly string _connectionString;
     private MySqlConnection _connection;
-
     public DatabaseHelper(string connectionString)
     {
         _connectionString = connectionString;
-        _connection = new MySqlConnection(_connectionString);
-        _connection.Open(); // Open the connection in the constructor
     }
 
-    private void AddParameters(MySqlCommand command, Dictionary<string, object> parameters)
-    {
-        if (parameters != null)
-        {
-            foreach (var param in parameters)
-            {
-                command.Parameters.AddWithValue(param.Key, param.Value);
-            }
-        }
-    }
 
     public MySqlDataReader ExecuteReader(string query, Dictionary<string, object> parameters = null)
     {
+        if (_connection == null || _connection.State != ConnectionState.Open)
+        {
+            _connection = new MySqlConnection(_connectionString);
+            _connection.Open();
+        }
+
         using (var command = new MySqlCommand(query, _connection))
         {
-            AddParameters(command, parameters);
+            if (parameters != null)
+            {
+                foreach (var param in parameters)
+                {
+                    command.Parameters.AddWithValue(param.Key, param.Value);
+                }
+            }
+
             return command.ExecuteReader();
         }
     }
-
+    // Method to execute a query and return the result as a DataTable
     public DataTable ExecuteQuery(string query, Dictionary<string, object> parameters = null)
     {
         DataTable dataTable = new DataTable();
 
-        using (var command = new MySqlCommand(query, _connection))
+        try
         {
-            AddParameters(command, parameters);
-
-            using (var reader = command.ExecuteReader())
+            using (var conn = new MySqlConnection(_connectionString))
             {
-                dataTable.Load(reader);
+                conn.Open();
+                using (var command = new MySqlCommand(query, conn))
+                {
+                    if (parameters != null)
+                    {
+                        foreach (var param in parameters)
+                        {
+                            command.Parameters.AddWithValue(param.Key, param.Value);
+                        }
+                    }
+
+                    using (var reader = command.ExecuteReader())
+                    {
+                        dataTable.Load(reader);
+                    }
+                }
             }
+        }
+        catch (MySqlException ex)
+        {
+            // Handle the exception as needed
+            Console.WriteLine($"Database Error: {ex.Message}");
         }
 
         return dataTable;
     }
 
+    // Method to execute a non-query command (INSERT, UPDATE, DELETE)
     public int ExecuteNonQuery(string query, Dictionary<string, object> parameters = null)
     {
-        using (var command = new MySqlCommand(query, _connection))
+        int rowsAffected = 0;
+
+        try
         {
-            AddParameters(command, parameters);
-            return command.ExecuteNonQuery();
+            using (var conn = new MySqlConnection(_connectionString))
+            {
+                conn.Open();
+                using (var command = new MySqlCommand(query, conn))
+                {
+                    if (parameters != null)
+                    {
+                        foreach (var param in parameters)
+                        {
+                            command.Parameters.AddWithValue(param.Key, param.Value);
+                        }
+                    }
+
+                    rowsAffected = command.ExecuteNonQuery();
+                }
+            }
         }
+        catch (MySqlException ex)
+        {
+            // Handle the exception as needed
+            Console.WriteLine($"Database Error: {ex.Message}");
+        }
+
+        return rowsAffected;
     }
 
+    // Method to execute a scalar query (e.g., SELECT COUNT(*))
     public object ExecuteScalar(string query, Dictionary<string, object> parameters = null)
     {
-        using (var command = new MySqlCommand(query, _connection))
-        {
-            AddParameters(command, parameters);
-            return command.ExecuteScalar();
-        }
-    }
+        object result = null;
 
-    public void Dispose()
-    {
-        _connection?.Dispose();
+        try
+        {
+            using (var conn = new MySqlConnection(_connectionString))
+            {
+                conn.Open();
+                using (var command = new MySqlCommand(query, conn))
+                {
+                    if (parameters != null)
+                    {
+                        foreach (var param in parameters)
+                        {
+                            command.Parameters.AddWithValue(param.Key, param.Value);
+                        }
+                    }
+
+                    result = command.ExecuteScalar();
+                }
+            }
+        }
+        catch (MySqlException ex)
+        {
+            // Handle the exception as needed
+            Console.WriteLine($"Database Error: {ex.Message}");
+        }
+
+        return result;
     }
 }
