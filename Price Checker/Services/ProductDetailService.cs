@@ -71,6 +71,7 @@ namespace Price_Checker.Configuration
             {
                 _timer.Interval = interval * 1000; // Convert to milliseconds
             }
+            else { _timer.Interval = 3*1000; }
         }
 
         private void Timer_Tick(object sender, EventArgs e)
