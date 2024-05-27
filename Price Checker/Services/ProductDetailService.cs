@@ -5,19 +5,30 @@ using System.Data.Common;
 using System.Drawing;
 using System.Windows.Forms;
 using Microsoft.Extensions.Logging;
+using MySql.Data.MySqlClient;
+using System.Data.Common;
 
 namespace Price_Checker.Configuration
 {
     internal class ProductDetailService
     {
         private readonly string connstring;
+        private readonly DatabaseHelper _dbHelper;
+        private readonly Timer _timer;
+        private readonly Form _formInstance;
+
         private readonly Timer timer;
         private readonly Form formInstance;
         private readonly DatabaseHelper databaseHelper;
 
+
         public ProductDetailService(Form form)
         {
             connstring = ConnectionStringService.ConnectionString;
+            _dbHelper = new DatabaseHelper(ConnectionStringService.ConnectionString);
+            _formInstance = form;
+            _timer = new Timer();
+            _timer.Tick += Timer_Tick;
             formInstance = form;
             timer = new Timer();
             timer.Tick += Timer_Tick;
@@ -26,7 +37,8 @@ namespace Price_Checker.Configuration
             timer.Start();
         }
 
-        public void HandleProductDetails(string barcode, Label lbl_name, Label lbl_price, Label lbl_manufacturer, Label lbl_uom, Label lbl_generic)
+        // Assuming this is part of ProductDetailService class
+        public void HandleProductDetails(string barcode, Label lbl_name, Label lbl_price, Label lbl_manufacturer, Label lbl_uom, Label lbl_generic, Panel detailPanel)
         {
             var products = GetProductDetails(barcode);
 
@@ -36,6 +48,16 @@ namespace Price_Checker.Configuration
             }
             else if (products.Count > 1)
             {
+                var displaypopform = new pop(products);
+                displaypopform.TopLevel = false;
+                displaypopform.FormBorderStyle = FormBorderStyle.None;
+                displaypopform.Dock = DockStyle.Fill;
+                displaypopform.Size = detailPanel.Size;
+                detailPanel.Controls.Add(displaypopform);
+                detailPanel.Tag = displaypopform;
+                displaypopform.BringToFront();
+                displaypopform.Show();
+
                 using (var chooseProductForm = new pop(products))
                 {
                     chooseProductForm.ShowDialog();
@@ -46,6 +68,7 @@ namespace Price_Checker.Configuration
                 MessageBox.Show("Product Not Found");
             }
         }
+
 
         private void SetLabelValues(Label lbl_name, Label lbl_price, Label lbl_manufacturer, Label lbl_uom, Label lbl_generic, Product product)
         {
@@ -69,10 +92,12 @@ namespace Price_Checker.Configuration
 
         private void Timer_Tick(object sender, EventArgs e)
         {
-            if (formInstance != null)
+            if (_formInstance != null)
             {
-                formInstance.Close();
+                _formInstance.Close();
             }
+           
+            _timer.Stop(); // Stop the timer once form is closed
             timer.Stop(); // Stop the timer once form is closed
         }
         public List<Product> GetProductDetails(string barcode)
@@ -84,6 +109,7 @@ namespace Price_Checker.Configuration
         { "@barcode", barcode }
     };
 
+            using (var dataReader = _dbHelper.ExecuteReader(sql, parameters))
             using (var dataReader = databaseHelper.ExecuteReader(sql, parameters))
             {
                 foreach (DbDataRecord record in dataReader)

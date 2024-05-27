@@ -69,6 +69,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.lbl_barcode.Cursor = System.Windows.Forms.Cursors.WaitCursor;
             this.lbl_barcode.Font = new System.Drawing.Font("Arial Rounded MT Bold", 28.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbl_barcode.Location = new System.Drawing.Point(722, 169);
             this.lbl_barcode.Location = new System.Drawing.Point(722, 141);
             this.lbl_barcode.Name = "lbl_barcode";
             this.lbl_barcode.Size = new System.Drawing.Size(316, 62);
@@ -77,16 +78,17 @@
             // 
             // label3
             // 
-            this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.label3.BackColor = System.Drawing.Color.Transparent;
             this.label3.Cursor = System.Windows.Forms.Cursors.WaitCursor;
             this.label3.Font = new System.Drawing.Font("Arial Rounded MT Bold", 40.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(113)))), ((int)(((byte)(192)))));
+            this.label3.Location = new System.Drawing.Point(4, 422);
             this.label3.Location = new System.Drawing.Point(3, 423);
             this.label3.Margin = new System.Windows.Forms.Padding(0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(1428, 77);
+            this.label3.Size = new System.Drawing.Size(1428, 119);
             this.label3.TabIndex = 3;
             this.label3.Text = "CHECK PRICE HERE";
             this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -237,9 +239,9 @@
             this.detailPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.detailPanel.BackColor = System.Drawing.Color.White;
             this.detailPanel.Controls.Add(this.lbl_barcode);
-            this.detailPanel.Location = new System.Drawing.Point(1, 109);
+            this.detailPanel.Location = new System.Drawing.Point(1, 112);
             this.detailPanel.Name = "detailPanel";
-            this.detailPanel.Size = new System.Drawing.Size(1431, 398);
+            this.detailPanel.Size = new System.Drawing.Size(1431, 426);
             this.detailPanel.TabIndex = 4;
             // 
             // bottomPanel
@@ -288,8 +290,10 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(1432, 1055);
             this.Controls.Add(this.panel1);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.KeyPreview = true;
             this.MinimizeBox = false;
             this.Name = "mainForm";

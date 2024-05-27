@@ -31,7 +31,7 @@ namespace Price_Checker.Services
                     {
                         if (products.Count > 1)
                         {
-                            DisplayPriceForm2(barcode, detailPanel);
+                            DisplayPopForm(barcode, detailPanel);
                         }
                         else
                         {
@@ -90,7 +90,7 @@ namespace Price_Checker.Services
             }
 
             // Create a new instance of PriceCheckerForm
-            _currentPriceForm = new PriceCheckerForm(barcode)
+            _currentPriceForm = new PriceCheckerForm(barcode, detailPanel)
             {
                 Dock = DockStyle.Fill,
                 Size = detailPanel.Size,
@@ -106,7 +106,7 @@ namespace Price_Checker.Services
             _currentPriceForm.Show();
         }
 
-        private void DisplayPriceForm2(string barcode, Panel detailPanel)
+        private void DisplayPopForm(string barcode, Panel detailPanel)
         {
             // Remove and dispose existing PriceCheckerForm if it exists
             foreach (Control control in detailPanel.Controls)
@@ -117,13 +117,15 @@ namespace Price_Checker.Services
                     {
                         detailPanel.Controls.Remove(existingPriceForm);
                         existingPriceForm.Dispose();
+
+
                     }
                     break;
                 }
             }
 
             // Create a new instance of PriceCheckerForm
-            _currentPriceForm = new PriceCheckerForm(barcode)
+            _currentPriceForm = new PriceCheckerForm(barcode, detailPanel)
             {
                 Dock = DockStyle.Fill,
                 Size = detailPanel.Size,
@@ -187,4 +189,3 @@ namespace Price_Checker.Services
         }
     }
 }
-
