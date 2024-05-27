@@ -1,4 +1,4 @@
-﻿using MySql.Data.MySqlClient;
+using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -35,16 +35,10 @@ public class DatabaseHelper
         }
     }
     // Method to execute a query and return the result as a DataTable
-        using (var command = new MySqlCommand(query, _connection))
-        {
-            AddParameters(command, parameters);
-            return command.ExecuteReader();
-        }
-    }
-
     public DataTable ExecuteQuery(string query, Dictionary<string, object> parameters = null)
     {
         DataTable dataTable = new DataTable();
+
         try
         {
             using (var conn = new MySqlConnection(_connectionString))
@@ -68,7 +62,6 @@ public class DatabaseHelper
             }
         }
         catch (MySqlException ex)
-        using (var command = new MySqlCommand(query, _connection))
         {
             // Handle the exception as needed
             Console.WriteLine($"Database Error: {ex.Message}");
@@ -81,6 +74,7 @@ public class DatabaseHelper
     public int ExecuteNonQuery(string query, Dictionary<string, object> parameters = null)
     {
         int rowsAffected = 0;
+
         try
         {
             using (var conn = new MySqlConnection(_connectionString))
@@ -137,17 +131,8 @@ public class DatabaseHelper
         {
             // Handle the exception as needed
             Console.WriteLine($"Database Error: {ex.Message}");
-    public object ExecuteScalar(string query, Dictionary<string, object> parameters = null)
-    {
-        using (var command = new MySqlCommand(query, _connection))
-        {
-            AddParameters(command, parameters);
-            return command.ExecuteScalar();
         }
 
         return result;
-    public void Dispose()
-    {
-        _connection?.Dispose();
     }
 }
