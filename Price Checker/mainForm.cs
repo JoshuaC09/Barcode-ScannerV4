@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Security.Policy;
 using System.Threading.Tasks;
@@ -52,7 +51,7 @@ namespace Price_Checker
             imageManager.LoadImageFiles();
             fontManager = new FontManagerService();
             lbl_barcode.Font = fontManager.GetCustomFont();
-            videoManager = new VideoManagerService(axWindowsMediaPlayer1);
+          
 
             videoManager = new VideoManagerService(axWindowsMediaPlayer1,pictureBox2);
         }

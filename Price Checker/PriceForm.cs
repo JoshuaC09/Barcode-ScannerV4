@@ -11,12 +11,12 @@ namespace Price_Checker
         private readonly ProductDetailService productDetailService;
 
 
-        public PriceCheckerForm(string barcode)
+        public PriceCheckerForm(string barcode, Panel detailPanel)
         {
             InitializeComponent();
 
             productDetailService = new ProductDetailService(this);
-            productDetailService.HandleProductDetails(barcode, lbl_name, lbl_price, lbl_manufacturer, lbl_uom, lbl_generic);
+            productDetailService.HandleProductDetails(barcode, lbl_name, lbl_price, lbl_manufacturer, lbl_uom, lbl_generic, detailPanel);
 
 
             this.Load += Form_Load;
@@ -99,6 +99,7 @@ namespace Price_Checker
                 }
             }
         }
+
 
     }
 }

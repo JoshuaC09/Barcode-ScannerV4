@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace Price_Checker
@@ -38,7 +39,7 @@ namespace Price_Checker
         private void StartAutoCloseTimer()
         {
             autoCloseTimer = new Timer();
-            autoCloseTimer.Interval = 5000; // Set timer interval to 5 seconds (5000 milliseconds)
+            autoCloseTimer.Interval = 10000; // Set timer interval to 5 seconds (5000 milliseconds)
             autoCloseTimer.Tick += AutoCloseTimer_Tick;
             autoCloseTimer.Start();
         }
