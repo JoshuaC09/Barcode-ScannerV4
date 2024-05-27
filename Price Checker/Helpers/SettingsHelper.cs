@@ -8,7 +8,6 @@ namespace Price_Checker.SettingsHelpers
     internal class SettingsHelper
     {
         private readonly DatabaseHelper _databaseHelper;
-
         public SettingsHelper(string connectionString)
         {
             _databaseHelper = new DatabaseHelper(connectionString);
@@ -73,10 +72,22 @@ namespace Price_Checker.SettingsHelpers
 
         public void SaveSettings(TextBox tb_appname, TextBox tb_adpictime, TextBox tb_adpicpath, TextBox tb_advidtime, TextBox tb_advidpath, TextBox tb_disptime)
         {
-            if (string.IsNullOrEmpty(tb_appname.Text) || string.IsNullOrEmpty(tb_adpictime.Text) || string.IsNullOrEmpty(tb_advidtime.Text) || string.IsNullOrEmpty(tb_disptime.Text) ||
-                !int.TryParse(tb_adpictime.Text, out int adpictime) || !int.TryParse(tb_advidtime.Text, out int advidtime) || !int.TryParse(tb_disptime.Text, out int disptime))
+            if (string.IsNullOrEmpty(tb_appname.Text) ||
+                string.IsNullOrEmpty(tb_adpictime.Text) ||
+                string.IsNullOrEmpty(tb_advidtime.Text) ||
+                string.IsNullOrEmpty(tb_disptime.Text) ||
+                !int.TryParse(tb_adpictime.Text, out int adpictime) ||
+                !int.TryParse(tb_advidtime.Text, out int advidtime) ||
+                !int.TryParse(tb_disptime.Text, out int disptime))
             {
                 MessageBox.Show("Please enter values for all required fields.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            // Check if any of the time values exceed 7 digits
+            if (tb_adpictime.Text.Length > 7 || tb_advidtime.Text.Length > 7 || tb_disptime.Text.Length > 7)
+            {
+                MessageBox.Show("Input values for Ad Picture Time, Ad Video Time, and Display Time must not exceed 7 digits.", "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -88,14 +99,14 @@ namespace Price_Checker.SettingsHelpers
 
             string query = "UPDATE settings SET set_appname = @appname, set_adpictime = @adpictime, set_adpic = @adpicpath, set_advidtime = @advidtime, set_advid = @advidpath, set_disptime = @disptime";
             var parameters = new Dictionary<string, object>
-            {
-                { "@appname", tb_appname.Text },
-                { "@adpictime", tb_adpictime.Text },
-                { "@adpicpath", tb_adpicpath.Text.Replace("\\", "$") },
-                { "@advidtime", tb_advidtime.Text },
-                { "@advidpath", tb_advidpath.Text.Replace("\\", "$") },
-                { "@disptime", tb_disptime.Text }
-            };
+    {
+        { "@appname", tb_appname.Text },
+        { "@adpictime", tb_adpictime.Text },
+        { "@adpicpath", tb_adpicpath.Text.Replace("\\", "$") },
+        { "@advidtime", tb_advidtime.Text },
+        { "@advidpath", tb_advidpath.Text.Replace("\\", "$") },
+        { "@disptime", tb_disptime.Text }
+    };
 
             _databaseHelper.ExecuteNonQuery(query, parameters);
             MessageBox.Show("Settings successfully saved.");

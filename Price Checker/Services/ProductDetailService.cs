@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Data;
+using System.Data.Common;
+using System.Drawing;
 using System.Windows.Forms;
 using Microsoft.Extensions.Logging;
 using MySql.Data.MySqlClient;
@@ -16,6 +17,9 @@ namespace Price_Checker.Configuration
         private readonly Timer _timer;
         private readonly Form _formInstance;
 
+        private readonly Timer timer;
+        private readonly Form formInstance;
+        private readonly DatabaseHelper databaseHelper;
 
 
         public ProductDetailService(Form form)
@@ -25,8 +29,12 @@ namespace Price_Checker.Configuration
             _formInstance = form;
             _timer = new Timer();
             _timer.Tick += Timer_Tick;
+            formInstance = form;
+            timer = new Timer();
+            timer.Tick += Timer_Tick;
+            databaseHelper = new DatabaseHelper(connstring);
             SetTimerInterval();
-            _timer.Start();
+            timer.Start();
         }
 
         // Assuming this is part of ProductDetailService class
@@ -50,6 +58,10 @@ namespace Price_Checker.Configuration
                 displaypopform.BringToFront();
                 displaypopform.Show();
 
+                using (var chooseProductForm = new pop(products))
+                {
+                    chooseProductForm.ShowDialog();
+                }
             }
             else
             {
@@ -67,15 +79,14 @@ namespace Price_Checker.Configuration
             lbl_generic.Text = product.Generic;
         }
 
-
         private void SetTimerInterval()
         {
             const string sql = "SELECT set_disptime FROM settings";
-            var result = _dbHelper.ExecuteScalar(sql);
+            var dataTable = databaseHelper.ExecuteQuery(sql);
 
-            if (result != null && int.TryParse(result.ToString(), out int interval))
+            if (dataTable.Rows.Count > 0)
             {
-                _timer.Interval = interval * 1000; // Convert to milliseconds
+                timer.Interval = Convert.ToInt32(dataTable.Rows[0]["set_disptime"]) * 1000; // Convert to milliseconds
             }
         }
 
@@ -87,8 +98,8 @@ namespace Price_Checker.Configuration
             }
            
             _timer.Stop(); // Stop the timer once form is closed
+            timer.Stop(); // Stop the timer once form is closed
         }
-
         public List<Product> GetProductDetails(string barcode)
         {
             var products = new List<Product>();
@@ -99,6 +110,7 @@ namespace Price_Checker.Configuration
     };
 
             using (var dataReader = _dbHelper.ExecuteReader(sql, parameters))
+            using (var dataReader = databaseHelper.ExecuteReader(sql, parameters))
             {
                 foreach (DbDataRecord record in dataReader)
                 {

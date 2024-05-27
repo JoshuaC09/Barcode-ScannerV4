@@ -70,6 +70,7 @@
             this.lbl_barcode.Cursor = System.Windows.Forms.Cursors.WaitCursor;
             this.lbl_barcode.Font = new System.Drawing.Font("Arial Rounded MT Bold", 28.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbl_barcode.Location = new System.Drawing.Point(722, 169);
+            this.lbl_barcode.Location = new System.Drawing.Point(722, 141);
             this.lbl_barcode.Name = "lbl_barcode";
             this.lbl_barcode.Size = new System.Drawing.Size(316, 62);
             this.lbl_barcode.TabIndex = 1;
@@ -84,6 +85,7 @@
             this.label3.Font = new System.Drawing.Font("Arial Rounded MT Bold", 40.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(113)))), ((int)(((byte)(192)))));
             this.label3.Location = new System.Drawing.Point(4, 422);
+            this.label3.Location = new System.Drawing.Point(3, 423);
             this.label3.Margin = new System.Windows.Forms.Padding(0);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(1428, 119);
@@ -320,7 +322,6 @@
         #endregion
         private System.Windows.Forms.PictureBox pictureBox3;
         public System.Windows.Forms.TextBox lbl_barcode;
-        private System.Windows.Forms.Label label3;
         public System.Windows.Forms.Panel panel1;
         public System.Windows.Forms.Panel scanPanel;
         private System.Windows.Forms.Panel panel2;
@@ -336,5 +337,6 @@
         private System.Windows.Forms.Panel detailPanel;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.PictureBox pictureBox2;
+        private System.Windows.Forms.Label label3;
     }
 }
