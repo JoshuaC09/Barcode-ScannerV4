@@ -14,7 +14,7 @@ namespace Price_Checker
         {
             InitializeComponent();
             _settingsManager = new SettingsHelper(connString);
-            _settingsManager.LoadSettings(tb_appname, tb_adpictime, tb_adpicpath, tb_advidtime, tb_advidpath, tb_disptime, rb_ipos, rb_eipos);
+            _settingsManager.LoadSettings(tb_appname, tb_adpictime, tb_adpicpath, tb_advidtime, tb_advidpath, tb_disptime, tb_muldisptime,  rb_ipos, rb_eipos);
             btn_close.Click += btn_close_Click;
 
             rb_ipos.CheckedChanged += RadioButton_CheckedChanged;
@@ -50,7 +50,7 @@ namespace Price_Checker
 
         private void btnSave_Click_1(object sender, EventArgs e)
         {
-            _settingsManager.SaveSettings(tb_appname, tb_adpictime, tb_adpicpath, tb_advidtime, tb_advidpath, tb_disptime);
+            _settingsManager.SaveSettings(tb_appname, tb_adpictime, tb_adpicpath, tb_advidtime, tb_advidpath, tb_disptime, tb_muldisptime);
         }
 
         private void RadioButton_CheckedChanged(object sender, EventArgs e)

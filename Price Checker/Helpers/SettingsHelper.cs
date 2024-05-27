@@ -13,7 +13,7 @@ namespace Price_Checker.SettingsHelpers
             _databaseHelper = new DatabaseHelper(connectionString);
         }
 
-        public void LoadSettings(TextBox tb_appname, TextBox tb_adpictime, TextBox tb_adpicpath, TextBox tb_advidtime, TextBox tb_advidpath, TextBox tb_disptime, RadioButton rb_ipos, RadioButton rb_eipos)
+        public void LoadSettings(TextBox tb_appname, TextBox tb_adpictime, TextBox tb_adpicpath, TextBox tb_advidtime, TextBox tb_advidpath, TextBox tb_disptime, TextBox tb_muldisptime, RadioButton rb_ipos, RadioButton rb_eipos)
         {
             string query = "SELECT * FROM settings";
             DataTable settingsTable = _databaseHelper.ExecuteQuery(query);
@@ -46,6 +46,10 @@ namespace Price_Checker.SettingsHelpers
                 tb_disptime.Enter += TextBox_Enter;
                 tb_disptime.Click += TextBox_Click;
 
+                tb_muldisptime.Text = row["set_muldisptime"].ToString();
+                tb_muldisptime.Enter += TextBox_Enter;
+                tb_muldisptime.Click += TextBox_Click;
+
                 int setCode = Convert.ToInt32(row["set_code"]);
                 rb_ipos.Checked = setCode == 1;
                 rb_eipos.Checked = setCode != 1;
@@ -70,34 +74,37 @@ namespace Price_Checker.SettingsHelpers
             textBoxJustEntered = false;
         }
 
-        public void SaveSettings(TextBox tb_appname, TextBox tb_adpictime, TextBox tb_adpicpath, TextBox tb_advidtime, TextBox tb_advidpath, TextBox tb_disptime)
+        public void SaveSettings(TextBox tb_appname, TextBox tb_adpictime, TextBox tb_adpicpath, TextBox tb_advidtime, TextBox tb_advidpath, TextBox tb_disptime, TextBox tb_muldisptime)
         {
             if (string.IsNullOrEmpty(tb_appname.Text) ||
                 string.IsNullOrEmpty(tb_adpictime.Text) ||
                 string.IsNullOrEmpty(tb_advidtime.Text) ||
                 string.IsNullOrEmpty(tb_disptime.Text) ||
+                string.IsNullOrEmpty(tb_muldisptime.Text) ||
+
                 !int.TryParse(tb_adpictime.Text, out int adpictime) ||
                 !int.TryParse(tb_advidtime.Text, out int advidtime) ||
-                !int.TryParse(tb_disptime.Text, out int disptime))
+                !int.TryParse(tb_disptime.Text, out int disptime) ||
+                !int.TryParse(tb_muldisptime.Text, out int muldisptime))
             {
                 MessageBox.Show("Please enter values for all required fields.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
             // Check if any of the time values exceed 7 digits
-            if (tb_adpictime.Text.Length > 7 || tb_advidtime.Text.Length > 7 || tb_disptime.Text.Length > 7)
+            if (tb_adpictime.Text.Length > 7 || tb_advidtime.Text.Length > 7 || tb_disptime.Text.Length > 7 || tb_muldisptime.Text.Length > 7)
             {
                 MessageBox.Show("Input values for Ad Picture Time, Ad Video Time, and Display Time must not exceed 7 digits.", "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
-            if (adpictime == 0 || advidtime == 0 || disptime == 0)
+            if (adpictime == 0 || advidtime == 0 || disptime == 0 || muldisptime == 0)
             {
                 MessageBox.Show("One of the fields is zero.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
-            string query = "UPDATE settings SET set_appname = @appname, set_adpictime = @adpictime, set_adpic = @adpicpath, set_advidtime = @advidtime, set_advid = @advidpath, set_disptime = @disptime";
+            string query = "UPDATE settings SET set_appname = @appname, set_adpictime = @adpictime, set_adpic = @adpicpath, set_advidtime = @advidtime, set_advid = @advidpath, set_disptime = @disptime, set_muldisptime = @muldisptime";
             var parameters = new Dictionary<string, object>
     {
         { "@appname", tb_appname.Text },
@@ -105,7 +112,8 @@ namespace Price_Checker.SettingsHelpers
         { "@adpicpath", tb_adpicpath.Text.Replace("\\", "$") },
         { "@advidtime", tb_advidtime.Text },
         { "@advidpath", tb_advidpath.Text.Replace("\\", "$") },
-        { "@disptime", tb_disptime.Text }
+        { "@disptime", tb_disptime.Text },
+        { "@muldisptime", tb_muldisptime.Text }
     };
 
             _databaseHelper.ExecuteNonQuery(query, parameters);

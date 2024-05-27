@@ -55,6 +55,11 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.btnBrowseVideos = new System.Windows.Forms.Button();
             this.btnBrowseImages = new System.Windows.Forms.Button();
+            this.label14 = new System.Windows.Forms.Label();
+            this.label15 = new System.Windows.Forms.Label();
+            this.tb_muldisptime = new System.Windows.Forms.TextBox();
+            this.label16 = new System.Windows.Forms.Label();
+            this.label17 = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -65,7 +70,7 @@
             this.label1.ForeColor = System.Drawing.Color.White;
             this.label1.Location = new System.Drawing.Point(0, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(787, 56);
+            this.label1.Size = new System.Drawing.Size(789, 56);
             this.label1.TabIndex = 0;
             this.label1.Text = "Price Verifier App Settings";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -74,7 +79,7 @@
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(69, 384);
+            this.label3.Location = new System.Drawing.Point(69, 413);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(180, 25);
             this.label3.TabIndex = 2;
@@ -84,7 +89,7 @@
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(67, 347);
+            this.label4.Location = new System.Drawing.Point(67, 376);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(147, 25);
             this.label4.TabIndex = 3;
@@ -94,7 +99,7 @@
             // 
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(67, 431);
+            this.label5.Location = new System.Drawing.Point(71, 492);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(154, 25);
             this.label5.TabIndex = 5;
@@ -104,7 +109,7 @@
             // 
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(69, 478);
+            this.label6.Location = new System.Drawing.Point(71, 539);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(187, 25);
             this.label6.TabIndex = 4;
@@ -113,7 +118,7 @@
             // btnSave
             // 
             this.btnSave.BackColor = System.Drawing.Color.White;
-            this.btnSave.Location = new System.Drawing.Point(538, 532);
+            this.btnSave.Location = new System.Drawing.Point(538, 613);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(101, 40);
             this.btnSave.TabIndex = 7;
@@ -125,7 +130,7 @@
             // 
             this.tb_adpicpath.BackColor = System.Drawing.Color.WhiteSmoke;
             this.tb_adpicpath.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tb_adpicpath.Location = new System.Drawing.Point(270, 342);
+            this.tb_adpicpath.Location = new System.Drawing.Point(270, 371);
             this.tb_adpicpath.Name = "tb_adpicpath";
             this.tb_adpicpath.Size = new System.Drawing.Size(460, 30);
             this.tb_adpicpath.TabIndex = 10;
@@ -134,7 +139,7 @@
             // 
             this.tb_advidpath.BackColor = System.Drawing.Color.WhiteSmoke;
             this.tb_advidpath.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tb_advidpath.Location = new System.Drawing.Point(270, 431);
+            this.tb_advidpath.Location = new System.Drawing.Point(274, 492);
             this.tb_advidpath.Name = "tb_advidpath";
             this.tb_advidpath.Size = new System.Drawing.Size(460, 30);
             this.tb_advidpath.TabIndex = 11;
@@ -143,7 +148,7 @@
             // 
             this.tb_adpictime.BackColor = System.Drawing.Color.WhiteSmoke;
             this.tb_adpictime.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tb_adpictime.Location = new System.Drawing.Point(270, 381);
+            this.tb_adpictime.Location = new System.Drawing.Point(270, 410);
             this.tb_adpictime.Name = "tb_adpictime";
             this.tb_adpictime.Size = new System.Drawing.Size(48, 30);
             this.tb_adpictime.TabIndex = 12;
@@ -153,7 +158,7 @@
             // 
             this.tb_advidtime.BackColor = System.Drawing.Color.WhiteSmoke;
             this.tb_advidtime.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tb_advidtime.Location = new System.Drawing.Point(270, 478);
+            this.tb_advidtime.Location = new System.Drawing.Point(272, 539);
             this.tb_advidtime.Name = "tb_advidtime";
             this.tb_advidtime.Size = new System.Drawing.Size(48, 30);
             this.tb_advidtime.TabIndex = 13;
@@ -161,7 +166,7 @@
             // 
             // btn_close
             // 
-            this.btn_close.Location = new System.Drawing.Point(645, 531);
+            this.btn_close.Location = new System.Drawing.Point(645, 612);
             this.btn_close.Name = "btn_close";
             this.btn_close.Size = new System.Drawing.Size(101, 40);
             this.btn_close.TabIndex = 19;
@@ -171,7 +176,7 @@
             // 
             // btnEdit
             // 
-            this.btnEdit.Location = new System.Drawing.Point(84, 532);
+            this.btnEdit.Location = new System.Drawing.Point(84, 613);
             this.btnEdit.Name = "btnEdit";
             this.btnEdit.Size = new System.Drawing.Size(101, 40);
             this.btnEdit.TabIndex = 20;
@@ -183,7 +188,7 @@
             // 
             this.label10.AutoSize = true;
             this.label10.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label10.Location = new System.Drawing.Point(324, 384);
+            this.label10.Location = new System.Drawing.Point(324, 413);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(136, 25);
             this.label10.TabIndex = 22;
@@ -193,7 +198,7 @@
             // 
             this.label9.AutoSize = true;
             this.label9.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label9.Location = new System.Drawing.Point(324, 481);
+            this.label9.Location = new System.Drawing.Point(326, 542);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(136, 25);
             this.label9.TabIndex = 23;
@@ -203,7 +208,7 @@
             // 
             this.label13.AutoSize = true;
             this.label13.Font = new System.Drawing.Font("Microsoft Sans Serif", 13.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label13.Location = new System.Drawing.Point(17, 301);
+            this.label13.Location = new System.Drawing.Point(17, 330);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(146, 29);
             this.label13.TabIndex = 27;
@@ -213,7 +218,7 @@
             // 
             this.tb_disptime.BackColor = System.Drawing.Color.WhiteSmoke;
             this.tb_disptime.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tb_disptime.Location = new System.Drawing.Point(296, 248);
+            this.tb_disptime.Location = new System.Drawing.Point(296, 246);
             this.tb_disptime.Name = "tb_disptime";
             this.tb_disptime.Size = new System.Drawing.Size(48, 30);
             this.tb_disptime.TabIndex = 9;
@@ -246,7 +251,7 @@
             // 
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label7.Location = new System.Drawing.Point(71, 253);
+            this.label7.Location = new System.Drawing.Point(71, 251);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(209, 25);
             this.label7.TabIndex = 6;
@@ -278,7 +283,7 @@
             // 
             this.label11.AutoSize = true;
             this.label11.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label11.Location = new System.Drawing.Point(350, 253);
+            this.label11.Location = new System.Drawing.Point(350, 251);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(136, 25);
             this.label11.TabIndex = 24;
@@ -311,7 +316,7 @@
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(787, 56);
+            this.panel1.Size = new System.Drawing.Size(789, 56);
             this.panel1.TabIndex = 28;
             // 
             // btnBrowseVideos
@@ -319,7 +324,7 @@
             this.btnBrowseVideos.BackColor = System.Drawing.Color.White;
             this.btnBrowseVideos.BackgroundImage = global::Price_Checker.Properties.Resources.dots;
             this.btnBrowseVideos.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.btnBrowseVideos.Location = new System.Drawing.Point(736, 427);
+            this.btnBrowseVideos.Location = new System.Drawing.Point(740, 489);
             this.btnBrowseVideos.Name = "btnBrowseVideos";
             this.btnBrowseVideos.Size = new System.Drawing.Size(35, 35);
             this.btnBrowseVideos.TabIndex = 15;
@@ -331,12 +336,64 @@
             this.btnBrowseImages.BackColor = System.Drawing.Color.White;
             this.btnBrowseImages.BackgroundImage = global::Price_Checker.Properties.Resources.dots;
             this.btnBrowseImages.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.btnBrowseImages.Location = new System.Drawing.Point(736, 339);
+            this.btnBrowseImages.Location = new System.Drawing.Point(736, 369);
             this.btnBrowseImages.Name = "btnBrowseImages";
             this.btnBrowseImages.Size = new System.Drawing.Size(35, 35);
             this.btnBrowseImages.TabIndex = 14;
             this.btnBrowseImages.UseVisualStyleBackColor = false;
             this.btnBrowseImages.Click += new System.EventHandler(this.btnBrowseImages_Click_1);
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label14.Location = new System.Drawing.Point(466, 295);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(136, 25);
+            this.label14.TabIndex = 31;
+            this.label14.Text = "seconds (sec)";
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label15.Location = new System.Drawing.Point(71, 292);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(310, 25);
+            this.label15.TabIndex = 29;
+            this.label15.Text = "Multiple Barcode Display Duration:";
+            // 
+            // tb_muldisptime
+            // 
+            this.tb_muldisptime.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.tb_muldisptime.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tb_muldisptime.Location = new System.Drawing.Point(412, 292);
+            this.tb_muldisptime.Name = "tb_muldisptime";
+            this.tb_muldisptime.Size = new System.Drawing.Size(48, 30);
+            this.tb_muldisptime.TabIndex = 30;
+            this.tb_muldisptime.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label16.ForeColor = System.Drawing.SystemColors.AppWorkspace;
+            this.label16.Location = new System.Drawing.Point(72, 455);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(288, 22);
+            this.label16.TabIndex = 32;
+            this.label16.Text = "ex.: 1_image, 2_image, 3_image ...";
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label17.ForeColor = System.Drawing.SystemColors.AppWorkspace;
+            this.label17.Location = new System.Drawing.Point(71, 577);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(273, 22);
+            this.label17.TabIndex = 33;
+            this.label17.Text = "ex.: 1_video, 2_video, 3_video ...";
             // 
             // settingsForm
             // 
@@ -344,7 +401,12 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.ClientSize = new System.Drawing.Size(787, 589);
+            this.ClientSize = new System.Drawing.Size(789, 665);
+            this.Controls.Add(this.label17);
+            this.Controls.Add(this.label16);
+            this.Controls.Add(this.label14);
+            this.Controls.Add(this.tb_muldisptime);
+            this.Controls.Add(this.label15);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.label12);
             this.Controls.Add(this.label2);
@@ -372,11 +434,9 @@
             this.Controls.Add(this.label9);
             this.Controls.Add(this.label5);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
-            this.MaximumSize = new System.Drawing.Size(805, 636);
             this.Name = "settingsForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Settings";
-            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.panel1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -412,6 +472,11 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.TextBox tb_muldisptime;
+        private System.Windows.Forms.Label label16;
+        private System.Windows.Forms.Label label17;
     }
 }
 
