@@ -1,4 +1,5 @@
-﻿using Price_Checker.Services;
+﻿using Price_Checker.Configuration;
+using Price_Checker.Services;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -11,13 +12,19 @@ namespace Price_Checker
     {
         private List<Product> products;
         private Timer autoCloseTimer;
+        private readonly string connstring;
+        private readonly DatabaseHelper _dbHelper;
 
         public pop(List<Product> products)
         {
             InitializeComponent();
+            connstring = ConnectionStringService.ConnectionString;
+            _dbHelper = new DatabaseHelper(connstring);
+
             this.products = products;
             LoadProducts();
             StartAutoCloseTimer();
+                       
         }
 
         private void LoadProducts()
@@ -39,10 +46,28 @@ namespace Price_Checker
         private void StartAutoCloseTimer()
         {
             autoCloseTimer = new Timer();
-            autoCloseTimer.Interval = 10000; // Set timer interval to 5 seconds (5000 milliseconds)
+            autoCloseTimer.Interval = SetTimerInterval(); // Set timer interval to 5 seconds (5000 milliseconds)
             autoCloseTimer.Tick += AutoCloseTimer_Tick;
             autoCloseTimer.Start();
         }
+
+
+        private int SetTimerInterval()
+        {
+            const string sql = "SELECT set_muldisptime FROM settings";
+            var result = _dbHelper.ExecuteScalar(sql);
+
+            if (result != null)
+            {
+                return (int)result * 1000;
+            }
+            else
+            {
+                throw new InvalidOperationException("The result from the database is null.");
+            }
+        }
+
+
 
         private void AutoCloseTimer_Tick(object sender, EventArgs e)
         {
