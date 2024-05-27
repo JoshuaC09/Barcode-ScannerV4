@@ -63,8 +63,7 @@ namespace Price_Checker
             }
             else
             {
-                const int defaultInterval = 6;
-               return defaultInterval *1000;
+               return 6 *1000;
             }
         }
 
