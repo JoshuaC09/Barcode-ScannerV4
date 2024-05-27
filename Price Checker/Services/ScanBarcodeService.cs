@@ -62,7 +62,7 @@ namespace Price_Checker.Services
             {
                 if (control is PriceCheckerForm priceForm)
                 {
-                    priceForm.SetBarcode("Barcode: " + barcode);
+                    priceForm.SetBarcode(barcode);
                     break;
                 }
             }
