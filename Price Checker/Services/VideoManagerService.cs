@@ -76,12 +76,12 @@ public class VideoManagerService
         if (string.IsNullOrEmpty(assetsFolder) || !Directory.Exists(assetsFolder) || !Directory.EnumerateFiles(assetsFolder).Any())
         {
             appDirectory = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
-            string defaultVideosFolder = Path.Combine(appDirectory, "assets", "videos");
+            string defaultVideosFolder = Path.Combine(appDirectory, "assets", "None");
 
             // Ensure the default directory exists
             if (!Directory.Exists(defaultVideosFolder))
             {
-                Directory.CreateDirectory(defaultVideosFolder);
+                return string.Empty;
             }
 
             return defaultVideosFolder;
@@ -91,6 +91,12 @@ public class VideoManagerService
 
     private List<string> GetAllVideoPaths(string videosFolder)
     {
+        if (string.IsNullOrEmpty(videosFolder) || !Directory.Exists(videosFolder))
+        {
+            // Handle the case when videosFolder is empty or invalid
+            // e.g., return an empty list, log an error, etc.
+            return new List<string>();
+        }
         var videoExtensions = new List<string> { "*.mp4", "*.avi", "*.mov", "*.mkv", "*.flv", "*.wmv", "*.m4v", "*.3gp", "*.ogv", "*.webm", "*.mpeg" };
         return videoExtensions.SelectMany(ext => Directory.EnumerateFiles(videosFolder, ext)).ToList();
     }
@@ -124,6 +130,7 @@ public class VideoManagerService
 
     public async Task PlayNextVideoAsync()
     {
+
         while (videoQueue.Count == 0)
         {
             // Queue is empty, repopulate it
