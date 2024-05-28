@@ -124,7 +124,7 @@ public class DatabaseConfig
 
     private bool CheckDatabaseHasData(MySqlConnection connection)
     {
-        string query = "SELECT COUNT(*) FROM prod_verifier2"; 
+        string query = "SELECT COUNT(*) FROM prod_verifier"; 
         using (var command = new MySqlCommand(query, connection))
         {
             int count = Convert.ToInt32(command.ExecuteScalar());
