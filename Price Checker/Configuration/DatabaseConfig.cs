@@ -86,27 +86,52 @@ public class DatabaseConfig
     }
 
     private static bool _hasConnected = false;
-    private void TryConnectToDatabase()
+  private void TryConnectToDatabase()
+{
+    if (_hasConnected)
     {
-        // Check if the method has already been called
-        if (_hasConnected)
+        return;
+    }
+    try
+    {
+        string connectionString = $"Server={Server};Port={Port};Database={Database};Uid={Uid};Pwd={Pwd};";
+        using (var connection = new MySqlConnection(connectionString))
         {
-            return;
-        }
-        try
-        {
-            string connectionString = $"Server={Server};Port={Port};Database={Database};Uid={Uid};Pwd={Pwd};";
-            using (var connection = new MySqlConnection(connectionString))
+            connection.Open();
+            if (!CheckDatabaseHasData(connection))
             {
-                connection.Open();
-                _hasConnected = true; // Set the flag to true after a successful connection
+                string message = "There are no values in the database at this time.\nPress OK to proceed or Cancel to close.";
+                DialogResult result = MessageBox.Show(
+                    message,
+                    "No Data",
+                    MessageBoxButtons.OKCancel,
+                    MessageBoxIcon.Warning,
+                    MessageBoxDefaultButton.Button2 // Set Cancel as the default button
+                );
+                if (result == DialogResult.Cancel)
+                {
+                    Environment.Exit(1);
+                }
             }
-        }
-        catch (MySqlException ex)
-        {
-            HandleException(ex, $"An error occurred while connecting to the MySQL server: {ex.Message}");
+            _hasConnected = true;
         }
     }
+    catch (MySqlException ex)
+    {
+        HandleException(ex, $"An error occurred while connecting to the MySQL server: {ex.Message}");
+    }
+}
+
+    private bool CheckDatabaseHasData(MySqlConnection connection)
+    {
+        string query = "SELECT COUNT(*) FROM prod_verifier2"; 
+        using (var command = new MySqlCommand(query, connection))
+        {
+            int count = Convert.ToInt32(command.ExecuteScalar());
+            return count > 0;
+        }
+    }
+
 
     private void HandleException(Exception ex, string userMessage)
     {

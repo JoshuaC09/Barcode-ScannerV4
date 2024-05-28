@@ -104,20 +104,18 @@ namespace Price_Checker.SettingsHelpers
                 return;
             }
 
-            int set_code = 1; 
 
-            string query = "INSERT INTO settings (set_code, set_appname, set_adpictime, set_adpic, set_advidtime, set_advid, set_disptime, set_muldisptime) VALUES (@set_code, @appname, @adpictime, @adpicpath, @advidtime, @advidpath, @disptime, @muldisptime) ON DUPLICATE KEY UPDATE set_appname = @appname, set_adpictime = @adpictime, set_adpic = @adpicpath, set_advidtime = @advidtime, set_advid = @advidpath, set_disptime = @disptime, set_muldisptime = @muldisptime;";
+            string query = "UPDATE settings SET set_appname = @appname, set_adpictime = @adpictime, set_adpic = @adpicpath, set_advidtime = @advidtime, set_advid = @advidpath, set_disptime = @disptime, set_muldisptime = @muldisptime";
 
             var parameters = new Dictionary<string, object>
-    {
-        { "@set_code", set_code },
-        { "@appname", tb_appname.Text },
-        { "@adpictime", tb_adpictime.Text },
-        { "@adpicpath", tb_adpicpath.Text.Replace("\\", "$") },
-        { "@advidtime", tb_advidtime.Text },
-        { "@advidpath", tb_advidpath.Text.Replace("\\", "$") },
-        { "@disptime", tb_disptime.Text },
-        { "@muldisptime", tb_muldisptime.Text }
+            {
+                { "@appname", tb_appname.Text },
+                { "@adpictime", tb_adpictime.Text },
+                { "@adpicpath", tb_adpicpath.Text.Replace("\\", "$") },
+                { "@advidtime", tb_advidtime.Text },
+                { "@advidpath", tb_advidpath.Text.Replace("\\", "$") },
+                { "@disptime", tb_disptime.Text },
+                { "@muldisptime", tb_muldisptime.Text }
     };
 
             _databaseHelper.ExecuteNonQuery(query, parameters);
