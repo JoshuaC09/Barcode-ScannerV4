@@ -63,7 +63,7 @@ namespace Price_Checker
             }
             else
             {
-               return 6 *1000;
+                return 6 * 1000;
             }
         }
 

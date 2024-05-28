@@ -203,7 +203,7 @@
             this.panel3.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel3.Location = new System.Drawing.Point(0, 0);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(1432, 72);
+            this.panel3.Size = new System.Drawing.Size(1432, 91);
             this.panel3.TabIndex = 3;
             // 
             // lbl_appname
@@ -215,7 +215,7 @@
             this.lbl_appname.ForeColor = System.Drawing.Color.White;
             this.lbl_appname.Location = new System.Drawing.Point(0, 0);
             this.lbl_appname.Name = "lbl_appname";
-            this.lbl_appname.Size = new System.Drawing.Size(1432, 72);
+            this.lbl_appname.Size = new System.Drawing.Size(1432, 91);
             this.lbl_appname.TabIndex = 0;
             this.lbl_appname.Text = "Price Verifier";
             this.lbl_appname.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;

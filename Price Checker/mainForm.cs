@@ -124,8 +124,8 @@ namespace Price_Checker
         }
 
         
-        private readonly float originalFormWidth = 1438f;  
-        private readonly float originalFormHeight = 1150f; 
+        private readonly float originalFormWidth = 1432f;  
+        private readonly float originalFormHeight = 1055f; 
 
         private Dictionary<Control, float> originalFontSizes = new Dictionary<Control, float>();
 
@@ -136,10 +136,10 @@ namespace Price_Checker
             StoreOriginalSizesAndPositions(panel3);
    
 
-            if (!originalFontSizes.ContainsKey(lbl_appname))
-            {
-                originalFontSizes[lbl_appname] = lbl_appname.Font.Size;
-            }
+            //if (!originalFontSizes.ContainsKey(lbl_appname))
+            //{
+            //    originalFontSizes[lbl_appname] = lbl_appname.Font.Size;
+            //}
 
             AdjustFontSizes();
         }
@@ -182,7 +182,7 @@ namespace Price_Checker
             if (originalFontSizes.ContainsKey(lbl_appname))
             {
                 float originalFontSizeAppName = originalFontSizes[lbl_appname];
-                lbl_appname.Font = new Font(lbl_appname.Font.FontFamily, originalFontSizeAppName * formRatio);
+                //lbl_appname.Font = new Font(lbl_appname.Font.FontFamily, originalFontSizeAppName * formRatio);
                 label3.Font = new Font(label3.Font.FontFamily, originalFontSizeAppName * formRatio);
             }
         }
@@ -198,6 +198,19 @@ namespace Price_Checker
                         float originalFontSize = originalFontSizes[label3];
                         label3.Font = new Font(label3.Font.FontFamily, originalFontSize * formRatio);;
                     }
+
+                    //{
+                    //    if (control is Label lbl_appname)
+                    //    {
+                    //        if (originalFontSizes.ContainsKey(lbl_appname))
+                    //        {
+                    //            float originalFontSize = originalFontSizes[lbl_appname];
+                    //            lbl_appname.Font = new Font(lbl_appname.Font.FontFamily, originalFontSize * formRatio); ;
+                    //        }
+                    //    }
+                    //}
+
+
                 }
             }
         }
