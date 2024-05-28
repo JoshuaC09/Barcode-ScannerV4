@@ -86,45 +86,45 @@ public class DatabaseConfig
     }
 
     private static bool _hasConnected = false;
-  private void TryConnectToDatabase()
-{
-    if (_hasConnected)
+    private void TryConnectToDatabase()
     {
-        return;
-    }
-    try
-    {
-        string connectionString = $"Server={Server};Port={Port};Database={Database};Uid={Uid};Pwd={Pwd};";
-        using (var connection = new MySqlConnection(connectionString))
+        if (_hasConnected)
         {
-            connection.Open();
-            if (!CheckDatabaseHasData(connection))
+            return;
+        }
+        try
+        {
+            string connectionString = $"Server={Server};Port={Port};Database={Database};Uid={Uid};Pwd={Pwd};";
+            using (var connection = new MySqlConnection(connectionString))
             {
-                string message = "There are no values in the database at this time.\nPress OK to proceed or Cancel to close.";
-                DialogResult result = MessageBox.Show(
-                    message,
-                    "No Data",
-                    MessageBoxButtons.OKCancel,
-                    MessageBoxIcon.Warning,
-                    MessageBoxDefaultButton.Button2 // Set Cancel as the default button
-                );
-                if (result == DialogResult.Cancel)
+                connection.Open();
+                if (!CheckDatabaseHasData(connection))
                 {
-                    Environment.Exit(1);
+                    string message = "There are no values in the database at this time.\nPress OK to proceed or Cancel to close.";
+                    DialogResult result = MessageBox.Show(
+                        message,
+                        "No Data",
+                        MessageBoxButtons.OKCancel,
+                        MessageBoxIcon.Warning,
+                        MessageBoxDefaultButton.Button2 // Set Cancel as the default button
+                    );
+                    if (result == DialogResult.Cancel)
+                    {
+                        Environment.Exit(1);
+                    }
                 }
+                _hasConnected = true;
             }
-            _hasConnected = true;
+        }
+        catch (MySqlException ex)
+        {
+            HandleException(ex, $"An error occurred while connecting to the MySQL server: {ex.Message}");
         }
     }
-    catch (MySqlException ex)
-    {
-        HandleException(ex, $"An error occurred while connecting to the MySQL server: {ex.Message}");
-    }
-}
 
     private bool CheckDatabaseHasData(MySqlConnection connection)
     {
-        string query = "SELECT COUNT(*) FROM prod_verifier"; 
+        string query = "SELECT COUNT(*) FROM prod_verifier";
         using (var command = new MySqlCommand(query, connection))
         {
             int count = Convert.ToInt32(command.ExecuteScalar());
