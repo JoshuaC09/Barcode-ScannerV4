@@ -30,7 +30,7 @@ namespace Price_Checker.SettingsHelpers
                 tb_adpictime.Enter += TextBox_Enter;
                 tb_adpictime.Click += TextBox_Click;
 
-                tb_adpicpath.Text = row["set_adpic"].ToString();
+                tb_adpicpath.Text = row["set_adpic"].ToString().Replace("$", "\\");
                 tb_adpicpath.Enter += TextBox_Enter;
                 tb_adpicpath.Click += TextBox_Click;
 
@@ -38,7 +38,7 @@ namespace Price_Checker.SettingsHelpers
                 tb_advidtime.Enter += TextBox_Enter;
                 tb_advidtime.Click += TextBox_Click;
 
-                tb_advidpath.Text = row["set_advid"].ToString();
+                tb_advidpath.Text = row["set_advid"].ToString().Replace("$", "\\");
                 tb_advidpath.Enter += TextBox_Enter;
                 tb_advidpath.Click += TextBox_Click;
 
