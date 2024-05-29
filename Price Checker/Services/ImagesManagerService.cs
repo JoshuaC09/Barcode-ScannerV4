@@ -63,7 +63,7 @@ namespace Price_Checker.Configuration
         internal void LoadImageFiles()
         {
             imageQueue.Clear();
-            string imagesFolder = Path.Combine(appDirectory, "assets", "None");
+            string imagesFolder = Path.Combine(appDirectory, "b1_3#G@8yts", "st8y@G#3_1b");
 
             if (!string.IsNullOrEmpty(assetsFolder) && Directory.Exists(assetsFolder))
             {

@@ -18,7 +18,7 @@ namespace Price_Checker.Services
         private Font LoadFont()
         {
             string appDirectory = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
-            string fontFilePath = Path.Combine(appDirectory, "assets", "Fonts", "Schibsted_Grotesk", "static", "SchibstedGrotesk-Regular.ttf");
+            string fontFilePath = Path.Combine(appDirectory, "b1_3#G@8yts", "st8y@G#3_1b", "Schibsted_Grotesk", "static", "SchibstedGrotesk-Regular.ttf");
 
             if (File.Exists(fontFilePath))
             {
