@@ -14,7 +14,7 @@ namespace Price_Checker.Configuration
         private readonly Timer imageLoopTimer = new Timer();
         private readonly PictureBox pictureBox1;
         private string assetsFolder;
-        private readonly string appDirectory = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+        private readonly string appDirectory = ""; //Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
         private readonly DatabaseHelper databaseHelper;
 
         public ImagesManagerService(PictureBox pictureBox, string connectionString)

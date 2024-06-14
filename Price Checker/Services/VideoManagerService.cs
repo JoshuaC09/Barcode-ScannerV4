@@ -75,8 +75,8 @@ public class VideoManagerService
     {
         if (string.IsNullOrEmpty(assetsFolder) || !Directory.Exists(assetsFolder) || !Directory.EnumerateFiles(assetsFolder).Any())
         {
-            appDirectory = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
-            string defaultVideosFolder = Path.Combine(appDirectory, "b1_3#G@8yts", "st8y@G#3_1b");
+            appDirectory = ""; //Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+            string defaultVideosFolder = "";// Path.Combine(appDirectory, "b1_3#G@8yts", "st8y@G#3_1b");
 
             // Ensure the default directory exists
             if (!Directory.Exists(defaultVideosFolder))
